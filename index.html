@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- En-têtes de sécurité applicables via <meta> (ébauche statique sans serveur applicatif).
+       X-Frame-Options et frame-ancestors devront être ajoutés côté serveur en production. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>Festival À Dos d'Arts — Rouffach | Le festival créé par la jeunesse</title>
+  <meta name="description" content="À Dos d'Arts, festival artistique gratuit et en plein air à Rouffach (Haut-Rhin). Graff, danse, théâtre, concerts : créé par la jeunesse, pour tout le monde." />
+
+  <!-- Open Graph / partage social (§12.2) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Festival À Dos d'Arts — Rouffach" />
+  <meta property="og:description" content="Festival artistique gratuit créé par la jeunesse, pour tout le monde. Rouffach, fin août." />
+  <meta property="og:locale" content="fr_FR" />
+
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+  <link rel="stylesheet" href="assets/css/intro.css" />
+
+  <!-- Données structurées Event (§10.3) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Festival",
+    "name": "Festival À Dos d'Arts",
+    "startDate": "2026-08-28",
+    "endDate": "2026-08-30",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "L'Escapade",
+      "address": "9 rue de l'Escapade, 68250 Rouffach, France"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock"
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "Collectif jeunesse À Dos d'Arts"
+    }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <!-- ===== Header persistant (§4.2) ===== -->
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Accueil — À Dos d'Arts">
+        <span class="brand__mark"><img src="assets/img/logo.svg" alt="" width="34" height="34" /></span>
+        À Dos d'Arts
+      </a>
+
+      <nav class="main-nav" id="main-nav" data-main-nav aria-label="Navigation principale">
+        <ul class="main-nav__list">
+          <li><a class="main-nav__link" href="index.html" aria-current="page">Accueil</a></li>
+          <li><a class="main-nav__link" href="programme.html">Programme</a></li>
+          <li><a class="main-nav__link" href="participer.html">Participer</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"
+          aria-label="Basculer le thème clair/sombre">
+          <span class="theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false"
+          aria-controls="main-nav" aria-label="Ouvrir le menu">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <!-- Feuillage décoratif (édition Jungle), purement ornemental. -->
+      <div class="hero__foliage" aria-hidden="true">
+        <svg class="foliage--tl" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0 C70 -10 150 20 196 96 C120 110 40 80 0 56 Z" fill="var(--brand-leaf)"/>
+          <path d="M8 24 C80 18 150 40 196 96" stroke="var(--brand-canopy)" stroke-width="3" fill="none"/>
+        </svg>
+        <svg class="foliage--br" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0 C70 -10 150 20 196 96 C120 110 40 80 0 56 Z" fill="var(--brand-canopy)"/>
+          <path d="M8 24 C80 18 150 40 196 96" stroke="var(--brand-leaf)" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
+      <div class="container hero__inner">
+        <p class="hero__edition" data-edition-line>8ᵉ édition · Jungle · Rouffach</p>
+        <h1 class="hero__title">À Dos <em>d'Arts</em></h1>
+        <p class="hero__signature" data-signature>Le festival artistique créé par la jeunesse, pour tout le monde.</p>
+
+        <div class="hero__cta-row">
+          <a class="btn btn--primary" href="programme.html">Voir le programme</a>
+          <a class="btn" href="participer.html">Participer</a>
+        </div>
+
+        <dl class="hero__facts">
+          <div class="hero__fact">
+            <dt class="visually-hidden">Dates</dt>
+            <dd><strong data-dates>28–30 août</strong> 2026</dd>
+          </div>
+          <div class="hero__fact">
+            <dt class="visually-hidden">Lieu</dt>
+            <dd><strong>Rouffach</strong> Haut-Rhin (68)</dd>
+          </div>
+          <div class="hero__fact">
+            <dt class="visually-hidden">Tarif</dt>
+            <dd><strong>Gratuit</strong> entrée libre</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ===== Bandeau état temporel (§4.3) ===== -->
+    <section class="section" aria-label="Édition en cours">
+      <div class="container">
+        <div class="temporal-banner" data-temporal-banner>
+          <!-- Rempli par temporal-state.js -->
+          <span class="status-pill">Chargement…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Accès rapides (intentions personas §2.2) ===== -->
+    <section class="section quick-access" aria-labelledby="acces-titre">
+      <div class="container">
+        <h2 id="acces-titre" class="section__title">En 1 clic</h2>
+        <div class="block-grid">
+          <a class="card quick-card" style="--quick-color: var(--discipline-theatre); --quick-on: var(--discipline-theatre-on)" href="programme.html">
+            <h3 class="card__title">Le programme</h3>
+            <p class="card__desc">Trois jours, deux lieux, dix disciplines. C'est quand, où, et quoi.</p>
+            <span class="quick-card__arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="card quick-card" style="--quick-color: var(--discipline-graff); --quick-on: var(--discipline-graff-on)" href="participer.html#ateliers">
+            <h3 class="card__title">S'inscrire à un atelier</h3>
+            <p class="card__desc">Tu as entre 10 et 17 ans ? Graff, danse, théâtre, vidéo. C'est gratuit.</p>
+            <span class="quick-card__arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="card quick-card" style="--quick-color: var(--discipline-danse); --quick-on: var(--discipline-danse-on)" href="participer.html#benevole">
+            <h3 class="card__title">Devenir bénévole</h3>
+            <p class="card__desc">Bar, technique, photo : viens faire tourner le festival avec nous.</p>
+            <span class="quick-card__arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="card quick-card" style="--quick-color: var(--discipline-beatbox); --quick-on: var(--discipline-beatbox-on)" href="#infos">
+            <h3 class="card__title">Infos pratiques</h3>
+            <p class="card__desc">Accès, horaires, restauration, encadrement. Tout pour venir l'esprit tranquille.</p>
+            <span class="quick-card__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Disciplines (typo forte, modèle KIKK) ===== -->
+    <section class="section" aria-labelledby="disc-titre">
+      <div class="container">
+        <h2 id="disc-titre" class="section__title">Toutes les disciplines</h2>
+        <p class="section__lead">Pas de hiérarchie : chaque art a sa place, du mur de graff à la scène slam.</p>
+        <div class="discipline-strip">
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-graff); --discipline-on: var(--discipline-graff-on)">Graff</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-danse); --discipline-on: var(--discipline-danse-on)">Danse</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-theatre); --discipline-on: var(--discipline-theatre-on)">Théâtre</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-beatbox); --discipline-on: var(--discipline-beatbox-on)">Beatbox</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-impro); --discipline-on: var(--discipline-impro-on)">Impro</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-percussions); --discipline-on: var(--discipline-percussions-on)">Percussions</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-photo); --discipline-on: var(--discipline-photo-on)">Photo</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-video); --discipline-on: var(--discipline-video-on)">Vidéo</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-stand-up); --discipline-on: var(--discipline-stand-up-on)">Stand-up</span>
+          <span class="discipline-tag" style="--discipline-color: var(--discipline-concert); --discipline-on: var(--discipline-concert-on)">Concerts</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Infos pratiques (extrait) ===== -->
+    <section class="section" id="infos" aria-labelledby="infos-titre">
+      <div class="container">
+        <h2 id="infos-titre" class="section__title">Infos pratiques</h2>
+        <div class="block-grid">
+          <article class="card">
+            <h3 class="card__title">Où ?</h3>
+            <p class="card__desc">L'Escapade et la salle polyvalente, à Rouffach (68250). En plein air, repli couvert en cas de pluie.</p>
+          </article>
+          <article class="card">
+            <h3 class="card__title">Combien ?</h3>
+            <p class="card__desc">Entrée gratuite, tous les ateliers gratuits. Buvette et petite restauration sur place.</p>
+          </article>
+          <article class="card">
+            <h3 class="card__title">Encadrement</h3>
+            <p class="card__desc">Ateliers 10-17 ans encadrés par des intervenants. Consentement parental demandé à l'inscription.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer riche (§4.2) ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>À Dos d'Arts</h3>
+          <p>Festival artistique gratuit, créé par la jeunesse, pour tout le monde. Rouffach, fin août.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Naviguer</h3>
+          <ul>
+            <li><a href="programme.html">Programme</a></li>
+            <li><a href="participer.html#ateliers">S'inscrire à un atelier</a></li>
+            <li><a href="participer.html#benevole">Devenir bénévole</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Suivre</h3>
+          <ul>
+            <li><a href="https://www.facebook.com/festivaladosdarts/" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" rel="noopener noreferrer">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+            <li><a href="#">Accessibilité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Festival À Dos d'Arts — Rouffach (68)</p>
+        <p>Ébauche — maquette de démonstration</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Bannière consentement (§15) ===== -->
+  <aside class="cookie-banner" data-cookie-banner hidden aria-label="Gestion des cookies">
+    <p>Ce site utilise uniquement une mesure d'audience respectueuse de la vie privée. Aucun traceur publicitaire, aucun script tiers avant ton accord.</p>
+    <div class="cookie-banner__actions">
+      <button class="btn btn--primary btn--sm" type="button" data-cookie-accept>Accepter</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-cookie-refuse>Refuser</button>
+    </div>
+  </aside>
+
+  <script type="module">
+    import { initTheme } from "./assets/js/theme.js";
+    import { initNav } from "./assets/js/nav.js";
+    import { renderTemporalBanner } from "./assets/js/temporal-state.js";
+    import { initCookieBanner } from "./assets/js/cookie.js";
+    import { initIntro } from "./assets/js/intro.js";
+
+    initTheme();
+    initNav();
+    initCookieBanner();
+    initIntro(); // intro « jungle », une fois par session
+
+    fetch("assets/data/edition.json")
+      .then((r) => r.json())
+      .then((edition) => {
+        const banner = document.querySelector("[data-temporal-banner]");
+        renderTemporalBanner(edition, banner);
+
+        const sig = document.querySelector("[data-signature]");
+        if (sig && edition.signature) sig.textContent = edition.signature;
+        const editionLine = document.querySelector("[data-edition-line]");
+        if (editionLine) {
+          const theme = edition.theme_nom ? ` · ${edition.theme_nom}` : "";
+          editionLine.textContent = `${edition.numero}ᵉ édition${theme} · ${edition.ville}`;
+        }
+      })
+      .catch(() => {
+        const banner = document.querySelector("[data-temporal-banner]");
+        banner.innerHTML = '<p>Programme bientôt en ligne. <a href="programme.html">Voir le programme</a></p>';
+      });
+  </script>
+</body>
+</html>

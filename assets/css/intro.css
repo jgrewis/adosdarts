@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Intro « entrée dans la jungle » — overlay SVG + CSS, joué une fois par
+   session (cf. §5.3 « interaction signature optionnelle »).
+   Désactivée sous prefers-reduced-motion (géré aussi côté JS).
+   ========================================================================== */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 50% 0%, #1f9d57 0%, #0b6b3a 45%, #06311c 100%);
+  opacity: 1;
+  transition: opacity 600ms var(--ease-out);
+}
+
+/* Verrouille le défilement pendant l'intro. */
+.intro-lock {
+  overflow: hidden;
+}
+
+/* Sortie : on efface l'overlay puis le JS le retire du DOM. */
+.intro.is-leaving {
+  opacity: 0;
+}
+
+/* --- Scène SVG plein écran --- */
+.intro__scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Rideaux de feuillage qui s'écartent --- */
+.intro__leaves {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 62%;
+  height: 100%;
+}
+
+.intro__leaves--left {
+  left: 0;
+  transform-origin: left center;
+  animation: leaves-part-left 2100ms var(--ease-out) 500ms both;
+}
+
+.intro__leaves--right {
+  right: 0;
+  transform-origin: right center;
+  animation: leaves-part-right 2100ms var(--ease-out) 500ms both;
+}
+
+.intro__leaves svg {
+  position: absolute;
+  top: 50%;
+  height: 150%;
+  width: auto;
+  transform: translateY(-50%);
+}
+
+.intro__leaves--left svg { left: -6%; }
+.intro__leaves--right svg { right: -6%; transform: translateY(-50%) scaleX(-1); }
+
+/* --- Toucan : entre depuis le bas, se pose, petit rebond --- */
+.intro__toucan {
+  position: relative;
+  width: clamp(150px, 34vw, 300px);
+  height: auto;
+  animation: toucan-in 1500ms var(--ease-out) 450ms both;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
+}
+
+/* --- Titre --- */
+.intro__title {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #fff;
+  animation: intro-rise 900ms var(--ease-out) 1300ms both;
+}
+
+.intro__title strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: clamp(2rem, 9vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+.intro__title span {
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--brand-toucan-yellow);
+  color: var(--brand-jungle-ink);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  border-radius: 999px;
+  font-size: var(--text-sm);
+}
+
+/* --- Bouton « Entrer » (skip) --- */
+.intro__skip {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
+  z-index: 2;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-6);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.intro__skip:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* --- Lucioles / éclats de lumière (décoratifs) --- */
+.intro__spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-toucan-yellow);
+  opacity: 0;
+  animation: spark-float 2200ms ease-in-out infinite;
+}
+
+@keyframes leaves-part-left {
+  from { transform: translateX(0) rotate(0); }
+  to { transform: translateX(-64%) rotate(-10deg); }
+}
+
+@keyframes leaves-part-right {
+  from { transform: translateX(0) rotate(0); }
+  to { transform: translateX(64%) rotate(10deg); }
+}
+
+@keyframes toucan-in {
+  0% { transform: translateY(60px) scale(0.7); opacity: 0; }
+  60% { opacity: 1; }
+  80% { transform: translateY(-6px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes intro-rise {
+  from { transform: translateX(-50%) translateY(24px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes spark-float {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  40% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-40px) scale(1); }
+}
+
+/* Sécurité accessibilité : si le navigateur applique tout de même l'overlay,
+   on coupe les animations et on révèle immédiatement (le JS l'évite déjà). */
+@media (prefers-reduced-motion: reduce) {
+  .intro,
+  .intro * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

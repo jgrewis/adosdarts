@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- En-têtes de sécurité applicables via <meta> (ébauche statique sans serveur applicatif).
+       X-Frame-Options et frame-ancestors devront être ajoutés côté serveur en production. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>Participer — Inscription ateliers & bénévolat | À Dos d'Arts</title>
+  <meta name="description" content="Inscris-toi à un atelier (10-17 ans) ou deviens bénévole du festival À Dos d'Arts. C'est gratuit, encadré, et ça se passe à Rouffach." />
+  <meta property="og:title" content="Participer — Festival À Dos d'Arts" />
+  <meta property="og:description" content="Inscription aux ateliers et candidature bénévole. Gratuit, à Rouffach." />
+
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+  <link rel="stylesheet" href="assets/css/intro.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Accueil — À Dos d'Arts">
+        <span class="brand__mark"><img src="assets/img/logo.svg" alt="" width="34" height="34" /></span>
+        À Dos d'Arts
+      </a>
+      <nav class="main-nav" id="main-nav" data-main-nav aria-label="Navigation principale">
+        <ul class="main-nav__list">
+          <li><a class="main-nav__link" href="index.html">Accueil</a></li>
+          <li><a class="main-nav__link" href="programme.html">Programme</a></li>
+          <li><a class="main-nav__link" href="participer.html" aria-current="page">Participer</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"
+          aria-label="Basculer le thème clair/sombre">
+          <span class="theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false"
+          aria-controls="main-nav" aria-label="Ouvrir le menu">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header">
+      <div class="container">
+        <h1>Participer</h1>
+        <p class="page-header__lead">Tu as entre 10 et 17 ans et tu veux créer ? Tu veux donner un coup de main ? Tu es au bon endroit. Tout est gratuit.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="form-layout">
+
+          <!-- ===== Inscription atelier (§5.1) ===== -->
+          <article class="form-card" id="ateliers">
+            <h2 class="section__title">S'inscrire à un atelier</h2>
+            <p class="form-card__intro">Choisis ta discipline. Si tu as moins de 18 ans, on te demande les coordonnées d'un parent et son accord — c'est la règle.</p>
+
+            <form data-validate novalidate
+              data-success-message="Inscription enregistrée (démonstration) ! L'équipe te recontacte par e-mail.">
+              <div class="form-status" data-form-status hidden></div>
+
+              <!-- Honeypot anti-spam : champ invisible et hors tabulation.
+                   Un humain ne le remplit jamais ; un bot, souvent. -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="a-site">Ne pas remplir ce champ</label>
+                <input type="text" id="a-site" name="site_web" tabindex="-1"
+                  autocomplete="off" data-honeypot />
+              </div>
+
+              <div class="field">
+                <label for="a-prenom">Prénom et nom <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="text" id="a-prenom" name="prenom" required
+                  autocomplete="name" placeholder=" " />
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-age">Ton âge <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="number" id="a-age" name="age" required
+                  min="10" max="17" data-age placeholder=" " />
+                <p class="hint">Les ateliers sont ouverts aux 10-17 ans.</p>
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-discipline">Discipline souhaitée <span class="required" aria-hidden="true">*</span></label>
+                <select class="select" id="a-discipline" name="discipline" required data-ateliers-select>
+                  <option value="">Choisis…</option>
+                </select>
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <!-- Bloc responsable légal : affiché si mineur (forms.js) -->
+              <fieldset class="fieldset" data-parent-block hidden>
+                <legend>Responsable légal</legend>
+                <div class="field">
+                  <label for="a-parent-nom">Nom du parent / responsable</label>
+                  <input class="input" type="text" id="a-parent-nom" name="parent_nom"
+                    autocomplete="name" placeholder=" " />
+                  <p class="field__error" aria-live="polite"></p>
+                </div>
+                <div class="field">
+                  <label for="a-parent-email">E-mail du parent</label>
+                  <input class="input" type="email" id="a-parent-email" name="parent_email"
+                    autocomplete="email" placeholder=" " />
+                  <p class="field__error" aria-live="polite"></p>
+                </div>
+                <label class="checkbox-field">
+                  <input type="checkbox" name="consentement" required />
+                  <span>En tant que responsable légal, j'autorise la participation à l'atelier et le traitement des données pour la seule gestion de l'inscription. <span class="required" aria-hidden="true">*</span></span>
+                </label>
+              </fieldset>
+
+              <button class="btn btn--primary" type="submit">Envoyer mon inscription</button>
+            </form>
+          </article>
+
+          <!-- ===== Candidature bénévole (§5.1) ===== -->
+          <article class="form-card" id="benevole">
+            <h2 class="section__title">Devenir bénévole</h2>
+            <p class="form-card__intro">Le festival tourne grâce aux bénévoles. Dis-nous où tu veux donner un coup de main, on s'occupe du reste.</p>
+
+            <form data-validate novalidate
+              data-success-message="Candidature envoyée (démonstration) ! On revient vers toi très vite.">
+              <div class="form-status" data-form-status hidden></div>
+
+              <!-- Honeypot anti-spam : champ invisible et hors tabulation. -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="b-site">Ne pas remplir ce champ</label>
+                <input type="text" id="b-site" name="site_web" tabindex="-1"
+                  autocomplete="off" data-honeypot />
+              </div>
+
+              <div class="field">
+                <label for="b-nom">Prénom et nom <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="text" id="b-nom" name="nom" required
+                  autocomplete="name" placeholder=" " />
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-email">E-mail <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="email" id="b-email" name="email" required
+                  autocomplete="email" placeholder=" " />
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-pole">Pôle souhaité <span class="required" aria-hidden="true">*</span></label>
+                <select class="select" id="b-pole" name="pole" required>
+                  <option value="">Choisis…</option>
+                  <option value="bar">Bar / buvette</option>
+                  <option value="technique">Technique / montage</option>
+                  <option value="photo">Photo / vidéo</option>
+                  <option value="accueil">Accueil du public</option>
+                  <option value="peu-importe">Peu importe, là où ça aide</option>
+                </select>
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-message">Tes disponibilités / un message</label>
+                <textarea class="textarea" id="b-message" name="message"
+                  placeholder="Ex. : dispo le samedi après-midi et toute la journée du dimanche."></textarea>
+                <p class="field__error" aria-live="polite"></p>
+              </div>
+
+              <button class="btn btn--primary" type="submit">Envoyer ma candidature</button>
+            </form>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 Festival À Dos d'Arts — Rouffach (68)</p>
+        <p><a href="index.html">Retour à l'accueil</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initTheme } from "./assets/js/theme.js";
+    import { initNav } from "./assets/js/nav.js";
+    import { initForms } from "./assets/js/forms.js";
+    import { initIntro } from "./assets/js/intro.js";
+
+    initTheme();
+    initNav();
+    initForms();
+    initIntro();
+
+    // Alimente la liste des disciplines d'atelier depuis les données.
+    fetch("assets/data/ateliers.json")
+      .then((r) => r.json())
+      .then((ateliers) => {
+        const select = document.querySelector("[data-ateliers-select]");
+        if (!select) return;
+        ateliers
+          .filter((a) => a.inscription_ouverte)
+          .forEach((a) => {
+            const opt = document.createElement("option");
+            opt.value = a.id;
+            opt.textContent = `${a.titre} (${a.public_vise})`;
+            select.appendChild(opt);
+          });
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

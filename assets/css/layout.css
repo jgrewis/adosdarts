@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Layout — header persistant, footer, grille modulaire de blocs (modèle KIKK)
+   ========================================================================== */
+
+/* --- Header persistant (§4.2) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--color-bg);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+  text-decoration: none;
+}
+
+.brand__mark {
+  width: 34px;
+  height: 34px;
+}
+
+/* --- Navigation principale --- */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.main-nav__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;            /* cible tactile §14 */
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.main-nav__link[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+.main-nav__link:hover {
+  background: var(--color-surface-alt);
+}
+
+.main-nav__link:active {
+  background: color-mix(in srgb, var(--color-surface-alt) 70%, var(--color-text) 12%);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --- Bouton menu mobile --- */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.nav-toggle__bar,
+.nav-toggle__bar::before,
+.nav-toggle__bar::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--color-text);
+  position: relative;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.nav-toggle__bar::before,
+.nav-toggle__bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.nav-toggle__bar::before { top: -6px; }
+.nav-toggle__bar::after { top: 6px; }
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    inset: 64px 0 auto 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--color-bg);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding: var(--space-4);
+    z-index: var(--z-header);
+    transform: translateY(-120%);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .main-nav[data-open="true"] {
+    transform: translateY(0);
+  }
+
+  .main-nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+
+  .main-nav__link {
+    padding: var(--space-3);
+    font-size: var(--text-lg);
+  }
+}
+
+/* --- Grille modulaire de blocs (modèle KIKK, §3.2 / §7.3) --- */
+.block-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--space-4);
+}
+
+.block-grid--tight {
+  gap: var(--space-2);
+}
+
+/* --- Footer riche (§4.2) --- */
+.site-footer {
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-top: var(--border-width) solid var(--color-border);
+  padding-block: var(--space-16) var(--space-8);
+  margin-top: var(--space-24);
+}
+
+.site-footer a {
+  color: inherit;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+
+.footer-col h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: space-between;
+  padding-top: var(--space-6);
+  border-top: 1px solid color-mix(in srgb, var(--color-bg) 30%, transparent);
+  font-size: var(--text-sm);
+}

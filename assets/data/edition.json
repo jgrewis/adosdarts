@@ -1,0 +1,30 @@
+{
+  "annee": 2026,
+  "numero": 8,
+  "date_debut": "2026-08-28",
+  "date_fin": "2026-08-30",
+  "theme_nom": "Jungle",
+  "statut_override": null,
+  "signature": "Le festival artistique créé par la jeunesse, pour tout le monde.",
+  "pitch": "Trois jours d'ateliers, de scènes et de rencontres en plein air à Rouffach. Graff, danse, théâtre, beatbox, impro, concerts : la jeunesse prend les commandes, et c'est gratuit pour tout le monde.",
+  "ville": "Rouffach",
+  "departement": "Haut-Rhin (68)",
+  "lieux": [
+    {
+      "id": "escapade",
+      "nom": "L'Escapade",
+      "adresse": "9 rue de l'Escapade, 68250 Rouffach",
+      "acces": "Plein air. Accès libre, parking vélo à l'entrée."
+    },
+    {
+      "id": "salle-polyvalente",
+      "nom": "Salle polyvalente",
+      "adresse": "Place de la Salle polyvalente, 68250 Rouffach",
+      "acces": "Salle couverte pour les représentations en soirée et en cas de pluie."
+    }
+  ],
+  "reseaux": {
+    "instagram": "https://www.instagram.com/",
+    "facebook": "https://www.facebook.com/festivaladosdarts/"
+  }
+}

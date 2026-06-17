@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="À Dos d'Arts">
+  <rect x="1.5" y="1.5" width="37" height="37" rx="8" fill="none" stroke="currentColor" stroke-width="3"/>
+  <path d="M9 29 L15 11 L21 29" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="11" y1="23" x2="19" y2="23" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="29" cy="15" r="3.2" fill="currentColor"/>
+  <path d="M25 30 C25 24, 33 24, 33 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Design tokens — source de vérité (cf. cahier des charges §7.1)
+   Thémables clair/sombre et, à terme, par édition.
+   Aucune valeur de couleur/typo/espacement en dur ailleurs : tout part d'ici.
+   ========================================================================== */
+
+:root {
+  /* --- Palette de marque (couche éditoriale, rejouable par édition) ---
+     Édition 2026 « JUNGLE » : feuillage + toucan. Les couleurs de discipline
+     ci-dessous gardent volontairement leur arc-en-ciel (pluridisciplinarité) ;
+     c'est l'ambiance générale (fonds, accent, bordures) qui passe au vert. */
+  --brand-magenta: #ff2d6b;
+  --brand-magenta-deep: #d10b4e; /* variante accessible (texte blanc ≥ 4.5:1) */
+  --brand-blue: #2d5bff;
+  --brand-acid: #d8ff3a;
+  --brand-violet: #7b3cff;
+  --brand-ink: #14121a;
+  --brand-paper: #fbf7ef;
+
+  /* Jungle */
+  --brand-jungle-ink: #10231a;     /* vert quasi-noir : texte / bordures */
+  --brand-canopy: #0b6b3a;         /* vert profond : accent (texte blanc ≥ 6:1) */
+  --brand-leaf: #1f9d57;           /* vert feuille */
+  --brand-fern: #57b65f;           /* vert clair */
+  --brand-jungle-paper: #f3f4e6;   /* crème végétale (fond clair) */
+  /* Toucan */
+  --brand-toucan-orange: #ff7a18;
+  --brand-toucan-yellow: #ffd23a;
+  --brand-toucan-red: #e0331f;
+  --brand-toucan-bill: #1f9d57;
+
+  /* --- Couleurs sémantiques par discipline (blocs modulaires, modèle KIKK) ---
+     Chaque discipline a sa couleur de fond ET sa couleur de texte associée
+     (`-on`), choisie pour garantir un contraste ≥ 4.5:1 sur cette couleur.
+     Le cahier des charges alerte explicitement sur les néons/fluos : ne JAMAIS
+     poser du blanc en dur sur ces fonds (graff/beatbox/impro/photo échouent).
+     Couleurs vives/claires -> texte encre ; couleurs sombres -> texte papier. */
+  --discipline-graff: var(--brand-magenta);
+  --discipline-graff-on: var(--brand-ink);
+  --discipline-danse: var(--brand-violet);
+  --discipline-danse-on: #ffffff;
+  --discipline-theatre: var(--brand-blue);
+  --discipline-theatre-on: #ffffff;
+  --discipline-beatbox: #ff7a18;
+  --discipline-beatbox-on: var(--brand-ink);
+  --discipline-impro: #007e74;
+  --discipline-impro-on: #ffffff;
+  --discipline-percussions: #c2410c;
+  --discipline-percussions-on: #ffffff;
+  --discipline-photo: #0d72a6;
+  --discipline-photo-on: #ffffff;
+  --discipline-video: #c01f66;
+  --discipline-video-on: #ffffff;
+  --discipline-concert: var(--brand-violet);
+  --discipline-concert-on: #ffffff;
+  --discipline-stand-up: #117a37;
+  --discipline-stand-up-on: #ffffff;
+  --discipline-default: var(--color-text);
+  --discipline-default-on: var(--color-bg);
+
+  /* --- États (succès / erreur / info) --- */
+  --color-success: #1a7f4b;
+  --color-error: #c4123a;
+  --color-info: #2d5bff;
+  --color-on-status: #ffffff;  /* texte sur fond d'état (succès/erreur) plein */
+
+  /* --- Typographie --- */
+  --font-display: "Helvetica Neue", "Arial Black", "Archivo", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Échelle fluide (clamp : mini, préférée fluide, maxi) */
+  --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.85rem);
+  --text-sm: clamp(0.875rem, 0.84rem + 0.18vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.2rem, 1.1rem + 0.5vw, 1.4rem);
+  --text-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --text-2xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+  --text-display: clamp(2.8rem, 1.8rem + 5.5vw, 7rem);
+
+  --weight-regular: 400;
+  --weight-medium: 600;
+  --weight-bold: 800;
+  --leading-tight: 0.98;
+  --leading-snug: 1.15;
+  --leading-normal: 1.55;
+  --tracking-tight: -0.03em;
+  --tracking-wide: 0.08em;
+
+  /* --- Espacement (base 4/8 px) --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* --- Rayons, bordures, ombres --- */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 20px;
+  --border-width: 3px;            /* cadres nets, modèle Nuits Sonores */
+  --shadow-block: 8px 8px 0 var(--color-text);
+  --shadow-block-hover: 4px 4px 0 var(--color-text);
+
+  /* --- Points de rupture (référence ; média queries dans les autres fichiers) --- */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+
+  /* --- Couches z-index documentées --- */
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-skiplink: 500;
+
+  /* --- Motion (durées et courbes) --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 240ms;
+  --duration-slow: 480ms;
+
+  /* --- Largeur de contenu --- */
+  --content-max: 1200px;
+  --content-pad: clamp(1rem, 4vw, 3rem);
+}
+
+/* --- Thème clair (par défaut) --- */
+:root,
+[data-theme="light"] {
+  --color-bg: var(--brand-jungle-paper);
+  --color-surface: #ffffff;
+  --color-surface-alt: #e7ecd6;
+  --color-text: var(--brand-jungle-ink);
+  --color-text-muted: #4c5a4f;
+  --color-border: var(--brand-jungle-ink);
+  --color-accent: var(--brand-canopy); /* fond plein + texte blanc : ≈ 6.5:1 */
+  --color-on-accent: #ffffff;
+  --color-focus: var(--brand-toucan-orange);
+}
+
+/* --- Thème sombre (ambiance plein air en soirée) --- */
+[data-theme="dark"] {
+  --color-bg: #0a1610;          /* nuit en sous-bois */
+  --color-surface: #112016;
+  --color-surface-alt: #18301f;
+  --color-text: #eef4ea;
+  --color-text-muted: #a7bdac;
+  --color-border: #eef4ea;
+  --color-accent: var(--brand-toucan-yellow); /* pop toucan sur fond nuit */
+  --color-on-accent: var(--brand-jungle-ink);
+  --color-focus: var(--brand-toucan-yellow);
+  --shadow-block: 8px 8px 0 var(--color-border);
+  --shadow-block-hover: 4px 4px 0 var(--color-border);
+
+  /* États relevés pour rester lisibles sur fond sombre (≥ 4.5:1).
+     Le rouge/vert d'origine étaient trop saturés/sombres sur les surfaces nuit. */
+  --color-success: #4ade80;
+  --color-error: #ff7088;
+  --color-info: #6f8cff;
+
+  /* Disciplines sombres -> texte clair en dark mode pour garder le contraste
+     quand le fond du bloc est lui-même sombre. */
+  --discipline-danse-on: #ffffff;
+  --discipline-theatre-on: #ffffff;
+}
