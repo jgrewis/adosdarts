@@ -1,30 +1,56 @@
 {
   "annee": 2026,
   "numero": 8,
-  "date_debut": "2026-08-28",
-  "date_fin": "2026-08-30",
-  "theme_nom": "Jungle",
+  "type": "Soirée concerts",
+  "date_label": "Samedi 22 août 2026",
+  "date_iso": "2026-08-22",
+  "ouverture_iso": "2026-08-22T15:00:00+02:00",
+  "concerts_iso": "2026-08-22T19:00:00+02:00",
   "statut_override": null,
-  "signature": "Le festival artistique créé par la jeunesse, pour tout le monde.",
-  "pitch": "Trois jours d'ateliers, de scènes et de rencontres en plein air à Rouffach. Graff, danse, théâtre, beatbox, impro, concerts : la jeunesse prend les commandes, et c'est gratuit pour tout le monde.",
+  "entree": "Entrée libre et gratuite — sans inscription ni billetterie",
+  "signature": "La soirée concerts qui clôt l'été à Rouffach.",
+  "pitch": "Quatre concerts sur deux scènes, des animations dès 15h, buvette et restauration locale : la 8ᵉ édition d'À Dos d'Arts vous donne rendez-vous le samedi 22 août 2026 à L'Escapade de Rouffach. Entrée libre.",
   "ville": "Rouffach",
   "departement": "Haut-Rhin (68)",
-  "lieux": [
+  "lieu": {
+    "nom": "L'Escapade",
+    "ville": "Rouffach",
+    "adresse": "L'Escapade, 68250 Rouffach",
+    "maps": "https://maps.app.goo.gl/QZw5W5pmu2b2eQoy6"
+  },
+  "horaires": [
+    { "heure": "15h00", "titre": "Ouverture des portes", "detail": "Animations et spectacles divers — détail à venir." },
+    { "heure": "19h00", "titre": "Début des concerts", "detail": "4 concerts de musique sur deux scènes." }
+  ],
+  "pratique": [
+    "Buvette et restauration locale sur place — détail à venir courant de l'été.",
+    "Carte bancaire et espèces acceptées.",
+    "Festival accessible : parking, WC, point d'eau potable, accès PMR, prévention.",
+    "Accent mis sur l'éco-responsabilité."
+  ],
+  "organisateurs": [
     {
-      "id": "escapade",
-      "nom": "L'Escapade",
-      "adresse": "9 rue de l'Escapade, 68250 Rouffach",
-      "acces": "Plein air. Accès libre, parking vélo à l'entrée."
+      "nom": "Fédération des Foyers Clubs d'Alsace",
+      "url": "https://www.foyersclubs-alsace.com/",
+      "logo": "assets/img/partenaires/foyers-clubs.png"
     },
     {
-      "id": "salle-polyvalente",
-      "nom": "Salle polyvalente",
-      "adresse": "Place de la Salle polyvalente, 68250 Rouffach",
-      "acces": "Salle couverte pour les représentations en soirée et en cas de pluie."
+      "nom": "CCPAROVIC",
+      "url": "https://www.cc-parovic.fr/",
+      "logo": "assets/img/partenaires/ccparovic.png"
     }
   ],
+  "partenaires": [
+    { "nom": "Région Grand Est", "logo": "assets/img/partenaires/grand-est.png" },
+    { "nom": "Collectivité européenne d'Alsace", "logo": "assets/img/partenaires/alsace.png" },
+    { "nom": "Ville de Rouffach", "logo": "assets/img/partenaires/rouffach.jpg" },
+    { "nom": "CAF du Haut-Rhin", "logo": "assets/img/partenaires/caf-68.png" },
+    { "nom": "MSA", "logo": "assets/img/partenaires/msa.jpeg" },
+    { "nom": "Crédit Mutuel", "logo": "assets/img/partenaires/credit-mutuel.png" }
+  ],
   "reseaux": {
-    "instagram": "https://www.instagram.com/",
-    "facebook": "https://www.facebook.com/festivaladosdarts/"
+    "facebook": "https://www.facebook.com/festivaladosdarts",
+    "instagram": "https://www.instagram.com/festival_adosdarts/",
+    "mail": "contact@adosdarts.fr"
   }
 }

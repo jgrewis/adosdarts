@@ -22,18 +22,30 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-display);
+  gap: var(--space-3);
+  font-family: var(--font-logo);
   font-weight: var(--weight-bold);
   font-size: var(--text-lg);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: 0.02em;
   text-decoration: none;
+  color: var(--brand-toucan);
+  white-space: nowrap;          /* la marque ne passe jamais sur 2 lignes */
+  min-width: 0;
 }
 
 .brand__mark {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+}
+
+.brand__mark svg,
+.brand__mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* --- Navigation principale --- */
@@ -82,6 +94,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* CTA du header : libellé sur une seule ligne pour ne pas casser la barre */
+.header-actions .btn {
+  white-space: nowrap;
 }
 
 /* --- Bouton menu mobile --- */
@@ -97,6 +115,16 @@
   justify-content: center;
   transition: transform var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.nav-toggle:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-block-hover);
+}
+
+.nav-toggle:active {
+  transform: translate(0, 0);
+  box-shadow: none;
 }
 
 .nav-toggle__bar,
@@ -150,6 +178,32 @@
   .main-nav__link {
     padding: var(--space-3);
     font-size: var(--text-lg);
+  }
+}
+
+/* --- En-tête sur petits écrans : on désencombre la barre --- */
+@media (max-width: 480px) {
+  .site-header__inner {
+    gap: var(--space-2);
+  }
+
+  /* Marque un cran plus compacte pour rester sur une ligne */
+  .brand {
+    font-size: var(--text-base);
+    gap: var(--space-2);
+  }
+
+  .brand__mark {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* En très petit écran, le CTA du header est redondant avec le menu :
+   on le masque pour laisser respirer la marque et le bouton menu. */
+@media (max-width: 380px) {
+  .header-actions .btn {
+    display: none;
   }
 }
 

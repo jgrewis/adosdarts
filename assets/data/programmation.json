@@ -1,0 +1,50 @@
+{
+  "_note": "Contenu éditorial à compléter par l'organisation : descriptions définitives, photos des groupes et liens (clip YouTube + écoute Deezer/Spotify/SoundCloud). Les liens nuls (null) sont masqués automatiquement à l'affichage.",
+  "scenes": ["Scène 1", "Scène 2"],
+  "groupes": [
+    {
+      "ordre": 1,
+      "nom": "SYMBIOZ",
+      "style": "À préciser",
+      "scene": "Scène 1",
+      "description": "Description du groupe à compléter par l'organisation.",
+      "image": null,
+      "couleur": "var(--brand-teal)",
+      "youtube": null,
+      "ecoute": null
+    },
+    {
+      "ordre": 2,
+      "nom": "AORAKI",
+      "style": "À préciser",
+      "scene": "Scène 2",
+      "description": "Description du groupe à compléter par l'organisation.",
+      "image": null,
+      "couleur": "var(--brand-coral)",
+      "youtube": null,
+      "ecoute": null
+    },
+    {
+      "ordre": 3,
+      "nom": "KIF & LUNIK",
+      "style": "À préciser",
+      "scene": "Scène 1",
+      "description": "Description du groupe à compléter par l'organisation.",
+      "image": null,
+      "couleur": "var(--brand-yellow)",
+      "youtube": null,
+      "ecoute": null
+    },
+    {
+      "ordre": 4,
+      "nom": "SOBEIKH",
+      "style": "À préciser",
+      "scene": "Scène 2",
+      "description": "Description du groupe à compléter par l'organisation.",
+      "image": null,
+      "couleur": "var(--brand-green)",
+      "youtube": null,
+      "ecoute": null
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Animation de chargement « entrée dans la jungle » — toucan + feuilles.
+   Injectée par loader.js, jouée une fois par session, désactivée sous
+   prefers-reduced-motion. SVG fournis par le client (poids quasi nul).
+   ========================================================================== */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  display: grid;
+  place-items: center;
+  background: var(--gradient-hero);
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 480ms var(--ease-out);
+}
+
+.loader[data-hide="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader__stage {
+  position: relative;
+  width: min(70vw, 360px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+/* Feuilles qui s'écartent pour révéler le toucan */
+.loader__leaf {
+  position: absolute;
+  width: 60%;
+  opacity: 0;
+  animation: leaf-part 1500ms var(--ease-out) forwards;
+}
+.loader__leaf--left {
+  left: -10%;
+  transform-origin: bottom right;
+  --leaf-x: -40%;
+  --leaf-r: -22deg;
+}
+.loader__leaf--right {
+  right: -10%;
+  transform-origin: bottom left;
+  --leaf-x: 40%;
+  --leaf-r: 18deg;
+}
+
+.loader__toucan {
+  position: relative;
+  width: 78%;
+  opacity: 0;
+  transform: scale(0.6) translateY(14px);
+  animation: toucan-pop 900ms var(--ease-bounce) 380ms forwards;
+  filter: drop-shadow(6px 8px 0 rgba(26, 20, 48, 0.3));
+}
+
+.loader__title {
+  position: absolute;
+  bottom: -14%;
+  font-family: var(--font-logo);
+  font-size: clamp(1.4rem, 5vw, 2.4rem);
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-shadow: 3px 3px 0 rgba(26, 20, 48, 0.3);
+  opacity: 0;
+  animation: fade-up 600ms var(--ease-out) 900ms forwards;
+}
+
+.loader__skip {
+  position: absolute;
+  bottom: var(--space-6);
+  right: var(--space-6);
+}
+
+@keyframes leaf-part {
+  0% { opacity: 0; transform: translateX(0) rotate(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0.9; transform: translateX(var(--leaf-x)) rotate(var(--leaf-r)); }
+}
+@keyframes toucan-pop {
+  0% { opacity: 0; transform: scale(0.6) translateY(14px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Garde-fou : aucune animation bloquante sous reduced-motion ;
+   le loader.js retire l'overlay immédiatement, mais au cas où. */
+@media (prefers-reduced-motion: reduce) {
+  .loader { display: none; }
+}

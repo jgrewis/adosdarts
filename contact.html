@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>Contact — Bénévoles &amp; artistes | Festival À Dos d'Arts #8</title>
+  <meta name="description" content="Devenez bénévole de la soirée concerts À Dos d'Arts, ou proposez votre groupe pour une prochaine édition. Contact : contact@adosdarts.fr." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Contact — À Dos d'Arts #8" />
+  <meta property="og:description" content="Bénévoles et groupes de musique : rejoignez l'aventure." />
+
+  <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Accueil — À Dos d'Arts">
+        <span class="brand__mark"><img src="assets/img/elements/toucan.svg" alt="" width="40" height="40" /></span>
+        À Dos d'Arts
+      </a>
+      <nav class="main-nav" id="main-nav" data-main-nav aria-label="Navigation principale">
+        <ul class="main-nav__list">
+          <li><a class="main-nav__link" href="index.html">Accueil</a></li>
+          <li><a class="main-nav__link" href="programmation.html">Programmation</a></li>
+          <li><a class="main-nav__link" href="infos.html">Infos pratiques</a></li>
+          <li><a class="main-nav__link" href="contact.html" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn--primary btn--sm" href="#benevole">Devenir bénévole</a>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false"
+          aria-controls="main-nav" aria-label="Ouvrir le menu">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">On a hâte de vous lire</p>
+        <h1>Contact</h1>
+        <p class="page-head__lead">Une question, l'envie de filer un coup de main, ou un groupe à nous faire découvrir ? Écrivez-nous à <a href="mailto:contact@adosdarts.fr">contact@adosdarts.fr</a> ou via les formulaires ci-dessous.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="split">
+
+          <!-- ===== Formulaire bénévole ===== -->
+          <div id="benevole">
+            <p class="eyebrow">Bénévoles</p>
+            <h2 class="section__title">Rejoindre l'équipe</h2>
+            <p class="card__desc">Nous recherchons des talents bénévoles pour nous aider à l'organisation du festival : préparer, aider au bar, devenir l'un des photographes officiels… N'hésitez pas à nous contacter !</p>
+
+            <form class="form" data-validate novalidate
+              data-success-message="Merci ! Votre proposition de coup de main est bien arrivée (démonstration — aucun envoi réel).">
+              <div class="form-status" data-form-status hidden></div>
+
+              <div class="field">
+                <label for="b-nom">Nom et prénom <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" id="b-nom" name="nom" type="text" required autocomplete="name" />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-email">E-mail <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" id="b-email" name="email" type="email" required autocomplete="email" />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-aide">Comment aimeriez-vous aider ?</label>
+                <select class="select" id="b-aide" name="aide">
+                  <option value="">Peu importe / à voir ensemble</option>
+                  <option>Préparation / montage</option>
+                  <option>Bar &amp; restauration</option>
+                  <option>Photo / vidéo</option>
+                  <option>Accueil du public</option>
+                  <option>Démontage / nettoyage</option>
+                </select>
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="b-message">Un mot pour nous (facultatif)</label>
+                <textarea class="textarea" id="b-message" name="message"></textarea>
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <!-- Honeypot anti-spam (ne pas remplir) -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="b-site">Ne pas remplir</label>
+                <input id="b-site" name="site" type="text" tabindex="-1" autocomplete="off" data-honeypot />
+              </div>
+
+              <button class="btn btn--primary" type="submit">Envoyer ma proposition</button>
+            </form>
+          </div>
+
+          <!-- ===== Formulaire artistes ===== -->
+          <div id="artistes">
+            <p class="eyebrow">Groupes de musique</p>
+            <h2 class="section__title">Jouer sur une prochaine édition</h2>
+            <p class="card__desc">Vous êtes un groupe et souhaitez participer à une future édition d'À Dos d'Arts ? Présentez-vous, on écoute tout.</p>
+
+            <form class="form" data-validate novalidate
+              data-success-message="Merci ! Votre proposition de groupe est bien arrivée (démonstration — aucun envoi réel).">
+              <div class="form-status" data-form-status hidden></div>
+
+              <div class="field">
+                <label for="a-groupe">Nom du groupe <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" id="a-groupe" name="groupe" type="text" required />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-email">E-mail de contact <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" id="a-email" name="email" type="email" required autocomplete="email" />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-style">Style de musique</label>
+                <input class="input" id="a-style" name="style" type="text" />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-lien">Un lien pour vous écouter (YouTube, Spotify, SoundCloud…)</label>
+                <input class="input" id="a-lien" name="lien" type="url"
+                  inputmode="url" placeholder="https://…"
+                  data-error-pattern="Indiquez une adresse commençant par http(s)://" />
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="a-message">Présentez-vous (facultatif)</label>
+                <textarea class="textarea" id="a-message" name="message"></textarea>
+                <p class="field__error" data-field-error aria-live="polite"></p>
+              </div>
+
+              <!-- Honeypot anti-spam (ne pas remplir) -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="a-site">Ne pas remplir</label>
+                <input id="a-site" name="site" type="text" tabindex="-1" autocomplete="off" data-honeypot />
+              </div>
+
+              <button class="btn btn--accent" type="submit">Proposer mon groupe</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Réseaux ===== -->
+    <section class="section section--night" aria-labelledby="reseaux-titre">
+      <div class="container">
+        <p class="eyebrow">Suivez le festival</p>
+        <h2 id="reseaux-titre" class="section__title">On se retrouve en ligne</h2>
+        <div class="socials">
+          <a class="social-link" href="https://www.facebook.com/festivaladosdarts" rel="noopener noreferrer" target="_blank"><span>Facebook</span></a>
+          <a class="social-link" href="https://www.instagram.com/festival_adosdarts/" rel="noopener noreferrer" target="_blank"><span>Instagram</span></a>
+          <a class="social-link" href="mailto:contact@adosdarts.fr"><span>contact@adosdarts.fr</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>À Dos d'Arts</h3>
+          <p>La soirée concerts gratuite qui clôt l'été à Rouffach. 8ᵉ édition le samedi 22 août 2026.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Naviguer</h3>
+          <ul>
+            <li><a href="programmation.html">Programmation</a></li>
+            <li><a href="infos.html">Infos pratiques</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="principe.html">Le principe du festival</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Suivre</h3>
+          <ul>
+            <li><a href="https://www.facebook.com/festivaladosdarts" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/festival_adosdarts/" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="mailto:contact@adosdarts.fr">contact@adosdarts.fr</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="principe.html">Le festival</a></li>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Accessibilité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Festival À Dos d'Arts — Rouffach (68)</p>
+        <p>Organisé par la Fédération des Foyers Clubs d'Alsace &amp; la CCPAROVIC</p>
+      </div>
+    </div>
+  </footer>
+
+  <aside class="cookie-banner" data-cookie-banner hidden aria-label="Gestion des cookies">
+    <p>Ce site n'utilise aucun traceur publicitaire. Une mesure d'audience respectueuse de la vie privée peut être activée avec votre accord.</p>
+    <div class="cookie-banner__actions">
+      <button class="btn btn--primary btn--sm" type="button" data-cookie-accept>Accepter</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-cookie-refuse>Refuser</button>
+    </div>
+  </aside>
+
+  <script type="module" src="assets/js/boot-contact.js"></script>
+</body>
+</html>

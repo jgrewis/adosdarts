@@ -1,6 +1,6 @@
 /* ==========================================================================
-   Composants réutilisables — boutons, cartes, badges, formulaires,
-   compte à rebours, bannière consentement (cf. §7.3)
+   Composants réutilisables — boutons, cartes, formulaires, compte à rebours,
+   bannière consentement, badges. Identité « affiche #8 ».
    ========================================================================== */
 
 /* --- Boutons / CTA --- */
@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 44px;            /* cible tactile §14 */
+  min-height: 48px;            /* cible tactile */
   padding: var(--space-3) var(--space-6);
   font-family: var(--font-display);
   font-weight: var(--weight-bold);
@@ -18,7 +18,7 @@
   letter-spacing: var(--tracking-tight);
   text-decoration: none;
   border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
@@ -51,6 +51,11 @@
   border-color: var(--color-border);
 }
 
+.btn--accent {
+  background: var(--color-accent-2);
+  color: var(--color-on-accent-2);
+}
+
 .btn--ghost {
   background: transparent;
 }
@@ -59,46 +64,27 @@
   background: var(--color-surface-alt);
 }
 
+/* Variante posée sur un fond sombre / dégradé vif (hero, sections night).
+   Fond transparent : sans cela, le fond blanc hérité de .btn rendait le
+   texte blanc illisible (blanc sur blanc). */
+.btn--on-dark {
+  background: transparent;
+  border-color: var(--white);
+  color: var(--white);
+}
+.btn--on-dark:hover {
+  background: var(--white);
+  color: var(--brand-ink);
+  box-shadow: 3px 3px 0 var(--white);
+}
+
 .btn--sm {
-  min-height: 44px;            /* cible tactile §14 maintenue même en variante compacte */
+  min-height: 44px;
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
 }
 
-/* --- Bascule de thème --- */
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-}
-
-.theme-toggle:hover,
-.nav-toggle:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-block-hover);
-}
-
-.theme-toggle:active,
-.nav-toggle:active {
-  transform: translate(0, 0);
-  box-shadow: none;
-}
-
-.theme-toggle__icon--sun { display: none; }
-.theme-toggle__icon--moon { display: block; }
-[data-theme="dark"] .theme-toggle__icon--sun { display: block; }
-[data-theme="dark"] .theme-toggle__icon--moon { display: none; }
-
-/* --- Carte encadrée réutilisable (modèle Nuits Sonores) --- */
+/* --- Carte encadrée réutilisable --- */
 .card {
   display: flex;
   flex-direction: column;
@@ -117,29 +103,13 @@
   box-shadow: var(--shadow-block);
 }
 
-.card__discipline-bar {
-  height: 8px;
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--space-4);
-  background: var(--discipline-color, var(--discipline-default));
-}
-
 .card__title {
   font-size: var(--text-lg);
   margin-bottom: var(--space-2);
 }
 
-.card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-}
-
 .card__desc {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   margin-bottom: var(--space-4);
 }
 
@@ -151,7 +121,7 @@
   gap: var(--space-2);
 }
 
-/* --- Badges (discipline, public) --- */
+/* --- Badges --- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -162,71 +132,12 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   border: 2px solid var(--color-border);
-  border-radius: 999px;
-}
-
-.badge--discipline {
-  background: var(--discipline-color, var(--discipline-default));
-  color: var(--discipline-on, var(--discipline-default-on));
-  border-color: var(--color-border); /* cadre net KIKK conservé */
-}
-
-/* --- Bouton favori (timetable §5.2) --- */
-.fav-btn {
+  border-radius: var(--radius-pill);
   background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
-  width: 44px;                 /* cible tactile §14 */
-  height: 44px;
-  font-size: var(--text-lg);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
 }
 
-.fav-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-block-hover);
-}
-
-.fav-btn:active {
-  transform: translate(0, 0);
-  box-shadow: none;
-}
-
-.fav-btn[aria-pressed="true"] {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-/* --- Filtres programme --- */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: flex-end;
-  padding: var(--space-6);
-  background: var(--color-surface-alt);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-8);
-}
-
-.filters__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.filters__group label {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-}
+.badge--accent { background: var(--color-accent); color: var(--color-on-accent); }
+.badge--free { background: var(--brand-yellow); color: var(--brand-ink); }
 
 /* --- Champs de formulaire --- */
 .field {
@@ -237,12 +148,10 @@
 }
 
 .field > label {
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
 }
 
-.field .required {
-  color: var(--color-error);
-}
+.field .required { color: var(--color-error); }
 
 .field .hint {
   font-size: var(--text-sm);
@@ -253,7 +162,7 @@
 .select,
 .textarea {
   width: 100%;
-  min-height: 44px;
+  min-height: 48px;
   padding: var(--space-3);
   background: var(--color-surface);
   color: var(--color-text);
@@ -265,33 +174,22 @@
 
 .input:hover,
 .select:hover,
-.textarea:hover {
-  border-color: var(--color-accent);
-}
+.textarea:hover { border-color: var(--color-accent); }
 
 .input:disabled,
 .select:disabled,
-.textarea:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.textarea:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.textarea {
-  min-height: 120px;
-  resize: vertical;
-}
+.textarea { min-height: 130px; resize: vertical; }
 
-.input:invalid:not(:placeholder-shown),
 .field[data-error="true"] .input,
 .field[data-error="true"] .select,
-.field[data-error="true"] .textarea {
-  border-color: var(--color-error);
-}
+.field[data-error="true"] .textarea { border-color: var(--color-error); }
 
 .field__error {
   font-size: var(--text-sm);
   color: var(--color-error);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   min-height: 1.2em;
 }
 
@@ -303,8 +201,8 @@
 }
 
 .checkbox-field input {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   margin-top: 2px;
   flex-shrink: 0;
 }
@@ -329,7 +227,7 @@
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-6);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
 }
 
 .form-status--success {
@@ -342,31 +240,39 @@
   border-color: var(--color-error);
 }
 
-.form-status[hidden] {
-  display: none;
-}
+.form-status[hidden] { display: none; }
 
-/* --- Compte à rebours (§5.2) --- */
+/* --- Compte à rebours --- */
 .countdown {
   display: flex;
-  gap: var(--space-4);
-  flex-wrap: wrap;
+  gap: var(--space-2);
+  flex-wrap: nowrap;          /* les 4 unités (j/h/min/sec) restent sur une ligne */
 }
 
 .countdown__unit {
-  min-width: 76px;
+  flex: 1 1 0;
+  min-width: 0;               /* autorise les boîtes à se serrer plutôt qu'à passer à la ligne */
   text-align: center;
-  background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
+  background: var(--white);
+  color: var(--brand-ink);
+  border: var(--border-width) solid var(--brand-ink);
   border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-2);
+  box-shadow: 4px 4px 0 var(--brand-toucan);
+}
+
+/* Repli : sur écrans très étroits, on autorise le retour à la ligne. */
+@media (max-width: 360px) {
+  .countdown { flex-wrap: wrap; }
+  .countdown__unit { flex: 1 1 60px; }
 }
 
 .countdown__value {
   display: block;
   font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
   font-size: var(--text-2xl);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-black);
   line-height: 1;
 }
 
@@ -377,7 +283,7 @@
   color: var(--color-text-muted);
 }
 
-/* --- Bannière consentement cookies (§5.1 / §15) --- */
+/* --- Bannière consentement cookies --- */
 .cookie-banner {
   position: fixed;
   inset: auto var(--space-4) var(--space-4) var(--space-4);
@@ -391,9 +297,7 @@
   padding: var(--space-6);
 }
 
-.cookie-banner[hidden] {
-  display: none;
-}
+.cookie-banner[hidden] { display: none; }
 
 .cookie-banner__actions {
   display: flex;
@@ -402,15 +306,15 @@
   margin-top: var(--space-4);
 }
 
-/* --- Tags d'état temporel --- */
+/* --- Pastille d'état --- */
 .status-pill {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  border-radius: var(--radius-pill);
+  background: var(--brand-yellow);
+  color: var(--brand-ink);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);

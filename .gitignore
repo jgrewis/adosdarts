@@ -16,3 +16,9 @@ build/
 .idea/
 .vscode/
 *.swp
+
+# Sources brutes fournies par le client (lourdes, hors livrable web)
+# — conservées localement, jamais committées. Les assets utilisés par le
+#   site ont été extraits et optimisés dans assets/.
+_client_assets/
+Download*.zip

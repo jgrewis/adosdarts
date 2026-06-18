@@ -1,19 +1,21 @@
-# Festival À Dos d'Arts — Ébauche de site
+# Festival À Dos d'Arts #8 — Site de la soirée concerts
 
-Maquette fonctionnelle (prototype) du site du **Festival À Dos d'Arts** (Rouffach, Haut-Rhin) :
-festival artistique gratuit, en plein air, créé par la jeunesse, pour tout le monde.
+Site du **Festival À Dos d'Arts** (Rouffach, Haut-Rhin), recentré sur la **soirée
+concerts** de la 8ᵉ édition : **samedi 22 août 2026, à L'Escapade de Rouffach**.
+Festival **gratuit**, **entrée libre**, sans billetterie ni inscription.
 
-> Statut : **ébauche** destinée à valider la direction artistique, l'arborescence et les
-> parcours clés avant la phase de production décrite dans le cahier des charges. Construite
-> en HTML/CSS/JavaScript vanilla, sans build ni dépendance, pour rester lisible par toute
-> l'équipe et ne présumer aucun choix de stack (Next.js / Astro restent à arbitrer).
+> Construit en **HTML / CSS / JavaScript vanilla**, sans build ni dépendance, pour
+> rester lisible par toute l'équipe. Identité reprise de l'affiche officielle 2026
+> (palette flat / low-poly, toucan, polices de marque). Déployable tel quel sur
+> tout hébergeur statique.
 
 ---
 
 ## 1. Lancement
 
-Le site charge ses données via `fetch()` sur des fichiers JSON locaux : **un serveur HTTP
-local est nécessaire** (l'ouverture directe en `file://` est bloquée par le navigateur).
+Le site charge ses données via `fetch()` sur des fichiers JSON locaux : **un serveur
+HTTP local est nécessaire** (l'ouverture directe en `file://` est bloquée par le
+navigateur).
 
 ```bash
 # depuis la racine du projet
@@ -21,13 +23,7 @@ python3 -m http.server 8765
 # puis ouvrir http://localhost:8765
 ```
 
-Alternatives équivalentes :
-
-```bash
-npx serve .          # Node
-php -S localhost:8765 # PHP
-```
-
+Alternatives : `npx serve .` (Node) ou `php -S localhost:8765` (PHP).
 Aucune installation, aucune compilation : il n'y a pas de `package.json`.
 
 ---
@@ -36,97 +32,106 @@ Aucune installation, aucune compilation : il n'y a pas de `package.json`.
 
 ```
 Adodart/
-├── index.html                  # Accueil : hero, état temporel, accès rapides, disciplines, infos
-├── programme.html              # Programme filtrable (jour/discipline/lieu/public) + favoris
-├── participer.html             # Inscription atelier (logique mineur) + candidature bénévole
+├── index.html              # Accueil : hero (affiche), compte à rebours, teaser prog, memories, partenaires
+├── programmation.html      # Les 4 groupes (2 scènes), rendus depuis JSON
+├── infos.html              # Lieu (Maps), horaires, infos pratiques, éco-responsabilité
+├── contact.html            # Formulaire bénévole + formulaire artistes, réseaux
+├── principe.html           # « Le principe du festival » (page accessoire, en 3 temps)
 │
 ├── assets/
 │   ├── css/
-│   │   ├── tokens.css          # Design tokens : SOURCE DE VÉRITÉ (couleurs, typo, espacements,
-│   │   │                       #   rayons, ombres, z-index, motion ; thèmes clair/sombre)
-│   │   ├── base.css            # Reset, typographie, accessibilité (focus, skip-link, honeypot)
-│   │   ├── layout.css          # Header persistant, footer, grille modulaire de blocs (KIKK)
-│   │   ├── components.css      # Boutons, cartes, badges, formulaires, compte à rebours, cookies
-│   │   └── pages.css           # Styles propres à accueil / programme / participer
+│   │   ├── tokens.css      # SOURCE DE VÉRITÉ : palette affiche, polices @font-face, espacements, ombres
+│   │   ├── base.css        # Reset, typographie, accessibilité (focus, skip-link, honeypot)
+│   │   ├── layout.css      # Header persistant, nav mobile, footer, grilles
+│   │   ├── components.css  # Boutons, cartes, badges, formulaires, compte à rebours, cookies
+│   │   ├── pages.css       # Hero d'affiche, programmation, timeline, memories, partenaires
+│   │   └── loader.css      # Animation de chargement « entrée dans la jungle »
 │   │
-│   ├── js/                     # Modules ES (type="module"), une responsabilité par fichier
-│   │   ├── theme.js            # Bascule clair/sombre, persistée (localStorage)
-│   │   ├── nav.js              # Menu mobile accessible
-│   │   ├── temporal-state.js   # État avant/pendant/après + compte à rebours
-│   │   ├── programme-filters.js# Filtres, recherche, favoris (localStorage)
-│   │   ├── forms.js            # Validation accessible + logique consentement mineur
-│   │   └── cookie.js           # Bannière de consentement RGPD
+│   ├── js/                 # Modules ES (type="module"), une responsabilité par fichier
+│   │   ├── boot-index.js / boot-programmation.js / boot-contact.js / boot-simple.js
+│   │   │                   #   Points d'entrée par page (scripts externes → CSP stricte sans inline)
+│   │   ├── nav.js          # Menu mobile accessible
+│   │   ├── countdown.js    # Compte à rebours jusqu'au 22/08/2026 15h00 (Europe/Paris)
+│   │   ├── loader.js       # Overlay de chargement (SVG toucan/feuilles), 1×/session, reduced-motion
+│   │   ├── programme.js    # Rendu des 4 groupes depuis programmation.json
+│   │   ├── partenaires.js  # Rendu organisateurs (mis en avant) + partenaires depuis edition.json
+│   │   ├── forms.js        # Validation accessible + honeypot (envoi simulé)
+│   │   └── cookie.js       # Bannière de consentement RGPD
 │   │
-│   ├── data/                   # Simulent le futur CMS headless (entités du §10.2 du cahier)
-│   │   ├── edition.json        # Dates, lieux, statut, signature de l'édition courante
-│   │   ├── programme.json      # Créneaux : jour, heure, lieu, discipline, public, artistes
-│   │   └── ateliers.json       # Ateliers : discipline, public visé, modalités
+│   ├── data/               # « CMS » de l'ébauche : éditer ici pour mettre à jour le contenu
+│   │   ├── edition.json    # Date, lieu, horaires, infos pratiques, organisateurs, partenaires, réseaux
+│   │   └── programmation.json  # Les 4 groupes (style, scène, description, image, liens)
 │   │
+│   ├── fonts/              # Polices de marque (Core Circus 2D Double, Maven Pro, Frutiger)
 │   └── img/
-│       └── logo.svg            # Logo placeholder (couche pérenne)
+│       ├── toucan.svg, elements/   # Toucan + feuilles (hero, loader)
+│       ├── affiches/      # Anciennes affiches (memories) : 2026, 2022
+│       └── partenaires/   # Logos organisateurs + partenaires
 │
-├── .gitignore
+├── .gitignore             # Ignore _client_assets/ et le .zip source (lourds, hors livrable)
 └── README.md
 ```
 
 ---
 
-## 3. Ce qui est couvert dans l'ébauche
+## 3. Ce qui est couvert
 
-- **Accueil dynamique par état temporel** (§4.3) : le site calcule automatiquement
-  *avant / pendant / après* à partir des dates de `edition.json`. Aujourd'hui → état *avant*
-  avec compte à rebours. Un `statut_override` dans le JSON permet de forcer l'état (comme le
-  fera le CMS).
-- **Programme filtrable** : filtres jour / discipline / lieu / public, recherche plein texte,
-  et **« ma sélection »** (favoris) persistée sur l'appareil.
-- **Formulaires** : inscription atelier avec **bloc responsable légal conditionnel** si l'âge
-  déclaré est < 18 ans (consentement parental explicite), et candidature bénévole. Validation
-  **accessible** (messages liés, `aria-invalid`, focus géré) et honeypot anti-spam.
-- **Direction artistique** « blocs modulaires + typo forte » (modèle KIKK), une couleur par
-  discipline, cadres nets et ombres dures (modèle Nuits Sonores), déclinée sur la **couche
-  éditoriale « Jungle »** de l'édition (palette verte + toucan).
-- **Intro animée « entrée dans la jungle »** (`assets/css/intro.css` + `assets/js/intro.js`) :
-  feuillage SVG qui s'écarte + toucan, **en SVG/CSS** (aucune vidéo, poids quasi nul). Jouée
-  **une seule fois par session**, bouton « Entrer » pour passer, **désactivée** sous
-  `prefers-reduced-motion`, sans son — conforme au §8 du cahier des charges.
-- **Thème clair/sombre** piloté par tokens, mémorisé entre les visites.
-- **Accessibilité** visée WCAG 2.1 AA : HTML sémantique, skip-link, focus visibles,
-  contrastes ≥ 4.5:1 (y compris en sombre et sur les couleurs de discipline), cibles
-  tactiles 44px, respect de `prefers-reduced-motion`.
-- **SEO de base** : `title` / `meta description` par page, Open Graph, **données structurées
-  JSON-LD `Event`/`Festival`**, un seul `h1` par page.
-- **RGPD** : bannière de consentement (refuser aussi simple qu'accepter, aucun script tiers
-  avant accord), minimisation des données, soin particulier sur les données de mineurs.
-
-## 4. Hors périmètre de l'ébauche (= phase de production)
-
-Conformément au cahier des charges, ces points relèvent de la mise en production et **ne sont
-pas** implémentés ici :
-
-- **Back-end des formulaires** : l'envoi est *simulé* (message de confirmation, aucune donnée
-  transmise). En production : fonctions serverless + e-mail transactionnel, validation
-  **côté serveur**, jeton CSRF, rate limiting (§11, §15).
-- **CMS headless** réel (les JSON le simulent), CI/CD, hébergement, monitoring (§10, §16).
-- En-têtes de sécurité servis en **HTTP réel** (ici en `<meta>` à titre indicatif ;
-  `X-Frame-Options`/`frame-ancestors` et CSP doivent être posés côté serveur/CDN).
-- Pages restantes de l'arborescence (artistes, infos pratiques détaillées, actualités,
-  archives, presse, légal…) et fonctions *Should/Could have* (timetable grille, galeries,
-  feed Instagram, `.ics`, multilingue).
+- **Accueil façon affiche** : hero (palette + toucan + feuilles de l'affiche officielle),
+  **compte à rebours** jusqu'à l'ouverture des portes (22/08/2026 15h00, heure de Paris,
+  via `edition.json > ouverture_iso` avec décalage horaire explicite).
+- **Animation de chargement** « entrée dans la jungle » (SVG toucan + feuilles fournis),
+  jouée **une seule fois par session**, bouton « Entrer » + touche Échap, **désactivée**
+  sous `prefers-reduced-motion`, sans son.
+- **Programmation** : les **4 groupes** (SYMBIOZ, AORAKI, KIF & LUNIK, SOBEIKH) sur
+  **2 scènes**, rendus depuis `programmation.json` (descriptions, photos et liens
+  d'écoute restent à compléter par l'organisation — les liens vides sont masqués).
+- **Infos pratiques** : lieu (**lien Google Maps**), horaires, restauration, accessibilité,
+  éco-responsabilité.
+- **Contact** : **formulaire bénévole** + **formulaire artistes** (honeypot anti-spam,
+  validation accessible côté client, **envoi simulé** — pas de backend dans l'ébauche).
+- **Memories** : galerie des anciennes affiches.
+- **Partenaires** : **2 organisateurs mis en avant** (Foyers Clubs d'Alsace, CCPAROVIC)
+  + partenaires institutionnels.
+- **Réseaux** : Facebook, Instagram, e‑mail (`contact@adosdarts.fr`). **Pas de TikTok.**
+- **Accessibilité** WCAG 2.1 AA : HTML sémantique, skip-link, focus visibles, contrastes
+  ≥ 4.5:1, cibles tactiles ≥ 44px, respect de `prefers-reduced-motion`.
+- **SEO** : `title` / `meta description` / Open Graph par page, **JSON-LD `MusicEvent`**
+  sur l'accueil, un seul `h1` par page.
+- **RGPD** : bannière de consentement, aucun traceur tiers actif.
+- **Sécurité** : CSP stricte (`script-src 'self'`, scripts externalisés), `nosniff`,
+  `Referrer-Policy`, échappement XSS systématique des données injectées.
 
 ---
 
-## 5. Déploiement (piste)
+## 4. Mettre à jour le contenu
 
-L'ébauche étant 100 % statique, elle se déploie telle quelle sur tout hébergeur statique
-(Netlify, Cloudflare Pages, GitHub Pages, un simple Nginx) : il suffit de servir le dossier.
-Pour la production, brancher les en-têtes de sécurité au niveau du serveur/CDN et remplacer
-les `fetch` sur `/assets/data/*.json` par la source CMS retenue.
+Tout le contenu éditorial vit dans **`assets/data/`** — pas besoin de toucher au code :
+
+- **`edition.json`** : dates, horaires, lieu/Maps, infos pratiques, organisateurs,
+  partenaires, réseaux. Le compte à rebours suit `ouverture_iso`.
+- **`programmation.json`** : pour chaque groupe — `style`, `scene`, `description`,
+  `image` (chemin relatif dans `assets/img/`), `youtube`, `ecoute`. Mettre une valeur
+  `null` masque proprement le lien/visuel correspondant.
 
 ---
 
-## 6. Convention de données
+## 5. Hors périmètre de l'ébauche (= phase de production)
 
-Les fichiers de `assets/data/` reprennent les entités du modèle de contenu du cahier des
-charges (§10.2). Pour faire évoluer le contenu de l'ébauche, il suffit d'éditer ces JSON :
-le rendu (programme, disciplines d'atelier, dates, compte à rebours) se met à jour sans
-toucher au code.
+- **Back-end des formulaires** : envoi *simulé*. En production : fonction serverless +
+  e-mail transactionnel, validation **côté serveur**, jeton CSRF, rate limiting.
+- **En-têtes de sécurité en HTTP réel** : ici en `<meta>`. À reposer côté serveur/CDN
+  (`X-Frame-Options`, CSP, etc.). GitHub Pages ne permet pas d'en-têtes personnalisés.
+- **Pages légales** : « Mentions légales » et « Accessibilité » sont des placeholders.
+- **Licence des polices** : Core Circus et Frutiger sont des polices **commerciales**,
+  intégrées à la demande du client. Vérifier la licence d'embarquement web avant mise
+  en ligne publique. (Maven Pro est sous OFL.)
+- **Contenu groupes** : descriptions, photos et liens d'écoute définitifs à fournir.
+
+---
+
+## 6. Déploiement
+
+100 % statique : se déploie tel quel (GitHub Pages, Netlify, Cloudflare Pages, Nginx…).
+**Tous les chemins sont relatifs** → compatible avec un déploiement en sous-chemin
+(ex. GitHub Pages `/adosdarts/`). ⚠️ Ne jamais introduire de chemin absolu commençant
+par `/` : cela casserait le site en sous-chemin.

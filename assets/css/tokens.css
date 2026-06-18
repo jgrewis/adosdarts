@@ -1,90 +1,106 @@
 /* ==========================================================================
-   Design tokens — source de vérité (cf. cahier des charges §7.1)
-   Thémables clair/sombre et, à terme, par édition.
-   Aucune valeur de couleur/typo/espacement en dur ailleurs : tout part d'ici.
+   Design tokens — source de vérité (édition #8, soirée concert 22 août 2026)
+   Palette et typographie tirées de l'affiche officielle et des polices fournies
+   par le client. Aucune valeur de couleur/typo/espacement en dur ailleurs.
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   Polices fournies par le client (dossier partagé).
+   - Core Circus 2D Double : logo + très grands titres d'affiche.
+   - Maven Pro (variable)  : titres et éléments forts (jeu sur les graisses).
+   - Frutiger LT Std Light Cn : corps de texte (police fine).
+   NB licence : Core Circus et Frutiger sont des polices commerciales ; elles
+   sont intégrées ici à la demande du client (assets fournis). À sécuriser
+   côté licence avant mise en production publique. Maven Pro est sous OFL.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Core Circus 2D Double";
+  src: url("../fonts/CoreCircus2DDouble.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maven Pro";
+  src: url("../fonts/MavenPro.ttf") format("truetype-variations");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Frutiger";
+  src: url("../fonts/Frutiger-LightCn.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  /* --- Palette de marque (couche éditoriale, rejouable par édition) ---
-     Édition 2026 « JUNGLE » : feuillage + toucan. Les couleurs de discipline
-     ci-dessous gardent volontairement leur arc-en-ciel (pluridisciplinarité) ;
-     c'est l'ambiance générale (fonds, accent, bordures) qui passe au vert. */
-  --brand-magenta: #ff2d6b;
-  --brand-magenta-deep: #d10b4e; /* variante accessible (texte blanc ≥ 4.5:1) */
-  --brand-blue: #2d5bff;
-  --brand-acid: #d8ff3a;
-  --brand-violet: #7b3cff;
-  --brand-ink: #14121a;
-  --brand-paper: #fbf7ef;
+  /* --- Palette de marque (extraite de l'affiche officielle 2026) --- */
+  --brand-toucan: #27367e;          /* bleu nuit du toucan */
+  --brand-toucan-deep: #1c2a63;     /* variante foncée */
+  --brand-teal: #17a6a1;            /* turquoise feuillage */
+  --brand-teal-deep: #0e7d79;       /* turquoise foncé (texte sur clair ≥ 4.5:1) */
+  --brand-green: #00983a;           /* vert feuille */
+  --brand-green-deep: #007a2e;      /* vert foncé accessible */
+  --brand-orange: #f08111;          /* orange (fond dégradé) */
+  --brand-coral: #ec683b;           /* corail (bas du dégradé) */
+  --brand-red: #e74317;             /* rouge bec */
+  --brand-yellow: #ffd621;          /* jaune bec / accents */
+  --brand-yellow-logo: #f7e82a;     /* jaune citron du logo */
+  --brand-cream: #fdf6e9;           /* crème (surfaces claires) */
+  --brand-ink: #1a1430;             /* encre (texte) */
+  --white: #ffffff;
+  --black: #111018;
 
-  /* Jungle */
-  --brand-jungle-ink: #10231a;     /* vert quasi-noir : texte / bordures */
-  --brand-canopy: #0b6b3a;         /* vert profond : accent (texte blanc ≥ 6:1) */
-  --brand-leaf: #1f9d57;           /* vert feuille */
-  --brand-fern: #57b65f;           /* vert clair */
-  --brand-jungle-paper: #f3f4e6;   /* crème végétale (fond clair) */
-  /* Toucan */
-  --brand-toucan-orange: #ff7a18;
-  --brand-toucan-yellow: #ffd23a;
-  --brand-toucan-red: #e0331f;
-  --brand-toucan-bill: #1f9d57;
+  /* --- Rôles sémantiques (thème unique, lumineux) --- */
+  --color-bg: var(--brand-cream);
+  --color-surface: var(--white);
+  --color-surface-alt: #fbe9d3;     /* crème ambrée */
+  --color-text: var(--brand-ink);
+  --color-text-muted: #5a5470;
+  --color-border: var(--brand-ink);
+  --color-accent: var(--brand-teal-deep);     /* fond plein + texte blanc */
+  --color-on-accent: var(--white);
+  --color-accent-2: var(--brand-coral);
+  --color-on-accent-2: var(--white);
+  --color-focus: var(--brand-toucan);
 
-  /* --- Couleurs sémantiques par discipline (blocs modulaires, modèle KIKK) ---
-     Chaque discipline a sa couleur de fond ET sa couleur de texte associée
-     (`-on`), choisie pour garantir un contraste ≥ 4.5:1 sur cette couleur.
-     Le cahier des charges alerte explicitement sur les néons/fluos : ne JAMAIS
-     poser du blanc en dur sur ces fonds (graff/beatbox/impro/photo échouent).
-     Couleurs vives/claires -> texte encre ; couleurs sombres -> texte papier. */
-  --discipline-graff: var(--brand-magenta);
-  --discipline-graff-on: var(--brand-ink);
-  --discipline-danse: var(--brand-violet);
-  --discipline-danse-on: #ffffff;
-  --discipline-theatre: var(--brand-blue);
-  --discipline-theatre-on: #ffffff;
-  --discipline-beatbox: #ff7a18;
-  --discipline-beatbox-on: var(--brand-ink);
-  --discipline-impro: #007e74;
-  --discipline-impro-on: #ffffff;
-  --discipline-percussions: #c2410c;
-  --discipline-percussions-on: #ffffff;
-  --discipline-photo: #0d72a6;
-  --discipline-photo-on: #ffffff;
-  --discipline-video: #c01f66;
-  --discipline-video-on: #ffffff;
-  --discipline-concert: var(--brand-violet);
-  --discipline-concert-on: #ffffff;
-  --discipline-stand-up: #117a37;
-  --discipline-stand-up-on: #ffffff;
-  --discipline-default: var(--color-text);
-  --discipline-default-on: var(--color-bg);
+  /* --- Dégradé d'ambiance (fond hero, repris de Fond.svg) --- */
+  --gradient-hero: radial-gradient(circle at 70% 15%, var(--brand-orange) 0%, var(--brand-coral) 70%, #d9542e 100%);
+  --gradient-night: linear-gradient(160deg, var(--brand-toucan) 0%, var(--brand-toucan-deep) 60%, #11183f 100%);
 
   /* --- États (succès / erreur / info) --- */
   --color-success: #1a7f4b;
   --color-error: #c4123a;
-  --color-info: #2d5bff;
-  --color-on-status: #ffffff;  /* texte sur fond d'état (succès/erreur) plein */
+  --color-info: var(--brand-toucan);
+  --color-on-status: var(--white);
 
   /* --- Typographie --- */
-  --font-display: "Helvetica Neue", "Arial Black", "Archivo", system-ui, sans-serif;
-  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-logo: "Core Circus 2D Double", "Arial Black", system-ui, sans-serif;
+  --font-display: "Maven Pro", "Arial Black", system-ui, sans-serif;
+  --font-body: "Frutiger", "Maven Pro", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   /* Échelle fluide (clamp : mini, préférée fluide, maxi) */
-  --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.85rem);
-  --text-sm: clamp(0.875rem, 0.84rem + 0.18vw, 1rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg: clamp(1.2rem, 1.1rem + 0.5vw, 1.4rem);
-  --text-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --text-2xl: clamp(2rem, 1.6rem + 2vw, 3rem);
-  --text-display: clamp(2.8rem, 1.8rem + 5.5vw, 7rem);
+  --text-xs: clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem);
+  --text-sm: clamp(0.9rem, 0.86rem + 0.18vw, 1rem);
+  --text-base: clamp(1.02rem, 0.97rem + 0.25vw, 1.18rem);
+  --text-lg: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --text-xl: clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
+  --text-2xl: clamp(2rem, 1.55rem + 2.1vw, 3.2rem);
+  --text-3xl: clamp(2.6rem, 1.7rem + 4vw, 4.6rem);
+  --text-display: clamp(3rem, 1.6rem + 7vw, 8rem);
 
   --weight-regular: 400;
-  --weight-medium: 600;
+  --weight-medium: 500;
+  --weight-semibold: 700;
   --weight-bold: 800;
-  --leading-tight: 0.98;
-  --leading-snug: 1.15;
-  --leading-normal: 1.55;
-  --tracking-tight: -0.03em;
-  --tracking-wide: 0.08em;
+  --weight-black: 900;
+  --leading-tight: 0.95;
+  --leading-snug: 1.12;
+  --leading-normal: 1.6;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.12em;
 
   /* --- Espacement (base 4/8 px) --- */
   --space-1: 0.25rem;
@@ -98,14 +114,16 @@
   --space-24: 6rem;
 
   /* --- Rayons, bordures, ombres --- */
-  --radius-sm: 4px;
-  --radius-md: 10px;
-  --radius-lg: 20px;
-  --border-width: 3px;            /* cadres nets, modèle Nuits Sonores */
-  --shadow-block: 8px 8px 0 var(--color-text);
-  --shadow-block-hover: 4px 4px 0 var(--color-text);
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 26px;
+  --radius-pill: 999px;
+  --border-width: 3px;
+  --shadow-block: 7px 7px 0 var(--color-border);
+  --shadow-block-hover: 3px 3px 0 var(--color-border);
+  --shadow-soft: 0 18px 40px -24px rgba(26, 20, 48, 0.55);
 
-  /* --- Points de rupture (référence ; média queries dans les autres fichiers) --- */
+  /* --- Points de rupture (référence) --- */
   --bp-sm: 480px;
   --bp-md: 768px;
   --bp-lg: 1024px;
@@ -113,59 +131,22 @@
 
   /* --- Couches z-index documentées --- */
   --z-base: 0;
+  --z-decor: 1;
   --z-sticky: 100;
   --z-header: 200;
   --z-overlay: 300;
   --z-modal: 400;
+  --z-loader: 450;
   --z-skiplink: 500;
 
-  /* --- Motion (durées et courbes) --- */
+  /* --- Motion --- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 120ms;
-  --duration-base: 240ms;
-  --duration-slow: 480ms;
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 140ms;
+  --duration-base: 260ms;
+  --duration-slow: 520ms;
 
   /* --- Largeur de contenu --- */
-  --content-max: 1200px;
+  --content-max: 1180px;
   --content-pad: clamp(1rem, 4vw, 3rem);
-}
-
-/* --- Thème clair (par défaut) --- */
-:root,
-[data-theme="light"] {
-  --color-bg: var(--brand-jungle-paper);
-  --color-surface: #ffffff;
-  --color-surface-alt: #e7ecd6;
-  --color-text: var(--brand-jungle-ink);
-  --color-text-muted: #4c5a4f;
-  --color-border: var(--brand-jungle-ink);
-  --color-accent: var(--brand-canopy); /* fond plein + texte blanc : ≈ 6.5:1 */
-  --color-on-accent: #ffffff;
-  --color-focus: var(--brand-toucan-orange);
-}
-
-/* --- Thème sombre (ambiance plein air en soirée) --- */
-[data-theme="dark"] {
-  --color-bg: #0a1610;          /* nuit en sous-bois */
-  --color-surface: #112016;
-  --color-surface-alt: #18301f;
-  --color-text: #eef4ea;
-  --color-text-muted: #a7bdac;
-  --color-border: #eef4ea;
-  --color-accent: var(--brand-toucan-yellow); /* pop toucan sur fond nuit */
-  --color-on-accent: var(--brand-jungle-ink);
-  --color-focus: var(--brand-toucan-yellow);
-  --shadow-block: 8px 8px 0 var(--color-border);
-  --shadow-block-hover: 4px 4px 0 var(--color-border);
-
-  /* États relevés pour rester lisibles sur fond sombre (≥ 4.5:1).
-     Le rouge/vert d'origine étaient trop saturés/sombres sur les surfaces nuit. */
-  --color-success: #4ade80;
-  --color-error: #ff7088;
-  --color-info: #6f8cff;
-
-  /* Disciplines sombres -> texte clair en dark mode pour garder le contraste
-     quand le fond du bloc est lui-même sombre. */
-  --discipline-danse-on: #ffffff;
-  --discipline-theatre-on: #ffffff;
 }
