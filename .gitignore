@@ -17,6 +17,9 @@ build/
 .vscode/
 *.swp
 
+# Documents de passation internes (notes de session, hors livrable web)
+handoff*.md
+
 # Sources brutes fournies par le client (lourdes, hors livrable web)
 # — conservées localement, jamais committées. Les assets utilisés par le
 #   site ont été extraits et optimisés dans assets/.
