@@ -111,7 +111,9 @@
   display: block;
   width: min(100%, 470px);
   height: auto;
-  filter: drop-shadow(2px 3px 0 rgba(26, 20, 48, 0.22));
+  /* Ombre très légère : on garde un soupçon de relief sans épaissir le trait
+     (le logo de l'affiche est fin). */
+  filter: drop-shadow(0 1px 1px rgba(26, 20, 48, 0.16));
 }
 /* Logo recomposé en texte (police Core Circus) : « Festival » au-dessus,
    puis « À Dos » / « d'Arts #8 », chacun sur sa propre ligne — comme l'affiche.
@@ -188,14 +190,16 @@
   place-items: center;
 }
 .hero__toucan {
+  position: relative;
+  z-index: var(--z-decor);     /* toujours AU-DESSUS des feuilles */
   width: min(100%, 420px);
   filter: drop-shadow(8px 10px 0 rgba(26, 20, 48, 0.3));
 }
-/* Feuilles de part et d'autre, plus grandes, derrière le toucan. */
+/* Feuilles de part et d'autre, plus grandes, DERRIÈRE le toucan. */
 .hero__leaf {
   position: absolute;
   width: 64%;
-  z-index: var(--z-base);
+  z-index: var(--z-base);      /* sous le toucan */
   opacity: 0.95;
 }
 .hero__leaf--1 { top: -14%; left: -22%; transform: rotate(-12deg); }
