@@ -490,3 +490,90 @@
   padding: var(--space-8);
 }
 .cta-band h2 { font-size: var(--text-2xl); }
+
+/* ==========================================================================
+   Mini-jeu « Vise la poubelle » — bloc éco-responsable de la page d'accueil.
+   ========================================================================== */
+.eco-game {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-block);
+  padding: clamp(var(--space-4), 3vw, var(--space-8));
+  margin-top: var(--space-8);
+}
+.eco-game__lead {
+  max-width: 60ch;
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+.eco-game__stage {
+  position: relative;
+  margin: var(--space-6) 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--brand-cream);
+}
+.eco-game__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 800 / 450;
+  cursor: grab;
+  touch-action: none;            /* le geste pilote le jeu, pas le scroll */
+  -webkit-user-select: none;
+  user-select: none;
+}
+.eco-game__canvas:active { cursor: grabbing; }
+.eco-game__canvas:focus-visible {
+  outline: var(--border-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+.eco-game__hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+.eco-game__chip {
+  flex: 1 1 160px;
+  background: var(--color-surface-alt);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+}
+.eco-game__chip-label {
+  display: block;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.eco-game__chip-value {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+.eco-game__chip-value.is-low {
+  color: var(--color-accent, #ec683b);
+  animation: eco-game-pulse 1s ease-in-out infinite;
+}
+@keyframes eco-game-pulse {
+  50% { opacity: 0.45; }
+}
+.eco-game__buttons {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-4);
+}
+.eco-game__status {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  min-height: 1.6em;
+  color: var(--color-text);
+}

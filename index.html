@@ -184,6 +184,65 @@
       </div>
     </section>
 
+    <!-- ===== Éco-responsabilité + mini-jeu ===== -->
+    <section class="section" aria-labelledby="eco-titre">
+      <div class="container">
+        <p class="eyebrow">Festival propre</p>
+        <h2 id="eco-titre" class="section__title">Un déchet, ça se vise (et ça se trie)</h2>
+        <p class="section__lead">
+          À Dos d'Arts se déroule en plein air, au cœur de la nature de Rouffach.
+          Pour que la fête reste belle, chaque mégot, gobelet ou emballage compte :
+          un déchet laissé au sol met des mois — parfois des siècles — à disparaître,
+          pollue les sols et menace la faune. La bonne nouvelle ? Le bon geste prend
+          deux secondes : viser la poubelle, et déposer chaque déchet dans le bon bac.
+        </p>
+
+        <div class="eco-game" data-jeu-poubelle>
+          <p class="eco-game__lead">
+            <strong>Mettez un maximum de déchets dans la corbeille en 25 secondes !</strong>
+            Vous êtes face à la poubelle, un déchet en main. La distance change à
+            chaque fois et un vent de travers tente de dévier votre lancer.
+            <strong>Faites glisser (ou swipez sur mobile) vers le haut, en direction
+            de la poubelle, pour lancer</strong> : plus le geste est ample, plus le
+            lancer est puissant ; inclinez-le à gauche ou à droite pour compenser le
+            vent. Chaque déchet bien rangé, c'est un de moins par terre.
+          </p>
+
+          <div class="eco-game__hud">
+            <div class="eco-game__chip">
+              <span class="eco-game__chip-label">Distance</span>
+              <span class="eco-game__chip-value" data-jeu-distance>—</span>
+            </div>
+            <div class="eco-game__chip">
+              <span class="eco-game__chip-label">Vent de travers</span>
+              <span class="eco-game__chip-value" data-jeu-vent>—</span>
+            </div>
+            <div class="eco-game__chip">
+              <span class="eco-game__chip-label">Temps restant</span>
+              <span class="eco-game__chip-value" data-jeu-timer>25 s</span>
+            </div>
+            <div class="eco-game__chip">
+              <span class="eco-game__chip-label">Score (réussis / lancers)</span>
+              <span class="eco-game__chip-value" data-jeu-score>0 / 0</span>
+            </div>
+          </div>
+
+          <div class="eco-game__stage">
+            <canvas class="eco-game__canvas" data-jeu-canvas width="800" height="450"
+              role="application" tabindex="0"
+              aria-label="Jeu de lancer à la première personne : une poubelle de tri se trouve devant vous, à distance variable, avec un vent de travers. Faites glisser vers le haut pour lancer le déchet, ou utilisez les flèches du clavier puis Entrée."></canvas>
+          </div>
+
+          <div class="eco-game__buttons">
+            <button class="btn btn--primary" type="button" data-jeu-demarrer>Démarrer la partie</button>
+            <button class="btn btn--ghost" type="button" data-jeu-suivant hidden>Passer cette poubelle</button>
+          </div>
+
+          <p class="eco-game__status" data-jeu-status role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Appel bénévoles ===== -->
     <section class="section" aria-labelledby="cta-titre">
       <div class="container">
