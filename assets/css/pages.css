@@ -106,19 +106,24 @@
 
 .hero__logo {
   font-family: var(--font-logo);
+  /* Core Circus 2D Double est une police à double trait : surtout PAS de gras
+     (le faux-bold du <h1> bouche l'intérieur et fait disparaître les deux traits). */
+  font-weight: 400;
   font-size: var(--text-display);
   line-height: 0.92;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: var(--white);
   margin-bottom: var(--space-4);
-  text-shadow: 4px 4px 0 rgba(26, 20, 48, 0.25);
+  /* Ombre légère pour le contraste, sans empâter le double trait. */
+  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.22);
 }
 /* Logo recomposé en texte (police Core Circus) : « Festival » au-dessus,
    puis « À Dos » / « d'Arts #8 », chacun sur sa propre ligne — comme l'affiche.
    À remplacer à terme par le vrai logo vectorisé (tréma corrigé). */
 .hero__logo-festival {
   display: block;
+  white-space: nowrap;          /* jamais de retour à la ligne dans le mot */
   font-family: var(--font-display);
   font-weight: var(--weight-bold);
   font-size: var(--text-xl);
@@ -200,17 +205,6 @@
 }
 .hero__leaf--1 { top: -14%; left: -22%; transform: rotate(-12deg); }
 .hero__leaf--2 { bottom: -16%; right: -20%; width: 56%; transform: rotate(8deg); }
-
-/* Trait jaune sous les pattes du toucan (élément fourni par le client). */
-.hero__line-deco {
-  position: absolute;
-  bottom: 4%;
-  left: 50%;
-  width: 78%;
-  transform: translateX(-50%);
-  z-index: var(--z-base);
-  pointer-events: none;
-}
 
 @media (max-width: 768px) {
   .hero__inner { grid-template-columns: 1fr; text-align: left; }
