@@ -529,8 +529,12 @@
   padding: var(--space-8);
 }
 .cta-band h2 { font-size: var(--text-2xl); }
-.cta-band + .cta-band { margin-top: var(--space-6); }
-.cta-band--alt { background: var(--brand-teal); color: var(--white); }
+.cta-band + .cta-band { margin-top: var(--space-12); }
+.cta-band--alt {
+  background: var(--brand-teal);
+  color: var(--white);
+  border-color: var(--brand-ink);
+}
 .cta-band--alt .btn { background: var(--white); color: var(--brand-ink); }
 
 /* ==========================================================================
