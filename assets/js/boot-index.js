@@ -20,6 +20,6 @@ fetch("assets/data/edition.json")
     startCountdown(document.querySelector("[data-countdown]"), edition.ouverture_iso);
     renderPartenaires(document.querySelector("[data-partenaires]"), edition);
     const dateEl = document.querySelector("[data-date]");
-    if (dateEl && edition.date_label) dateEl.textContent = edition.date_label.replace("Samedi ", "");
+    if (dateEl && edition.date_label) dateEl.textContent = edition.date_label;
   })
   .catch(() => {});

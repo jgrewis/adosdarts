@@ -23,7 +23,10 @@ export function initLoader() {
       <img class="loader__leaf loader__leaf--left" src="assets/img/elements/feuille-2-0.svg" alt="" />
       <img class="loader__leaf loader__leaf--right" src="assets/img/elements/feuille-1-0.svg" alt="" />
       <img class="loader__toucan" src="assets/img/elements/toucan.svg" alt="" />
-      <span class="loader__title">À Dos d'Arts #8</span>
+      <span class="loader__title">
+        <span class="loader__title-festival">Festival</span>
+        <span class="loader__title-main">À Dos d'Arts #8</span>
+      </span>
     </div>
     <button class="btn btn--sm btn--on-dark loader__skip" type="button" data-loader-skip>Entrer</button>
   `;

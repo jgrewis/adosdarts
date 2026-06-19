@@ -94,20 +94,21 @@
   <main id="main">
     <!-- ===== HERO (reprise de l'affiche) ===== -->
     <section class="hero">
-      <div class="hero__facets" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
+      <div class="hero__lines" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
       </div>
       <div class="container hero__inner">
         <div class="hero__content">
           <h1 class="hero__logo">
-            <span class="hero__logo-line">À&nbsp;Dos <span class="hash">#8</span></span>
-            <span class="hero__logo-line">d'Arts</span>
+            <span class="hero__logo-festival">Festival</span>
+            <span class="hero__logo-line">À&nbsp;Dos</span>
+            <span class="hero__logo-line">d'Arts <span class="hash">#8</span></span>
           </h1>
           <div class="hero__meta">
-            <span class="hero__date" data-date>22 août 2026</span>
+            <span class="hero__date" data-date>Samedi 22 août 2026</span>
             <span class="hero__place">L'Escapade · Rouffach</span>
           </div>
-          <p class="hero__tagline">Soirée concerts · Entrée libre · 4 groupes, 2 scènes</p>
+          <p class="hero__tagline">Soirée concerts &amp; Scène ouverte · Entrée libre · 4 groupes, 2 scènes</p>
 
           <div class="hero__cta-row">
             <a class="btn btn--primary" href="programmation.html">Voir la programmation</a>
@@ -121,6 +122,7 @@
         <div class="hero__visual" aria-hidden="true">
           <img class="hero__leaf hero__leaf--1" src="assets/img/elements/feuille-1-0.svg" alt="" />
           <img class="hero__toucan" src="assets/img/elements/toucan.svg" alt="" width="420" height="390" />
+          <img class="hero__line-deco" src="assets/img/elements/trait-jaune.png" alt="" />
           <img class="hero__leaf hero__leaf--2" src="assets/img/elements/feuille-2-0.svg" alt="" />
         </div>
       </div>
@@ -132,14 +134,14 @@
         <div class="facts-bar">
           <div class="facts-bar__item">
             <p class="facts-bar__label">Quand</p>
-            <p class="facts-bar__value">Sam. 22 août 2026</p>
+            <p class="facts-bar__value">Samedi 22 août 2026</p>
           </div>
           <div class="facts-bar__item">
             <p class="facts-bar__label">Où</p>
             <p class="facts-bar__value">L'Escapade, Rouffach</p>
           </div>
           <div class="facts-bar__item">
-            <p class="facts-bar__label">Portes / Concerts</p>
+            <p class="facts-bar__label">Ouverture des portes / 1er concert</p>
             <p class="facts-bar__value">15h00 / 19h00</p>
           </div>
           <div class="facts-bar__item">
@@ -170,7 +172,7 @@
       <div class="container">
         <p class="eyebrow">Memories</p>
         <h2 id="mem-titre" class="section__title">8 éditions de souvenirs</h2>
-        <p class="section__lead">Depuis 2017, le festival rythme la fin de l'été à Rouffach. Petit retour en affiches.</p>
+        <p class="section__lead">Depuis 2017, le festival rythme la fin de l'été à Rouffach. Petit retour en affiches images.</p>
         <div class="memories">
           <figure class="memory">
             <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" loading="lazy" />
@@ -180,6 +182,17 @@
             <img src="assets/img/affiches/affiche-2022.png" alt="Affiche de l'édition 2022 (4ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #4 — 2022</figcaption>
           </figure>
+        </div>
+
+        <h3 class="memories__subtitle">En images</h3>
+        <p class="section__lead">Quelques instants des éditions passées — la galerie complète arrive bientôt.</p>
+        <div class="gallery" data-galerie>
+          <!-- Vignettes de photos d'anciennes éditions à intégrer (4-5 + galerie).
+               En attente des fichiers client : placeholders ci-dessous. -->
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
         </div>
       </div>
     </section>
@@ -252,6 +265,14 @@
             <p>Le festival vit grâce à ses bénévoles. Rejoignez l'aventure de la 8ᵉ édition.</p>
           </div>
           <a class="btn btn--primary" href="contact.html#benevole">Devenir bénévole</a>
+        </div>
+
+        <div class="cta-band cta-band--alt">
+          <div>
+            <h2>Prêt à faire monter ton groupe sur nos planches ?</h2>
+            <p>Vous faites de la musique et rêvez de jouer à À Dos d'Arts ? Proposez votre groupe pour une prochaine édition.</p>
+          </div>
+          <a class="btn btn--primary" href="contact.html#artistes">Proposer mon groupe</a>
         </div>
       </div>
     </section>

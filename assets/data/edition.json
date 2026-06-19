@@ -1,7 +1,7 @@
 {
   "annee": 2026,
   "numero": 8,
-  "type": "Soirée concerts",
+  "type": "Soirée concerts & Scène ouverte",
   "date_label": "Samedi 22 août 2026",
   "date_iso": "2026-08-22",
   "ouverture_iso": "2026-08-22T15:00:00+02:00",
@@ -20,7 +20,7 @@
   },
   "horaires": [
     { "heure": "15h00", "titre": "Ouverture des portes", "detail": "Animations et spectacles divers — détail à venir." },
-    { "heure": "19h00", "titre": "Début des concerts", "detail": "4 concerts de musique sur deux scènes." }
+    { "heure": "19h00", "titre": "Début des concerts", "detail": "4 groupes et une scène ouverte tout au long de la soirée." }
   ],
   "pratique": [
     "Buvette et restauration locale sur place — détail à venir courant de l'été.",
@@ -36,17 +36,17 @@
     },
     {
       "nom": "CCPAROVIC",
-      "url": "https://www.cc-parovic.fr/",
+      "url": "https://www.cc-paysderouffach-vignobles-chateaux.fr/",
       "logo": "assets/img/partenaires/ccparovic.png"
     }
   ],
   "partenaires": [
-    { "nom": "Région Grand Est", "logo": "assets/img/partenaires/grand-est.png" },
-    { "nom": "Collectivité européenne d'Alsace", "logo": "assets/img/partenaires/alsace.png" },
-    { "nom": "Ville de Rouffach", "logo": "assets/img/partenaires/rouffach.jpg" },
-    { "nom": "CAF du Haut-Rhin", "logo": "assets/img/partenaires/caf-68.png" },
-    { "nom": "MSA", "logo": "assets/img/partenaires/msa.jpeg" },
-    { "nom": "Crédit Mutuel", "logo": "assets/img/partenaires/credit-mutuel.png" }
+    { "nom": "Région Grand Est", "url": "https://www.grandest.fr/", "logo": "assets/img/partenaires/grand-est.png" },
+    { "nom": "Collectivité européenne d'Alsace", "url": "https://www.alsace.eu/", "logo": "assets/img/partenaires/alsace.png" },
+    { "nom": "Ville de Rouffach", "url": "https://www.ville-rouffach.fr/", "logo": "assets/img/partenaires/rouffach.jpg" },
+    { "nom": "CAF du Haut-Rhin", "url": "https://www.caf.fr/", "logo": "assets/img/partenaires/caf-68.png" },
+    { "nom": "MSA", "url": "https://alsace.msa.fr/lfp", "logo": "assets/img/partenaires/msa.jpeg" },
+    { "nom": "Crédit Mutuel", "url": "https://www.creditmutuel.fr/home/index.html", "logo": "assets/img/partenaires/credit-mutuel.png" }
   ],
   "reseaux": {
     "facebook": "https://www.facebook.com/festivaladosdarts",

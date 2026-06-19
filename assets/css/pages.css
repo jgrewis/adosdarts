@@ -48,51 +48,47 @@
   padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
-/* Facettes géométriques discrètes (clin d'œil au low-poly de l'affiche) */
-.hero__facets {
+/* Traits jaunes sur le fond orange (logique de l'affiche, en remplacement
+   des anciens triangles low-poly). Fines lignes obliques, discrètes. */
+.hero__lines {
   position: absolute;
   inset: 0;
   z-index: var(--z-base);
   pointer-events: none;
+  overflow: hidden;
 }
-.hero__facets span {
+.hero__lines span {
   position: absolute;
-  display: block;
-  opacity: 0.5;
-}
-.hero__facets span:nth-child(1) {
-  top: -8%; left: -6%; width: 42%; height: 60%;
-  background: var(--brand-orange);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-.hero__facets span:nth-child(2) {
-  bottom: -10%; right: -4%; width: 50%; height: 70%;
-  background: var(--brand-coral);
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
-}
-.hero__facets span:nth-child(3) {
-  top: 20%; right: 12%; width: 26%; height: 40%;
-  background: var(--brand-teal);
-  opacity: 0.28;
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-.hero__facets span:nth-child(4) {
-  bottom: 8%; left: 4%; width: 18%; height: 28%;
+  left: -10%;
+  width: 120%;
+  height: clamp(4px, 0.6vw, 8px);
   background: var(--brand-yellow);
-  opacity: 0.32;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  opacity: 0.55;
+  transform: rotate(-7deg);
+  transform-origin: left center;
 }
+.hero__lines span:nth-child(1) { top: 14%; opacity: 0.45; }
+.hero__lines span:nth-child(2) { top: 32%; }
+.hero__lines span:nth-child(3) { top: 53%; opacity: 0.4; }
+.hero__lines span:nth-child(4) { top: 72%; }
+.hero__lines span:nth-child(5) { top: 89%; opacity: 0.35; }
 
 .hero__inner {
   position: relative;
   z-index: var(--z-decor);
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 0.9fr 1.1fr;
   gap: var(--space-8);
   align-items: center;
 }
 
-.hero__content { max-width: 40ch; }
+/* Toucan à gauche, texte décalé vers la droite (évite la queue coupée). */
+.hero__visual { order: -1; }
+.hero__content {
+  order: 0;
+  max-width: 42ch;
+  justify-self: start;
+}
 
 /* Le texte blanc court sur un dégradé orange vif (couleurs de marque,
    non modifiables). On garantit la lisibilité (contraste) avec un léger
@@ -118,7 +114,18 @@
   margin-bottom: var(--space-4);
   text-shadow: 4px 4px 0 rgba(26, 20, 48, 0.25);
 }
-/* « À Dos #8 » puis « d'Arts » dessous — chacun sur sa propre ligne. */
+/* Logo recomposé en texte (police Core Circus) : « Festival » au-dessus,
+   puis « À Dos » / « d'Arts #8 », chacun sur sa propre ligne — comme l'affiche.
+   À remplacer à terme par le vrai logo vectorisé (tréma corrigé). */
+.hero__logo-festival {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-wide);
+  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.25);
+  margin-bottom: var(--space-1);
+}
 .hero__logo-line {
   display: block;
   white-space: nowrap;
@@ -184,19 +191,33 @@
   width: min(100%, 420px);
   filter: drop-shadow(8px 10px 0 rgba(26, 20, 48, 0.3));
 }
+/* Feuilles de part et d'autre, plus grandes, derrière le toucan. */
 .hero__leaf {
   position: absolute;
-  width: 38%;
+  width: 64%;
   z-index: var(--z-base);
   opacity: 0.95;
 }
-.hero__leaf--1 { top: -6%; left: -4%; transform: rotate(-12deg); }
-.hero__leaf--2 { bottom: -8%; right: -2%; width: 30%; transform: rotate(8deg); }
+.hero__leaf--1 { top: -14%; left: -22%; transform: rotate(-12deg); }
+.hero__leaf--2 { bottom: -16%; right: -20%; width: 56%; transform: rotate(8deg); }
+
+/* Trait jaune sous les pattes du toucan (élément fourni par le client). */
+.hero__line-deco {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  width: 78%;
+  transform: translateX(-50%);
+  z-index: var(--z-base);
+  pointer-events: none;
+}
 
 @media (max-width: 768px) {
   .hero__inner { grid-template-columns: 1fr; text-align: left; }
-  .hero__visual { order: -1; max-width: 280px; }
+  .hero__visual { order: -1; max-width: 320px; }
   .hero__toucan { width: 100%; }
+  .hero__leaf--1 { left: -14%; }
+  .hero__leaf--2 { right: -12%; }
 }
 
 /* ==========================================================================
@@ -393,6 +414,35 @@
   letter-spacing: var(--tracking-wide);
 }
 
+/* Galerie photos (anciennes éditions) */
+.memories__subtitle {
+  margin-top: var(--space-12);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: var(--space-4);
+}
+.gallery__item {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-surface-alt);
+}
+.gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery__item--empty {
+  display: grid;
+  place-items: center;
+  border-style: dashed;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
 /* ==========================================================================
    Partenaires
    ========================================================================== */
@@ -490,6 +540,9 @@
   padding: var(--space-8);
 }
 .cta-band h2 { font-size: var(--text-2xl); }
+.cta-band + .cta-band { margin-top: var(--space-6); }
+.cta-band--alt { background: var(--brand-teal); color: var(--white); }
+.cta-band--alt .btn { background: var(--white); color: var(--brand-ink); }
 
 /* ==========================================================================
    Mini-jeu « Vise la poubelle » — bloc éco-responsable de la page d'accueil.
