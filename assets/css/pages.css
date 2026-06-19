@@ -77,16 +77,15 @@
   position: relative;
   z-index: var(--z-decor);
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1.1fr 0.9fr;
   gap: var(--space-8);
   align-items: center;
 }
 
-/* Toucan à gauche, texte décalé vers la droite (évite la queue coupée). */
-.hero__visual { order: -1; }
+/* Toucan à droite, tout le contenu (titre, date, boutons, compteur) à gauche.
+   Ordre DOM naturel : .hero__content (gauche) puis .hero__visual (droite). */
 .hero__content {
-  order: 0;
-  max-width: 42ch;
+  max-width: 44ch;
   justify-self: start;
 }
 
