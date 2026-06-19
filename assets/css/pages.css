@@ -103,19 +103,15 @@
   text-shadow: none;
 }
 
+/* Le logo est désormais le SVG officiel de l'affiche (inline). */
 .hero__logo {
-  font-family: var(--font-logo);
-  /* Core Circus 2D Double est une police à double trait : surtout PAS de gras
-     (le faux-bold du <h1> bouche l'intérieur et fait disparaître les deux traits). */
-  font-weight: 400;
-  font-size: var(--text-display);
-  line-height: 0.92;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  color: var(--white);
-  margin-bottom: var(--space-4);
-  /* Ombre légère pour le contraste, sans empâter le double trait. */
-  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.22);
+  margin: 0 0 var(--space-4);
+}
+.hero__logo-svg {
+  display: block;
+  width: min(100%, 470px);
+  height: auto;
+  filter: drop-shadow(2px 3px 0 rgba(26, 20, 48, 0.22));
 }
 /* Logo recomposé en texte (police Core Circus) : « Festival » au-dessus,
    puis « À Dos » / « d'Arts #8 », chacun sur sa propre ligne — comme l'affiche.
