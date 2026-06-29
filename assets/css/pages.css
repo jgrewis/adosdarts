@@ -50,28 +50,15 @@
 
 /* Traits jaunes sur le fond orange (logique de l'affiche, en remplacement
    des anciens triangles low-poly). Fines lignes obliques, discrètes. */
+/* Traits jaunes repris tels quels de l'affiche (assets/img/elements/traits-jaunes.svg),
+   plutôt qu'une recomposition CSS approximative. */
 .hero__lines {
   position: absolute;
   inset: 0;
   z-index: var(--z-base);
   pointer-events: none;
-  overflow: hidden;
+  background: url("../img/elements/traits-jaunes.svg") center / cover no-repeat;
 }
-.hero__lines span {
-  position: absolute;
-  left: -10%;
-  width: 120%;
-  height: clamp(4px, 0.6vw, 8px);
-  background: var(--brand-yellow);
-  opacity: 0.55;
-  transform: rotate(-7deg);
-  transform-origin: left center;
-}
-.hero__lines span:nth-child(1) { top: 14%; opacity: 0.45; }
-.hero__lines span:nth-child(2) { top: 32%; }
-.hero__lines span:nth-child(3) { top: 53%; opacity: 0.4; }
-.hero__lines span:nth-child(4) { top: 72%; }
-.hero__lines span:nth-child(5) { top: 89%; opacity: 0.35; }
 
 .hero__inner {
   position: relative;
