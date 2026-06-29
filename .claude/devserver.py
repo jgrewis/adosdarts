@@ -1,6 +1,7 @@
 """Serveur de dev statique pour la preview — désactive le cache navigateur
 afin que les modifications de CSS/JS/images soient toujours rechargées.
 (Usage local uniquement ; non livré sur le site en production.)"""
+import os
 import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
@@ -14,5 +15,5 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 4599
+    port = int(os.environ.get("PORT") or (sys.argv[1] if len(sys.argv) > 1 else 4599))
     HTTPServer(("", port), NoCacheHandler).serve_forever()

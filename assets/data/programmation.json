@@ -1,5 +1,9 @@
 {
-  "_note": "Photos des groupes (image) et liens d'écoute Deezer/Spotify (ecoute) à compléter dès réception. Les liens nuls (null) sont masqués automatiquement à l'affichage.",
+  "_note": "Photos des groupes (image) et liens d'écoute Deezer/Spotify (ecoute) à compléter dès réception. Les liens nuls (null) sont masqués automatiquement à l'affichage. Le champ playlist (spotify/deezer) ci-dessous suit la même règle pour le bloc playlist du festival.",
+  "playlist": {
+    "spotify": "https://open.spotify.com/playlist/4vAf8c1LFqGeJ59v1g3tnM?si=QdkM09PHSUmJLKBvS6Kksg",
+    "deezer": "https://link.deezer.com/s/33FLkJj6aiBd3RlyBGlWs"
+  },
   "scenes": ["Grande scène", "Scène ouverte"],
   "groupes": [
     {

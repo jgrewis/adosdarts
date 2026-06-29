@@ -11,7 +11,7 @@ import { initGamePoubelle } from "./game-poubelle.js";
 initNav();
 initCookieBanner();
 initLoader();
-initProgramme();
+initProgramme({ teaser: true });
 initGamePoubelle(document.querySelector("[data-jeu-poubelle]"));
 
 fetch("assets/data/edition.json")

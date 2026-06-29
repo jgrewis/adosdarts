@@ -154,6 +154,7 @@
   color: var(--brand-ink);
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-sm);
+  white-space: nowrap;
 }
 .hero__place {
   font-family: var(--font-display);
@@ -211,6 +212,7 @@
   .hero__toucan { width: 100%; }
   .hero__leaf--1 { left: -14%; }
   .hero__leaf--2 { right: -12%; }
+  .hero__date { white-space: normal; }
 }
 
 /* ==========================================================================
@@ -324,7 +326,7 @@
   align-self: end;
   text-align: left;
 }
-.band-card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
+.band-card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; color: var(--color-text); }
 .band-card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -339,6 +341,50 @@
   margin-top: auto;
   padding-top: var(--space-4);
 }
+
+/* Variante « teaser » (accueil) : seule la partie colorée (nom) reste
+   visible par défaut ; les détails se déroulent au survol/focus, dans un
+   panneau flottant (position absolue) pour ne pas pousser la grille.
+   .band-card a overflow:hidden (pour les coins arrondis de l'image) : on le
+   neutralise ici et on reporte le clip sur .band-card__visual lui-même,
+   pour laisser le panneau déborder sous la carte. */
+.band-card--teaser { overflow: visible; }
+.band-card--teaser .band-card__visual {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+}
+.band-card--teaser .band-card__visual:focus-visible { outline: 3px solid var(--white); outline-offset: -6px; }
+.band-card__visual-link {
+  margin-top: var(--space-2);
+  background: transparent;
+  color: var(--white);
+  border-color: var(--white);
+}
+.band-card__visual-link:hover { background: rgba(255, 255, 255, 0.15); }
+
+.band-card__details {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-block);
+  opacity: 0;
+  transition: grid-template-rows var(--duration-base) var(--ease-out),
+    opacity var(--duration-base) var(--ease-out);
+}
+.band-card__details > * { overflow: hidden; min-height: 0; }
+.band-card--teaser.is-expanded { z-index: var(--z-sticky); }
+.band-card--teaser.is-expanded .band-card__details { grid-template-rows: 1fr; opacity: 1; }
+
+.band-card__media { aspect-ratio: 16 / 9; }
+.band-card__media iframe { width: 100%; height: 100%; border: 0; display: block; }
 
 /* ==========================================================================
    Horaires (timeline)
@@ -410,6 +456,7 @@
 /* Galerie photos (anciennes éditions) */
 .memories__subtitle {
   margin-top: var(--space-12);
+  margin-bottom: var(--space-3);
   font-family: var(--font-display);
   font-weight: var(--weight-bold);
 }
@@ -534,12 +581,15 @@
 }
 .cta-band h2 { font-size: var(--text-2xl); }
 .cta-band + .cta-band { margin-top: var(--space-12); }
+.cta-band + .band-grid { margin-top: var(--space-12); }
 .cta-band--alt {
   background: var(--brand-teal);
   color: var(--white);
   border-color: var(--brand-ink);
 }
 .cta-band--alt .btn { background: var(--white); color: var(--brand-ink); }
+.cta-band--center { flex-direction: column; text-align: center; }
+.cta-band__links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
 
 /* ==========================================================================
    Mini-jeu « Vise la poubelle » — bloc éco-responsable de la page d'accueil.

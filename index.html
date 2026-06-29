@@ -7,7 +7,7 @@
   <!-- En-têtes de sécurité applicables via <meta> (ébauche statique).
        À reposer en en-têtes HTTP réels côté serveur/CDN en production. -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -145,7 +145,7 @@
 
         <div class="hero__visual" aria-hidden="true">
           <img class="hero__leaf hero__leaf--1" src="assets/img/elements/feuille-1-0.svg" alt="" />
-          <img class="hero__toucan" src="assets/img/elements/toucan.svg" alt="" width="420" height="390" />
+          <img class="hero__toucan" src="assets/img/elements/toucan-trait.svg" alt="" width="420" height="390" />
           <img class="hero__leaf hero__leaf--2" src="assets/img/elements/feuille-2-0.svg" alt="" />
         </div>
       </div>
@@ -181,6 +181,20 @@
         <p class="eyebrow">La soirée</p>
         <h2 id="prog-titre" class="section__title">4 concerts, 2 scènes</h2>
         <p class="section__lead">Quatre groupes s'enchaînent dès 19h pour clôturer l'été en musique.</p>
+        <div class="cta-band cta-band--alt cta-band--center">
+          <div>
+            <h2>La playlist du festival</h2>
+            <p>Retrouve tous les artistes de cette édition dans une playlist à écouter en boucle avant le grand soir.</p>
+          </div>
+          <div class="cta-band__links">
+            <a class="btn btn--sm" id="playlist-spotify" href="#" hidden target="_blank" rel="noopener noreferrer">
+              <img src="assets/img/elements/spotify.png" alt="" width="20" height="20" /> Écouter sur Spotify
+            </a>
+            <a class="btn btn--sm btn--ghost" id="playlist-deezer" href="#" hidden target="_blank" rel="noopener noreferrer">
+              <img src="assets/img/elements/deezer.png" alt="" width="20" height="20" /> Écouter sur Deezer
+            </a>
+          </div>
+        </div>
         <div class="band-grid" data-programme>
           <p>Chargement de la programmation…</p>
         </div>
@@ -195,20 +209,40 @@
       <div class="container">
         <p class="eyebrow">Memories</p>
         <h2 id="mem-titre" class="section__title">8 éditions de souvenirs</h2>
-        <p class="section__lead">Depuis 2017, le festival rythme la fin de l'été à Rouffach. Petit retour en affiches images.</p>
+        <p class="section__lead">Depuis 2019, le festival rythme la fin de l'été à Rouffach. Petit retour en images.</p>
         <div class="memories">
           <figure class="memory">
-            <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
+            <img src="assets/img/affiches/affiche-2019.png" alt="Affiche de l'édition 2019 (1ʳᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #1 — 2019</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2020.png" alt="Affiche de l'édition 2020 (2ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #2 — 2020</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2021.png" alt="Affiche de l'édition 2021 (3ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #3 — 2021</figcaption>
           </figure>
           <figure class="memory">
             <img src="assets/img/affiches/affiche-2022.png" alt="Affiche de l'édition 2022 (4ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #4 — 2022</figcaption>
           </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2023.png" alt="Affiche de l'édition 2023 (5ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #5 — 2023</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2024.png" alt="Affiche de l'édition 2024 (6ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #6 — 2024</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
+          </figure>
         </div>
 
         <h3 class="memories__subtitle">En images</h3>
-        <p class="section__lead">Quelques instants des éditions passées — la galerie complète arrive bientôt.</p>
+        <p class="section__lead">Quelques instants des éditions passées, la galerie complète arrive bientôt.</p>
         <div class="gallery" data-galerie>
           <!-- Vignettes de photos d'anciennes éditions à intégrer (4-5 + galerie).
                En attente des fichiers client : placeholders ci-dessous. -->
