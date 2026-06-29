@@ -134,11 +134,11 @@ function bandCard(group, { teaser = false } = {}) {
     </article>`;
 }
 
-/* Ouverture au survol/focus, fermeture différée de 2s (pour ne pas refermer
+/* Ouverture au survol/focus, fermeture différée de 0,5s (pour ne pas refermer
    sur un simple passage de souris), bascule au tap sur mobile (pas de hover).
    L'iframe vidéo est démontée à la fermeture pour couper la lecture. */
 function wireTeaserCards(container) {
-  const CLOSE_DELAY = 2000;
+  const CLOSE_DELAY = 500;
   container.querySelectorAll(".band-card--teaser").forEach((card) => {
     const visual = card.querySelector(".band-card__visual");
     const media = card.querySelector(".band-card__media iframe");
