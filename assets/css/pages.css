@@ -581,6 +581,31 @@
   outline: var(--border-width) solid var(--color-focus);
   outline-offset: 2px;
 }
+/* Bouton de lancement centré sur l'image du jeu */
+.eco-game__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;            /* laisse passer le geste vers le canvas */
+}
+/* Voile sombre uniquement quand le bouton est visible (avant/après partie) */
+.eco-game__overlay:has(.eco-game__start:not([hidden])) {
+  background: radial-gradient(ellipse at center,
+    rgba(12, 20, 24, 0.45) 0%, rgba(12, 20, 24, 0.15) 45%, rgba(12, 20, 24, 0) 75%);
+}
+.eco-game__start {
+  pointer-events: auto;            /* le bouton reste cliquable */
+  font-size: var(--text-lg);
+  padding: var(--space-3) var(--space-6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+/* La classe .btn impose display:flex, ce qui masquerait le [hidden] : on force
+   la disparition du bouton pendant la partie (réaffiché avant/après). */
+.eco-game__start[hidden] {
+  display: none;
+}
 .eco-game__hud {
   display: flex;
   flex-wrap: wrap;

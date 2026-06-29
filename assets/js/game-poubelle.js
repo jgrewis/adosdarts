@@ -60,7 +60,8 @@ const C = {
 const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-// Habillage : feuilles de la marque (chargées une fois, partagées).
+// Habillage : feuilles de la marque + illustrations extraites des sources
+// client (ciel coucher de soleil, platelage bois, herbe, feuilles volantes).
 const ASSETS = (() => {
   const load = (src) => { const i = new Image(); i.src = src; return i; };
   return {
@@ -68,8 +69,33 @@ const ASSETS = (() => {
     leafB: load("assets/img/elements/feuille-2-0.svg"),
     paper: load("assets/img/boule-papier.svg"),   // boulette froissée (240×240)
     bin: load("assets/img/corbeille.svg"),         // corbeille de tri (240×260)
+    sky: load("assets/img/jeu/ciel.png"),          // ciel coucher de soleil
+    wood: load("assets/img/jeu/sol-bois.png"),     // texture platelage bois (chemin)
+    grass: load("assets/img/jeu/touffes-herbe.svg"), // touffes d'herbe vectorielles (3 variantes)
+    leaves: load("assets/img/jeu/feuilles-vent.svg"), // feuilles au vent (5 variantes)
   };
 })();
+
+// Découpe des 3 touffes dans le SVG (viewBox 600×360). Pour chacune : rectangle
+// source + point d'ancrage au pied (bx,by) afin de la poser sur le sol en
+// respectant la perspective du joueur.
+const GRASS_TUFTS = [
+  { sx: 66,  sy: 126, sw: 172, sh: 221, bx: 151, by: 333 },
+  { sx: 272, sy: 187, sw: 121, sh: 162, bx: 332, by: 335 },
+  { sx: 382, sy: 153, sw: 148, sh: 194, bx: 456, by: 333 },
+];
+// Bande d'herbe (les 3 touffes) pour habiller la ligne d'horizon.
+const GRASS_STRIP = { sx: 60, sy: 150, sw: 472, sh: 195 };
+
+// Découpe des 5 feuilles dans le SVG « feuilles au vent » (viewBox 660×200),
+// pour piocher une feuille différente par projectile volant.
+const LEAVES = [
+  { sx: 37,  sy: 43, sw: 98,  sh: 74 },
+  { sx: 177, sy: 65, sw: 86,  sh: 68 },
+  { sx: 301, sy: 37, sw: 108, sh: 90 },
+  { sx: 437, sy: 73, sw: 114, sh: 44 },
+  { sx: 573, sy: 55, sw: 74,  sh: 68 },
+];
 
 export function initGamePoubelle(root) {
   if (!root) return;
@@ -117,6 +143,8 @@ export function initGamePoubelle(root) {
     kbAim: 0,
     kbPower: 0.55,
     ballSpin: rand(0, 6.28),
+    flash: null,        // compte à rebours furtif des 5 dernières secondes {n,t0}
+    lastSec: null,
   };
 
   /* ----------------------------------------------------- Projection 3D→2D */
@@ -154,6 +182,8 @@ export function initGamePoubelle(root) {
     state.score = 0;
     state.tries = 0;
     state.misses = [];
+    state.flash = null;
+    state.lastSec = null;
     updateScore();
     updateTimer();
     if (startBtn) startBtn.hidden = true;
@@ -182,6 +212,8 @@ export function initGamePoubelle(root) {
     state.ball = null;
     state.landed = null;
     state.misses = [];
+    state.flash = null;
+    state.lastSec = null;
     state.timeLeft = SESSION_TIME;
     state.bin.dist = 280; state.bin.x = 0; state.wind = 0;
     if (distOut) distOut.textContent = `${Math.round(state.bin.dist / 9)} m`;
@@ -317,12 +349,20 @@ export function initGamePoubelle(root) {
   }
 
   function drawBackdrop() {
-    // Halo chaud du couchant
-    const sky = ctx.createLinearGradient(0, 0, 0, HORIZON + 30);
-    sky.addColorStop(0, C.skyGlowTop);
-    sky.addColorStop(1, C.skyGlowBot);
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, HORIZON + 30);
+    // Ciel coucher de soleil : illustration si chargée, sinon dégradé chaud.
+    const skyImg = ASSETS.sky;
+    if (skyImg.complete && skyImg.naturalWidth) {
+      const dw = W;
+      const dh = dw * (skyImg.naturalHeight / skyImg.naturalWidth);
+      // bas de l'image (le soleil) calé sur l'horizon ; le haut déborde hors champ
+      ctx.drawImage(skyImg, 0, HORIZON + 30 - dh, dw, dh);
+    } else {
+      const sky = ctx.createLinearGradient(0, 0, 0, HORIZON + 30);
+      sky.addColorStop(0, C.skyGlowTop);
+      sky.addColorStop(1, C.skyGlowBot);
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, HORIZON + 30);
+    }
 
     // Mur de feuillage sombre à l'horizon (festonné)
     const wall = ctx.createLinearGradient(0, HORIZON - 70, 0, HORIZON + 10);
@@ -364,50 +404,100 @@ export function initGamePoubelle(root) {
     }
   }
 
+  // Demi-largeur du chemin (en x monde) à une profondeur z donnée.
+  const pathHalf = (z) => 150 - (150 - 46) * clamp(z / 470, 0, 1);
+
   function drawGround() {
-    // herbe
+    // herbe (plan vert de base)
     const grass = ctx.createLinearGradient(0, HORIZON, 0, H);
     grass.addColorStop(0, C.grassFar);
     grass.addColorStop(1, C.grassNear);
     ctx.fillStyle = grass;
     ctx.fillRect(0, HORIZON, W, H - HORIZON);
 
+    // bande d'herbe le long de la ligne d'horizon (touffes du SVG, répétées
+    // avec recouvrement pour combler les creux et former un liseré continu)
+    const grassImg = ASSETS.grass;
+    if (grassImg.complete && grassImg.naturalWidth) {
+      const bh = 30, scale = bh / GRASS_STRIP.sh, bw = GRASS_STRIP.sw * scale;
+      for (let x = -bw * 0.4; x < W + bw; x += bw * 0.6) {
+        ctx.drawImage(grassImg, GRASS_STRIP.sx, GRASS_STRIP.sy, GRASS_STRIP.sw, GRASS_STRIP.sh,
+          x, HORIZON - bh + 8, bw, bh);
+      }
+    }
+
     // chemin central en perspective (trapèze) vers la poubelle
     const pNearL = project(-150, 0, 14), pNearR = project(150, 0, 14);
     const pFarL = project(-46, 0, 470), pFarR = project(46, 0, 470);
-    const pg = ctx.createLinearGradient(0, HORIZON, 0, H);
-    pg.addColorStop(0, C.pathFar);
-    pg.addColorStop(1, C.path);
-    ctx.fillStyle = pg;
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(pNearL.sx, pNearL.sy);
     ctx.lineTo(pNearR.sx, pNearR.sy);
     ctx.lineTo(pFarR.sx, pFarR.sy);
     ctx.lineTo(pFarL.sx, pFarL.sy);
     ctx.closePath();
-    ctx.fill();
-    // lattes
-    ctx.strokeStyle = C.plank;
-    ctx.lineWidth = 1.5;
-    for (let z = 40; z <= 460; z += 36) {
-      const a = project(-150 + (150 - 46) * (z / 470), 0, z);
-      const b = project(150 - (150 - 46) * (z / 470), 0, z);
-      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
-    }
 
-    // touffes d'herbe penchées par le vent
-    const lean = (state.wind / WIND_MAX) * 12;
-    ctx.strokeStyle = "rgba(8,60,30,0.8)";
+    const wood = ASSETS.wood;
+    if (wood.complete && wood.naturalWidth) {
+      // platelage bois : on découpe au trapèze puis on étire la texture dessus
+      ctx.clip();
+      const top = pFarL.sy, bot = pNearL.sy;
+      ctx.drawImage(wood, 0, top, W, bot - top);
+      // assombrissement vers le fond pour la profondeur
+      const fade = ctx.createLinearGradient(0, top, 0, bot);
+      fade.addColorStop(0, "rgba(40,24,8,0.45)");
+      fade.addColorStop(0.4, "rgba(40,24,8,0.10)");
+      fade.addColorStop(1, "rgba(40,24,8,0)");
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, top, W, bot - top);
+    } else {
+      const pg = ctx.createLinearGradient(0, HORIZON, 0, H);
+      pg.addColorStop(0, C.pathFar);
+      pg.addColorStop(1, C.path);
+      ctx.fillStyle = pg;
+      ctx.fill();
+      ctx.strokeStyle = C.plank;
+      ctx.lineWidth = 1.5;
+      for (let z = 40; z <= 460; z += 36) {
+        const a = project(-pathHalf(z), 0, z);
+        const b = project(pathHalf(z), 0, z);
+        ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // touffes d'herbe en perspective, de part et d'autre du chemin : chaque
+    // touffe est posée au sol (pied ancré au point projeté) et dimensionnée
+    // selon sa distance, pour rester cohérente avec le point de vue du joueur.
+    const lean = (state.wind / WIND_MAX) * 0.16;
+    let idx = 0;
     for (const t of tufts) {
+      idx++;
+      if (Math.abs(t.x) < pathHalf(t.z) + 6) continue; // pas d'herbe sur le platelage
       const p = project(t.x, 0, t.z);
       if (p.s <= 0) continue;
-      const h = 16 * p.s;
-      const sway = Math.sin(state.swayPhase + t.x * 0.05) * 2 + lean;
-      ctx.lineWidth = Math.max(0.8, 1.4 * p.s);
-      ctx.beginPath();
-      ctx.moveTo(p.sx, p.sy);
-      ctx.quadraticCurveTo(p.sx + sway * p.s, p.sy - h * 0.6, p.sx + sway * 1.7 * p.s, p.sy - h);
-      ctx.stroke();
+      const sway = lean + Math.sin(state.swayPhase + t.x * 0.05) * 0.05;
+      if (grassImg.complete && grassImg.naturalWidth) {
+        const src = GRASS_TUFTS[idx % GRASS_TUFTS.length];
+        const hScreen = clamp(82 * p.s, 10, 160);
+        const sc = hScreen / src.sh;
+        const lx = (src.bx - src.sx) * sc;   // pied dans le repère destination
+        const ly = (src.by - src.sy) * sc;
+        ctx.save();
+        ctx.translate(p.sx, p.sy);
+        ctx.rotate(sway);
+        ctx.drawImage(grassImg, src.sx, src.sy, src.sw, src.sh,
+          -lx, -ly, src.sw * sc, src.sh * sc);
+        ctx.restore();
+      } else {
+        const h = 16 * p.s;
+        ctx.strokeStyle = "rgba(8,60,30,0.8)";
+        ctx.lineWidth = Math.max(0.8, 1.4 * p.s);
+        ctx.beginPath();
+        ctx.moveTo(p.sx, p.sy);
+        ctx.quadraticCurveTo(p.sx + sway * 18 * p.s, p.sy - h * 0.6, p.sx + sway * 30 * p.s, p.sy - h);
+        ctx.stroke();
+      }
     }
   }
 
@@ -582,16 +672,27 @@ export function initGamePoubelle(root) {
   }
 
   function drawFlyers(dt) {
-    for (const l of flyers) {
+    for (let i = 0; i < flyers.length; i++) {
+      const l = flyers[i];
       l.x += state.wind * dt * 0.6; l.r += dt * 2 * (state.wind >= 0 ? 1 : -1);
       if (l.x > 340) l.x = -340; if (l.x < -340) l.x = 340;
       const p = project(l.x, l.y, l.z);
       if (p.s <= 0 || p.sy < 0) continue;
-      const size = 6 * p.s;
-      ctx.save(); ctx.translate(p.sx, p.sy); ctx.rotate(l.r);
-      ctx.fillStyle = "rgba(0,152,58,0.85)";
-      ctx.beginPath(); ctx.ellipse(0, 0, size, size * 0.45, 0, 0, 6.28); ctx.fill();
-      ctx.restore();
+      const leafImg = ASSETS.leaves;
+      if (leafImg.complete && leafImg.naturalWidth) {
+        const src = LEAVES[i % LEAVES.length];
+        const w = clamp(30 * p.s, 7, 44);
+        const h = w * (src.sh / src.sw);
+        ctx.save(); ctx.translate(p.sx, p.sy); ctx.rotate(l.r); ctx.globalAlpha = 0.95;
+        ctx.drawImage(leafImg, src.sx, src.sy, src.sw, src.sh, -w / 2, -h / 2, w, h);
+        ctx.restore();
+      } else {
+        const size = 6 * p.s;
+        ctx.save(); ctx.translate(p.sx, p.sy); ctx.rotate(l.r);
+        ctx.fillStyle = "rgba(0,152,58,0.85)";
+        ctx.beginPath(); ctx.ellipse(0, 0, size, size * 0.45, 0, 0, 6.28); ctx.fill();
+        ctx.restore();
+      }
     }
   }
 
@@ -600,6 +701,32 @@ export function initGamePoubelle(root) {
     ctx.fillStyle = "rgba(255,255,255,0.8)";
     ctx.font = "12px system-ui, sans-serif";
     ctx.fillText("Clavier : ←/→ viser · ↑/↓ puissance · Entrée pour lancer", 14, H - 12);
+  }
+
+  /** Chiffre du compte à rebours (5→1) : surgit en grand au centre, fondu sortant. */
+  function drawCountdown(now) {
+    const f = state.flash;
+    if (!f) return;
+    const DUR = 750;                         // durée d'apparition (ms)
+    const t = (now - f.t0) / DUR;
+    if (t >= 1) { state.flash = null; return; }
+    const alpha = Math.max(0, 1 - t * t);    // fondu sortant rapide
+    const scale = 0.7 + t * 0.8;             // léger zoom en sortie
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(W / 2, H / 2);
+    ctx.scale(scale, scale);
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = "900 170px 'Arial Black', system-ui, sans-serif";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(26,20,48,0.85)";
+    ctx.lineWidth = 14;
+    ctx.strokeText(String(f.n), 0, 0);
+    ctx.fillStyle = C.aim;
+    ctx.fillText(String(f.n), 0, 0);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
   }
 
   function roundRect(x, y, w, h, r) {
@@ -621,6 +748,13 @@ export function initGamePoubelle(root) {
 
     if (state.session === "playing") {
       state.timeLeft -= dt;
+      // Compte à rebours furtif : à chaque seconde entière de 5 à 1, le chiffre
+      // surgit en grand au centre puis disparaît en fondu (cf. drawCountdown).
+      const sec = Math.ceil(state.timeLeft);
+      if (sec !== state.lastSec) {
+        if (sec >= 1 && sec <= 5) state.flash = { n: sec, t0: now };
+        state.lastSec = sec;
+      }
       if (state.timeLeft <= 0) { state.timeLeft = 0; endSession(); }
       updateTimer();
     }
@@ -642,6 +776,7 @@ export function initGamePoubelle(root) {
     drawFoliageFrame();
     drawForegroundBall();
     drawKbHint();
+    drawCountdown(now);
 
     requestAnimationFrame(frame);
   }

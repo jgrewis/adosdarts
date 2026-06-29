@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="600" height="360">
+  <defs>
+    <linearGradient id="gFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bccb8a"></stop>
+      <stop offset="48%" stop-color="#8e9e5b"></stop>
+      <stop offset="100%" stop-color="#5c6b3a"></stop>
+    </linearGradient>
+    <linearGradient id="gBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#809154"></stop>
+      <stop offset="100%" stop-color="#434f2c"></stop>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5"></feGaussianBlur>
+    </filter>
+    
+  </defs>
+
+  <g fill="#264b18" opacity="0.22" filter="url(#soft)">
+    <ellipse cx="150" cy="333" rx="74" ry="12"></ellipse>
+    <ellipse cx="330" cy="335" rx="52" ry="9"></ellipse>
+    <ellipse cx="462" cy="333" rx="66" ry="11"></ellipse>
+  </g>
+
+  <g class="tuft t1">
+    <path d="M120.47,320 Q89.75,241.18 68.61,176.69 Q96.83,241.18 130.59,320 Z" fill="url(#gBack)"></path>
+    <path d="M128.79,320 Q119.49,230.81 101.33,157.83 Q127.85,230.81 140.72,320 Z" fill="url(#gBack)"></path>
+    <path d="M140.18,320 Q132.06,214.64 135.58,128.44 Q139.04,214.64 150.15,320 Z" fill="url(#gBack)"></path>
+    <path d="M153.76,320 Q163.25,216.03 182.34,130.96 Q171.45,216.03 165.49,320 Z" fill="url(#gBack)"></path>
+    <path d="M161.98,320 Q186.33,249.92 213.69,192.57 Q193.38,249.92 172.05,320 Z" fill="url(#gBack)"></path>
+    <path d="M122.5,320 Q104.19,250.75 81.47,194.1 Q112.75,250.75 134.72,320 Z" fill="url(#gFront)"></path>
+    <path d="M125.66,320 Q112.75,242.78 87.28,179.59 Q120.73,242.78 137.06,320 Z" fill="url(#gFront)"></path>
+    <path d="M137.65,320 Q124.6,233.19 110.22,162.17 Q131.57,233.19 147.61,320 Z" fill="url(#gFront)"></path>
+    <path d="M137.77,320 Q121.21,216.22 122.84,131.3 Q128.49,216.22 148.17,320 Z" fill="url(#gFront)"></path>
+    <path d="M144.59,320 Q139.61,234.1 155.6,163.82 Q146.81,234.1 154.88,320 Z" fill="url(#gFront)"></path>
+    <path d="M146.98,320 Q160.49,227.02 162.26,150.95 Q169.89,227.02 160.41,320 Z" fill="url(#gFront)"></path>
+    <path d="M157.32,320 Q167.3,240.74 191.99,175.9 Q175.38,240.74 168.86,320 Z" fill="url(#gFront)"></path>
+    <path d="M155.2,320 Q167.57,242.49 199.9,179.07 Q175.67,242.49 166.76,320 Z" fill="url(#gFront)"></path>
+    <path d="M168.33,320 Q192.35,249.43 229.67,191.68 Q200.03,249.43 179.3,320 Z" fill="url(#gFront)"></path>
+    <path d="M170.51,320 Q195.36,237.42 235.14,169.86 Q204.44,237.42 183.48,320 Z" fill="url(#gFront)"></path>
+  </g>
+
+  <g class="tuft t2">
+    <path d="M309.8,322 Q299.02,262.88 277.2,214.5 Q305.03,262.88 318.37,322 Z" fill="url(#gBack)"></path>
+    <path d="M320.54,322 Q307.46,265.49 310.68,219.26 Q312.73,265.49 328.08,322 Z" fill="url(#gBack)"></path>
+    <path d="M329.71,322 Q339.06,258.03 343.79,205.7 Q345.5,258.03 338.92,322 Z" fill="url(#gBack)"></path>
+    <path d="M341.7,322 Q365.65,265.59 376.67,219.44 Q371.76,265.59 350.44,322 Z" fill="url(#gBack)"></path>
+    <path d="M309.94,322 Q296.17,258.11 274.85,205.84 Q301.82,258.11 318.01,322 Z" fill="url(#gFront)"></path>
+    <path d="M314.44,322 Q307.2,271.79 298.39,230.72 Q312.82,271.79 322.46,322 Z" fill="url(#gFront)"></path>
+    <path d="M321.59,322 Q319.96,255.45 321.53,200.99 Q324.93,255.45 328.69,322 Z" fill="url(#gFront)"></path>
+    <path d="M325.63,322 Q330.97,265.24 328.57,218.8 Q337.97,265.24 335.62,322 Z" fill="url(#gFront)"></path>
+    <path d="M333.18,322 Q335.51,265.49 353.99,219.26 Q340.76,265.49 340.68,322 Z" fill="url(#gFront)"></path>
+    <path d="M335.55,322 Q342.03,249.06 369.76,189.38 Q347.16,249.06 342.88,322 Z" fill="url(#gFront)"></path>
+    <path d="M344.46,322 Q356.97,266.53 390.88,221.15 Q362.79,266.53 352.78,322 Z" fill="url(#gFront)"></path>
+  </g>
+
+  <g class="tuft t3">
+    <path d="M433.17,320 Q404.5,247.41 384.28,188.01 Q410.51,247.41 441.75,320 Z" fill="url(#gBack)"></path>
+    <path d="M443.83,320 Q430.42,258.43 428.17,208.05 Q438.44,258.43 455.28,320 Z" fill="url(#gBack)"></path>
+    <path d="M455.64,320 Q463.2,229.52 456.67,155.5 Q471.18,229.52 467.04,320 Z" fill="url(#gBack)"></path>
+    <path d="M464.73,320 Q487.67,239.73 502.64,174.05 Q495.49,239.73 475.92,320 Z" fill="url(#gBack)"></path>
+    <path d="M475.74,320 Q491.47,259.42 526.05,209.85 Q498.09,259.42 485.19,320 Z" fill="url(#gBack)"></path>
+    <path d="M437.18,320 Q424.3,243.59 399.88,181.08 Q432.4,243.59 448.75,320 Z" fill="url(#gFront)"></path>
+    <path d="M442.5,320 Q436.36,256.92 415.22,205.3 Q444.05,256.92 453.5,320 Z" fill="url(#gFront)"></path>
+    <path d="M446.01,320 Q451.79,246.71 434.79,186.75 Q458.69,246.71 455.87,320 Z" fill="url(#gFront)"></path>
+    <path d="M450.5,320 Q434.6,236.41 440.56,168.02 Q440.7,236.41 459.22,320 Z" fill="url(#gFront)"></path>
+    <path d="M460.22,320 Q458.14,244.45 472.77,182.64 Q465.23,244.45 470.35,320 Z" fill="url(#gFront)"></path>
+    <path d="M459.74,320 Q480.73,231.64 485.79,159.35 Q488.98,231.64 471.53,320 Z" fill="url(#gFront)"></path>
+    <path d="M465.67,320 Q472.45,243.81 501.69,181.47 Q480.47,243.81 477.13,320 Z" fill="url(#gFront)"></path>
+    <path d="M471.12,320 Q496.03,265.07 524.3,220.13 Q502.73,265.07 480.69,320 Z" fill="url(#gFront)"></path>
+  </g>
+</svg>
