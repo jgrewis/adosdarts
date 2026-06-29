@@ -1,5 +1,6 @@
 /* Bootstrap de la page d'accueil. Externalisé pour permettre une CSP
    sans 'unsafe-inline' sur script-src. */
+import { renderLayout } from "./layout.js";
 import { initNav } from "./nav.js";
 import { initCookieBanner } from "./cookie.js";
 import { initLoader } from "./loader.js";
@@ -8,6 +9,7 @@ import { initProgramme } from "./programme.js";
 import { renderPartenaires } from "./partenaires.js";
 import { initGamePoubelle } from "./game-poubelle.js";
 
+renderLayout();
 initNav();
 initCookieBanner();
 initLoader();
