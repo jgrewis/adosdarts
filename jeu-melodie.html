@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP en <meta> : X-Content-Type-Options et frame-ancestors n'ont d'effet
+       qu'en en-têtes HTTP réels — à poser côté serveur/CDN en production. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>Compose ta mélodie — le jeu musical | À Dos d'Arts</title>
+  <meta name="description" content="Jeu musical gratuit du festival À Dos d'Arts : piano, guitare et trompette jouables en ligne. Compose, enregistre et partage ta mélodie." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/jeu-melodie.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Compose ta mélodie — le jeu musical" />
+  <meta property="og:description" content="Piano, guitare et trompette jouables en ligne : compose, enregistre et partage ta mélodie du festival À Dos d'Arts." />
+  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/jeu-melodie.html" />
+  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
+
+  <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
+  <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+  <link rel="stylesheet" href="assets/css/jeu-melodie.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <div data-site-header></div>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">Le jeu</p>
+        <h1>Compose ta mélodie</h1>
+        <p class="page-head__lead">Joue du piano, de la guitare ou de la trompette directement dans ton navigateur, enregistre ta performance et partage-la.</p>
+      </div>
+    </section>
+
+    <section class="melodie" data-melodie>
+      <div class="melodie__scene">
+        <div class="melodie__intro" data-melodie-intro>
+          <p class="melodie__intro-text">Choisis un instrument, joue en direct et enregistre ta mélodie.</p>
+          <button class="btn btn--primary" type="button" data-melodie-start>Commencer</button>
+          <button class="btn btn--on-dark" type="button" data-melodie-resume hidden>Reprendre ma dernière création</button>
+          <p class="melodie__ios-hint" data-melodie-ios-hint hidden>iPhone/iPad : pensez à désactiver le mode silencieux pour entendre le son.</p>
+          <div class="melodie__shared" data-melodie-shared hidden>
+            <p>Quelqu'un vous a partagé une mélodie.</p>
+            <button class="btn btn--primary" type="button" data-melodie-shared-play>▶ Écouter</button>
+          </div>
+          <p class="melodie__shared-error" data-melodie-shared-error hidden>Lien illisible : cette mélodie n'a pas pu être chargée.</p>
+        </div>
+        <p class="melodie__loading" data-melodie-loading role="status" aria-live="polite" hidden></p>
+        <div class="melodie__instrument" data-melodie-instrument hidden>
+          <div class="melodie-instruments" data-melodie-instruments role="group" aria-label="Choisir un instrument">
+            <button class="melodie-instrument-btn" type="button" data-instrument="piano" aria-pressed="true">Piano</button>
+            <button class="melodie-instrument-btn" type="button" data-instrument="guitare" aria-pressed="false">Guitare</button>
+            <button class="melodie-instrument-btn" type="button" data-instrument="trompette" aria-pressed="false">Trompette</button>
+          </div>
+          <label class="melodie-toggle">
+            <input type="checkbox" data-melodie-letters checked />
+            Afficher les lettres du clavier
+          </label>
+          <fieldset class="melodie-mode" data-melodie-mode>
+            <legend class="visually-hidden">Mode de jeu</legend>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="notes" checked /> Notes
+            </label>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="chords" /> Accords
+            </label>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="both" /> Les deux
+            </label>
+          </fieldset>
+          <div class="melodie-chords" data-melodie-chords></div>
+          <div class="melodie-play" data-melodie-play></div>
+          <div class="melodie-transport-wrap" data-melodie-transport></div>
+
+          <div class="melodie-share" data-melodie-share>
+            <button type="button" class="btn btn--on-dark btn--sm" data-share-copy disabled>Copier le lien</button>
+            <button type="button" class="btn btn--on-dark btn--sm" data-share-export disabled>Exporter</button>
+            <label class="btn btn--on-dark btn--sm melodie-share__import">
+              Importer
+              <input type="file" accept="application/json,.json" data-share-import class="visually-hidden" />
+            </label>
+            <p class="melodie-share__status" data-share-status role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="melodie-demos" data-melodie-demos hidden>
+            <p class="melodie-demos__label">Exemples :</p>
+            <div class="melodie-demos__list" data-melodie-demos-list></div>
+          </div>
+
+          <p class="melodie__credits">Sons : samples libres (tonejs-instruments, licences CC).</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+
+  <aside class="cookie-banner" data-cookie-banner hidden aria-label="Gestion des cookies">
+    <p>Ce site n'utilise aucun traceur publicitaire. Une mesure d'audience respectueuse de la vie privée peut être activée avec votre accord.</p>
+    <div class="cookie-banner__actions">
+      <button class="btn btn--primary btn--sm" type="button" data-cookie-accept>Accepter</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-cookie-refuse>Refuser</button>
+    </div>
+  </aside>
+
+  <script src="assets/vendor/tone.min.js"></script>
+  <script src="assets/vendor/lz-string.min.js"></script>
+  <script type="module" src="assets/js/boot-jeu-melodie.js"></script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+/* ==========================================================================
+   Styles de la page « Compose ta mélodie ». Uniquement des var(--...) issus
+   de assets/css/tokens.css (aucune couleur/police/espacement en dur, R4).
+   ========================================================================== */
+
+.melodie {
+  padding: 0 var(--content-pad) var(--space-16);
+}
+
+.melodie__scene {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--melodie-bg);
+  color: var(--melodie-text);
+  text-align: center;
+  box-shadow: var(--shadow-block-night);
+}
+
+.melodie__intro-text {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-6);
+}
+
+.melodie__loading {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie__instrument {
+  margin-top: var(--space-8);
+}
+
+.melodie-instruments {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.melodie-instrument-btn {
+  font-family: var(--font-body);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--melodie-text);
+  cursor: pointer;
+}
+.melodie-instrument-btn[aria-pressed="true"] {
+  background: var(--melodie-text);
+  color: var(--brand-ink);
+}
+
+.melodie-toggle {
+  display: block;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+.melodie-piano.hide-letters .melodie-key__letter {
+  display: none;
+}
+
+.melodie-mode {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  border: none;
+}
+
+.melodie-mode__option {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  cursor: pointer;
+}
+
+/* [hidden] doit rester prioritaire sur le display:flex ci-dessous, sinon
+   le mode « Notes » n'arrive jamais à masquer les pads d'accords. */
+.melodie-chords[hidden] {
+  display: none;
+}
+.melodie-chords {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  touch-action: none;
+}
+
+.melodie-chord {
+  min-width: 96px;
+  min-height: 64px;
+  padding: var(--space-3) var(--space-6);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-md);
+  background: var(--melodie-surface);
+  color: var(--melodie-text);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  user-select: none;
+}
+
+.melodie-chord.is-active {
+  background: var(--melodie-glow-guitare);
+  color: var(--brand-ink);
+  transition: none;
+}
+.melodie-chord:not(.is-active) {
+  transition: background-color var(--duration-slow) var(--ease-out), color var(--duration-slow) var(--ease-out);
+}
+
+.melodie-play {
+  touch-action: none;
+}
+
+/* Trompette : rangée de pistons ronds, lueur corail à l'appui. */
+.trompette-keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+  touch-action: none;
+}
+
+.melodie-piston {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--melodie-text);
+  background: var(--melodie-surface);
+  cursor: pointer;
+  user-select: none;
+}
+
+.melodie-piston.is-active {
+  background: var(--melodie-glow-trompette);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--melodie-glow-trompette) 45%, transparent);
+  transition: none;
+}
+.melodie-piston:not(.is-active) {
+  transition: background-color var(--duration-slow) var(--ease-out), box-shadow var(--duration-slow) var(--ease-out);
+}
+
+/* Guitare — V1 : boutons-notes sur les 6 cordes à vide (cordes grattables
+   prévues en V1.1, cf. README). */
+.guitare-keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  touch-action: none;
+}
+
+.melodie-string {
+  min-width: 64px;
+  min-height: 64px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--melodie-text);
+  background: var(--melodie-surface);
+  color: var(--melodie-text);
+  font-family: var(--font-body);
+  cursor: pointer;
+  user-select: none;
+}
+
+.melodie-string.is-active {
+  background: var(--melodie-glow-guitare);
+  color: var(--brand-ink);
+  transition: none;
+}
+.melodie-string:not(.is-active) {
+  transition: background-color var(--duration-slow) var(--ease-out), color var(--duration-slow) var(--ease-out);
+}
+
+.melodie-transport-wrap {
+  margin-top: var(--space-8);
+  border-top: 1px solid color-mix(in srgb, var(--melodie-text) 25%, transparent);
+  padding-top: var(--space-6);
+}
+
+.melodie-transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie-transport__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--melodie-text);
+  cursor: pointer;
+}
+.melodie-transport__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.melodie-transport__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--melodie-rec);
+  display: inline-block;
+}
+.melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
+  animation: melodie-rec-pulse 1s infinite;
+}
+@keyframes melodie-rec-pulse {
+  50% { opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
+    animation: none;
+  }
+}
+
+.melodie-transport__timer {
+  font-variant-numeric: tabular-nums;
+  min-width: 3.5em;
+}
+
+.melodie-transport__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.melodie__shared {
+  margin-top: var(--space-4);
+}
+
+.melodie__shared-error {
+  margin-top: var(--space-4);
+  color: var(--melodie-text);
+}
+
+.melodie-share {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.melodie-share__import {
+  cursor: pointer;
+}
+
+.melodie-share__status {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie-demos {
+  margin-top: var(--space-6);
+  text-align: center;
+}
+
+.melodie-demos__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.melodie-demos__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.piano-octaves {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* Zone de jeu : touch-action à none obligatoire (R6/§3.9), sinon le doigt
+   fait défiler la page pendant qu'on joue au lieu de jouer une note. */
+.piano-keys {
+  position: relative;
+  height: 200px;
+  max-width: 720px;
+  margin: 0 auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.melodie-key {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: var(--space-2);
+  border: var(--border-width) solid var(--brand-ink);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.melodie-key--white {
+  height: 100%;
+  background: var(--melodie-key-white);
+  color: var(--brand-ink);
+  z-index: var(--z-base);
+}
+
+.melodie-key--black {
+  height: 62%;
+  background: var(--melodie-key-black);
+  color: var(--melodie-text);
+  z-index: var(--z-decor);
+  transform: translateX(-50%);
+}
+
+.melodie-key__letter {
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Allumage instantané (jamais d'animation à l'attaque), extinction en fondu
+   uniquement à la désactivation — cf. CDC §4.2. */
+.melodie-key.is-active {
+  background: var(--melodie-glow-piano);
+  color: var(--melodie-text);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--melodie-glow-piano) 45%, transparent);
+  transition: none;
+}
+.melodie-key--white:not(.is-active),
+.melodie-key--black:not(.is-active) {
+  transition: background-color var(--duration-slow) var(--ease-out), box-shadow var(--duration-slow) var(--ease-out);
+  box-shadow: none;
+}
+
+/* Le focus par défaut du site (outline bleu nuit, --color-focus) est
+   illisible sur le panneau nocturne du jeu : outline clair ici (R6/CDC §9). */
+.melodie__scene :focus-visible {
+  outline-color: var(--melodie-text);
+}
+
+.melodie__ios-hint {
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie__credits {
+  margin-top: var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  opacity: 0.8;
+}
+
+/* Sous prefers-reduced-motion : changement d'état sec, sans halo animé ni
+   transition de lueur (CDC §3.9/§4.2). */
+@media (prefers-reduced-motion: reduce) {
+  .melodie-key--white:not(.is-active),
+  .melodie-key--black:not(.is-active),
+  .melodie-chord:not(.is-active),
+  .melodie-piston:not(.is-active),
+  .melodie-string:not(.is-active) {
+    transition: none;
+  }
+  .melodie-key.is-active,
+  .melodie-piston.is-active {
+    box-shadow: none;
+  }
+}

@@ -164,10 +164,23 @@
   display: grid;
   place-items: center;
 }
-.hero__toucan {
+/* Le toucan ouvre le jeu « Compose ta mélodie » : lien accessible, léger
+   effet au survol/focus pour signaler qu'il est cliquable. */
+.hero__toucan-link {
   position: relative;
   z-index: var(--z-decor);     /* toujours AU-DESSUS des feuilles */
+  display: block;
   width: min(100%, 420px);
+  border-radius: var(--radius-lg);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.hero__toucan-link:hover,
+.hero__toucan-link:focus-visible {
+  transform: scale(1.03) rotate(-1deg);
+}
+.hero__toucan {
+  display: block;
+  width: 100%;
   filter: drop-shadow(8px 10px 0 rgba(26, 20, 48, 0.3));
 }
 /* Feuilles de part et d'autre, plus grandes, DERRIÈRE le toucan. */
@@ -183,7 +196,7 @@
 @media (max-width: 768px) {
   .hero__inner { grid-template-columns: 1fr; text-align: left; }
   .hero__visual { order: -1; max-width: 320px; }
-  .hero__toucan { width: 100%; }
+  .hero__toucan-link { width: 100%; }
   .hero__leaf--1 { left: -14%; }
   .hero__leaf--2 { right: -12%; }
   .hero__date { white-space: normal; }

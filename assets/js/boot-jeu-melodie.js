@@ -1,0 +1,386 @@
+/* Bootstrap de la page du jeu « Compose ta mélodie ». Externalisé pour
+   permettre une CSP sans 'unsafe-inline' sur script-src.
+   Tone est une globale fournie par assets/vendor/tone.min.js. */
+/* global Tone */
+import { renderLayout } from "./layout.js";
+import { initNav } from "./nav.js";
+import { initCookieBanner } from "./cookie.js";
+import { unlockAudio } from "./melodie/engine.js";
+import { loadAll, isFallback, noteOn, noteOff } from "./melodie/instruments.js";
+import { getState, setState } from "./melodie/store.js";
+import { renderPiano } from "./melodie/ui-piano.js";
+import { renderGuitare } from "./melodie/ui-guitare.js";
+import { renderTrompette } from "./melodie/ui-trompette.js";
+import { renderChords } from "./melodie/ui-chords.js";
+import { CHORDS, chordOn, chordOff } from "./melodie/chords.js";
+import { attachPointerNotes } from "./melodie/pointer-notes.js";
+import { attachKeyboard } from "./melodie/keyboard.js";
+import { createRecorder } from "./melodie/recorder.js";
+import { play as playRecording, stop as stopPlayback } from "./melodie/player.js";
+import { saveLast, loadLast } from "./melodie/storage.js";
+import { renderTransport } from "./melodie/ui-transport.js";
+import { encodeToUrl, decodeFromUrl, downloadRecording, importFromFile } from "./melodie/serialize.js";
+import { loadDemos } from "./melodie/demos.js";
+
+renderLayout();
+initNav();
+initCookieBanner();
+
+const root = document.querySelector("[data-melodie]");
+const startBtn = root?.querySelector("[data-melodie-start]");
+const resumeBtn = root?.querySelector("[data-melodie-resume]");
+const intro = root?.querySelector("[data-melodie-intro]");
+const loading = root?.querySelector("[data-melodie-loading]");
+const instrumentPanel = root?.querySelector("[data-melodie-instrument]");
+const playRoot = root?.querySelector("[data-melodie-play]");
+const chordsRoot = root?.querySelector("[data-melodie-chords]");
+const transportRoot = root?.querySelector("[data-melodie-transport]");
+const instrumentBtns = root?.querySelectorAll("[data-instrument]");
+const lettersToggle = root?.querySelector("[data-melodie-letters]");
+const modeInputs = root?.querySelectorAll('[name="melodie-mode"]');
+const sharedBanner = root?.querySelector("[data-melodie-shared]");
+const sharedPlayBtn = root?.querySelector("[data-melodie-shared-play]");
+const sharedError = root?.querySelector("[data-melodie-shared-error]");
+const shareCopyBtn = root?.querySelector("[data-share-copy]");
+const shareExportBtn = root?.querySelector("[data-share-export]");
+const shareImportInput = root?.querySelector("[data-share-import]");
+const shareStatus = root?.querySelector("[data-share-status]");
+const demosWrap = root?.querySelector("[data-melodie-demos]");
+const demosList = root?.querySelector("[data-melodie-demos-list]");
+
+const RENDERERS = { piano: renderPiano, guitare: renderGuitare, trompette: renderTrompette };
+
+if (resumeBtn && loadLast()) resumeBtn.hidden = false;
+
+/* iOS coupe le son si le commutateur silencieux physique est activé, sans
+   moyen fiable de le détecter : on affiche juste une astuce pour cette
+   plateforme (CDC §3.9, §9 étape 9). */
+const iosHint = root?.querySelector("[data-melodie-ios-hint]");
+if (iosHint && /iPad|iPhone|iPod/.test(navigator.userAgent)) iosHint.hidden = false;
+
+/* Mélodie partagée par lien : décodée tout de suite (avant même « Commencer »),
+   mais la lecture ne démarre qu'au clic (l'audio n'est pas encore débloqué). */
+let sharedRecording = null;
+if (location.hash.startsWith("#m=")) {
+  sharedRecording = decodeFromUrl(location.hash);
+  if (sharedRecording && sharedBanner) sharedBanner.hidden = false;
+  else if (sharedError) sharedError.hidden = false;
+}
+
+/* Allume/éteint visuellement une touche ou un pad sans jamais re-rendre le
+   clavier (interdit pendant le jeu, cf. CDC §5.4) : uniquement classList. */
+function lightKey(container, note, on) {
+  container?.querySelectorAll(`[data-note="${note}"]`).forEach((key) => {
+    key.classList.toggle("is-active", on);
+  });
+}
+
+const recorder = createRecorder(() => Tone.now(), {
+  onLimit: (recording) => {
+    finishRecording(recording);
+    if (transportRefs) transportRefs.status.textContent = "Limite atteinte (5 000 notes ou 5 minutes) : enregistrement arrêté automatiquement.";
+  },
+});
+
+function playNoteOn(notes) {
+  const instrument = getState().instrument;
+  noteOn(notes, instrument);
+  notes.forEach((n) => lightKey(playRoot, n, true));
+  recorder.noteOn(notes, instrument);
+}
+function playNoteOff(notes) {
+  const instrument = getState().instrument;
+  noteOff(notes, instrument);
+  notes.forEach((n) => lightKey(playRoot, n, false));
+  recorder.noteOff(notes, instrument);
+}
+function playChordOn(chordId) {
+  const instrument = getState().instrument;
+  chordOn(chordId, instrument);
+  lightKey(chordsRoot, chordId, true);
+  const notes = CHORDS[chordId]?.[instrument];
+  if (notes) recorder.noteOn(notes, instrument);
+}
+function playChordOff(chordId) {
+  const instrument = getState().instrument;
+  chordOff(chordId, instrument);
+  lightKey(chordsRoot, chordId, false);
+  const notes = CHORDS[chordId]?.[instrument];
+  if (notes) recorder.noteOff(notes, instrument);
+}
+
+let pointerHandle = null;
+let chordsPointerHandle = null;
+let keyboardHandle = null;
+
+function releaseEverything() {
+  pointerHandle?.releaseAll();
+  chordsPointerHandle?.releaseAll();
+  keyboardHandle?.releaseAll();
+}
+
+function applyMode(mode) {
+  if (playRoot) playRoot.hidden = mode === "chords";
+  if (chordsRoot) chordsRoot.hidden = mode === "notes";
+}
+
+/* Bascule l'interface de jeu selon l'instrument actif : clavier (piano),
+   boutons-notes (guitare) ou pistons (trompette). Les pads d'accords
+   restent disponibles quel que soit l'instrument (gérés à part). */
+function renderInstrumentUI(instrument) {
+  if (!playRoot) return;
+  pointerHandle?.releaseAll();
+  const render = RENDERERS[instrument] || renderPiano;
+  const zone = render(playRoot);
+  pointerHandle = attachPointerNotes(zone, { onNoteOn: playNoteOn, onNoteOff: playNoteOff });
+}
+
+/* ------------------------------------------------------- Transport ---- */
+let transportRefs = null;
+let lastRecording = null;
+let recordTimerInterval = null;
+let recordStartWall = null;
+let metronomeSynth = null;
+let metronomeTimer = null;
+
+function formatTime(seconds) {
+  const s = Math.max(0, Math.round(seconds));
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
+}
+
+function updateRecordTimer() {
+  if (!transportRefs || recordStartWall === null) return;
+  transportRefs.timer.textContent = formatTime((performance.now() - recordStartWall) / 1000);
+}
+
+function startMetronome(bpm) {
+  stopMetronome();
+  if (!metronomeSynth) metronomeSynth = new Tone.Synth({ volume: -12 }).toDestination();
+  metronomeSynth.triggerAttackRelease("C6", "32n");
+  metronomeTimer = setInterval(() => metronomeSynth.triggerAttackRelease("C6", "32n"), 60000 / bpm);
+}
+function stopMetronome() {
+  if (metronomeTimer) clearInterval(metronomeTimer);
+  metronomeTimer = null;
+}
+
+/* Point d'entrée unique pour changer la performance active : garde le
+   transport et les boutons de partage synchronisés avec sa présence. */
+function setLastRecording(recording) {
+  lastRecording = recording;
+  if (transportRefs) transportRefs.playBtn.disabled = !recording;
+  if (shareCopyBtn) shareCopyBtn.disabled = !recording;
+  if (shareExportBtn) shareExportBtn.disabled = !recording;
+}
+
+function finishRecording(recording) {
+  if (!transportRefs) return;
+  const { recordBtn, stopBtn, status } = transportRefs;
+  clearInterval(recordTimerInterval);
+  recordTimerInterval = null;
+  recordStartWall = null;
+  recordBtn.setAttribute("aria-pressed", "false");
+  recordBtn.disabled = false;
+  stopBtn.disabled = true;
+  if (recording && recording.events.length) {
+    setLastRecording(recording);
+    saveLast(recording);
+    status.textContent = "Enregistrement terminé, prêt à réécouter.";
+  } else {
+    status.textContent = "Enregistrement arrêté (aucune note jouée).";
+  }
+}
+
+function triggerPlay() {
+  if (!lastRecording || !transportRefs) return;
+  const { playBtn, status } = transportRefs;
+  playBtn.disabled = true;   // jamais deux lectures superposées
+  status.textContent = "Lecture en cours";
+  playRecording(lastRecording, {
+    onEventStart: (ev) => ev.notes.forEach((n) => lightKey(playRoot, n, true)),
+    onEventEnd: (ev) => ev.notes.forEach((n) => lightKey(playRoot, n, false)),
+    onDone: () => {
+      playBtn.disabled = false;
+      status.textContent = "Lecture terminée.";
+    },
+  });
+}
+
+function setupTransport() {
+  if (!transportRoot || transportRefs) return;
+  transportRefs = renderTransport(transportRoot);
+  const { recordBtn, stopBtn, playBtn, timer, status, metronomeToggle, tempoInput, tempoValue, volumeInput } = transportRefs;
+
+  recordBtn.addEventListener("click", () => {
+    releaseEverything();
+    stopPlayback();
+    recorder.start();
+    recordStartWall = performance.now();
+    timer.textContent = "00:00";
+    recordTimerInterval = setInterval(updateRecordTimer, 200);
+    recordBtn.setAttribute("aria-pressed", "true");
+    recordBtn.disabled = true;
+    stopBtn.disabled = false;
+    playBtn.disabled = true;
+    status.textContent = "Enregistrement en cours";
+  });
+
+  stopBtn.addEventListener("click", () => finishRecording(recorder.stop()));
+  playBtn.addEventListener("click", triggerPlay);
+
+  metronomeToggle.addEventListener("change", () => {
+    if (metronomeToggle.checked) startMetronome(Number(tempoInput.value));
+    else stopMetronome();
+  });
+  tempoInput.addEventListener("input", () => {
+    tempoValue.textContent = `${tempoInput.value} BPM`;
+    if (metronomeToggle.checked) startMetronome(Number(tempoInput.value));
+  });
+  volumeInput.addEventListener("input", () => {
+    Tone.Destination.volume.value = Number(volumeInput.value);
+  });
+}
+
+/* ------------------------------------------------------------ Partage -- */
+function setupShare() {
+  shareCopyBtn?.addEventListener("click", async () => {
+    if (!lastRecording) return;
+    const url = encodeToUrl(lastRecording);
+    if (!url) {
+      if (shareStatus) shareStatus.textContent = "Performance trop longue pour un lien — exportez le fichier.";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      if (shareStatus) shareStatus.textContent = "Lien copié !";
+    } catch {
+      if (shareStatus) shareStatus.textContent = url;
+    }
+  });
+
+  shareExportBtn?.addEventListener("click", () => {
+    if (lastRecording) downloadRecording(lastRecording);
+  });
+
+  shareImportInput?.addEventListener("change", async () => {
+    const file = shareImportInput.files?.[0];
+    shareImportInput.value = "";
+    if (!file) return;
+    const recording = await importFromFile(file);
+    if (recording) {
+      setLastRecording(recording);
+      if (shareStatus) shareStatus.textContent = "Mélodie importée, prête à réécouter.";
+    } else if (shareStatus) {
+      shareStatus.textContent = "Fichier illisible : ce n'est pas une mélodie valide.";
+    }
+  });
+}
+
+/* -------------------------------------------------------------- Démos -- */
+async function setupDemos() {
+  const demos = await loadDemos();
+  if (!demos.length || !demosList || !demosWrap) return;
+  demosWrap.hidden = false;
+  demos.forEach((demo) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn--on-dark btn--sm";
+    btn.textContent = demo.title;
+    btn.addEventListener("click", () => {
+      setLastRecording(demo);
+      triggerPlay();
+    });
+    demosList.appendChild(btn);
+  });
+}
+
+/* --------------------------------------------------------- Démarrage -- */
+let sessionStarted = false;
+
+async function beginSession() {
+  if (sessionStarted) return;
+  sessionStarted = true;
+
+  await unlockAudio();          // DOIT rester dans ce gestionnaire de clic
+  if (intro) intro.hidden = true;
+  if (loading) loading.hidden = false;
+
+  await loadAll((progress) => {
+    if (loading) loading.textContent = `Chargement des sons… ${Math.round(progress * 100)} %`;
+  });
+
+  const fallbackUsed = ["piano", "guitare", "trompette"].some(isFallback);
+  if (loading) {
+    loading.hidden = !fallbackUsed;
+    if (fallbackUsed) loading.textContent = "Son de remplacement pour certains instruments (réseau indisponible).";
+  }
+
+  if (instrumentPanel) instrumentPanel.hidden = false;
+  renderInstrumentUI(getState().instrument);
+  if (chordsRoot) {
+    const zone = renderChords(chordsRoot);
+    chordsPointerHandle = attachPointerNotes(zone, {
+      onNoteOn: (ids) => ids.forEach(playChordOn),
+      onNoteOff: (ids) => ids.forEach(playChordOff),
+    });
+  }
+  keyboardHandle = attachKeyboard({
+    onNoteOn: playNoteOn,
+    onNoteOff: playNoteOff,
+    onChordOn: playChordOn,
+    onChordOff: playChordOff,
+  });
+  applyMode(getState().mode);
+  setupTransport();
+  setupShare();
+  await setupDemos();
+}
+
+startBtn?.addEventListener("click", beginSession);
+resumeBtn?.addEventListener("click", async () => {
+  await beginSession();
+  const recording = loadLast();
+  if (recording) {
+    setLastRecording(recording);
+    triggerPlay();
+  }
+});
+sharedPlayBtn?.addEventListener("click", async () => {
+  await beginSession();
+  if (sharedRecording) {
+    setLastRecording(sharedRecording);
+    triggerPlay();
+  }
+});
+
+/* « Panic » : un Alt+Tab ou changement d'onglet pendant une note tenue ne
+   doit jamais la laisser sonner à l'infini (CDC §8.3.3). */
+window.addEventListener("blur", releaseEverything);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) releaseEverything();
+});
+
+instrumentBtns?.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (btn.dataset.instrument === getState().instrument) return;
+    releaseEverything();
+    setState({ instrument: btn.dataset.instrument });
+    instrumentBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    renderInstrumentUI(btn.dataset.instrument);
+  });
+});
+
+lettersToggle?.addEventListener("change", () => {
+  playRoot?.classList.toggle("hide-letters", !lettersToggle.checked);
+});
+
+modeInputs?.forEach((input) => {
+  input.addEventListener("change", () => {
+    if (!input.checked) return;
+    releaseEverything();
+    setState({ mode: input.value });
+    applyMode(input.value);
+  });
+});

@@ -12,6 +12,7 @@ const NAV = [
   { key: "index", href: "index.html", label: "Accueil" },
   { key: "programmation", href: "programmation.html", label: "Programmation" },
   { key: "principe", href: "principe.html", label: "Le festival" },
+  { key: "jeu-melodie", href: "jeu-melodie.html", label: "Le jeu" },
   { key: "infos", href: "infos.html", label: "Infos pratiques" },
   { key: "contact", href: "contact.html", label: "Contact" },
 ];
@@ -22,6 +23,7 @@ const CTA = {
   programmation: { label: "Comment venir", href: "infos.html" },
   infos: { label: "Itinéraire", href: "https://maps.app.goo.gl/QZw5W5pmu2b2eQoy6", external: true },
   principe: { label: "La soirée", href: "programmation.html" },
+  "jeu-melodie": { label: "Comment venir", href: "infos.html" },
   contact: { label: "Devenir bénévole", href: "#benevole" },
 };
 

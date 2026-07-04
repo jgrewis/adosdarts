@@ -37,6 +37,8 @@ Adodart/
 ├── infos.html              # Lieu (Maps), horaires, infos pratiques, éco-responsabilité
 ├── contact.html            # Formulaire bénévole + formulaire artistes, réseaux
 ├── principe.html           # « Le principe du festival » (page accessoire, en 3 temps)
+├── jeu-melodie.html        # « Compose ta mélodie » : instrument jouable (piano/guitare/trompette),
+│                           #   accordé au thème du festival, ouvert depuis le menu ou le toucan de l'accueil
 │
 ├── assets/
 │   ├── css/
@@ -45,28 +47,42 @@ Adodart/
 │   │   ├── layout.css      # Header persistant, nav mobile, footer, grilles
 │   │   ├── components.css  # Boutons, cartes, badges, formulaires, compte à rebours, cookies
 │   │   ├── pages.css       # Hero d'affiche, programmation, timeline, memories, partenaires
-│   │   └── loader.css      # Animation de chargement « entrée dans la jungle »
+│   │   ├── loader.css      # Animation de chargement « entrée dans la jungle »
+│   │   └── jeu-melodie.css # Styles de la page jeu (scène nocturne, clavier, transport…)
+│   │
+│   ├── vendor/             # Bibliothèques tierces vendorisées (CSP script-src 'self', pas de CDN)
+│   │   ├── tone.min.js     # Tone.js 14.7.77 (MIT) — moteur audio du jeu
+│   │   ├── lz-string.min.js # lz-string 1.5.0 (MIT) — compression des liens de partage
+│   │   └── LICENCES.md     # Origine et licence de chaque lib/sample vendorisé
+│   │
+│   ├── audio/melodie/      # Samples piano/guitare/trompette (< 3 Mo), licences CC (cf. LICENCES.md)
 │   │
 │   ├── js/                 # Modules ES (type="module"), une responsabilité par fichier
 │   │   ├── boot-index.js / boot-programmation.js / boot-contact.js / boot-simple.js
 │   │   │                   #   Points d'entrée par page (scripts externes → CSP stricte sans inline)
+│   │   ├── boot-jeu-melodie.js  # Point d'entrée de la page jeu (layout + orchestration du jeu)
 │   │   ├── nav.js          # Menu mobile accessible
 │   │   ├── countdown.js    # Compte à rebours jusqu'au 22/08/2026 15h00 (Europe/Paris)
 │   │   ├── loader.js       # Overlay de chargement (SVG toucan/feuilles), 1×/session, reduced-motion
 │   │   ├── programme.js    # Rendu des 4 groupes depuis programmation.json
 │   │   ├── partenaires.js  # Rendu organisateurs (mis en avant) + partenaires depuis edition.json
 │   │   ├── forms.js        # Validation accessible + honeypot (envoi simulé)
-│   │   └── cookie.js       # Bannière de consentement RGPD
+│   │   ├── cookie.js       # Bannière de consentement RGPD
+│   │   └── melodie/        # Modules du jeu (moteur audio, clavier, accords, enregistrement, partage…)
 │   │
 │   ├── data/               # « CMS » de l'ébauche : éditer ici pour mettre à jour le contenu
 │   │   ├── edition.json    # Date, lieu, horaires, infos pratiques, organisateurs, partenaires, réseaux
-│   │   └── programmation.json  # Les 4 groupes (style, scène, description, image, liens)
+│   │   ├── programmation.json  # Les 4 groupes (style, scène, description, image, liens)
+│   │   └── melodie-demos.json  # 3 démos préenregistrées du jeu (format Recording)
 │   │
 │   ├── fonts/              # Polices de marque (Core Circus 2D Double, Maven Pro, Frutiger)
 │   └── img/
 │       ├── toucan.svg, elements/   # Toucan + feuilles (hero, loader)
 │       ├── affiches/      # Anciennes affiches (memories) : 2026, 2022
 │       └── partenaires/   # Logos organisateurs + partenaires
+│
+├── tests/
+│   └── jeu-melodie.html   # Tests navigateur des modules purs du jeu (noindex, hors sitemap)
 │
 ├── .gitignore             # Ignore _client_assets/ et le .zip source (lourds, hors livrable)
 └── README.md
@@ -93,6 +109,13 @@ Adodart/
 - **Partenaires** : **2 organisateurs mis en avant** (Foyers Clubs d'Alsace, CCPAROVIC)
   + partenaires institutionnels.
 - **Réseaux** : Facebook, Instagram, e‑mail (`contact@adosdarts.fr`). **Pas de TikTok.**
+- **Compose ta mélodie** (`jeu-melodie.html`) : instrument jouable en direct (piano,
+  guitare, trompette samplés via Tone.js vendorisée), notes et accords, multi-touch
+  mobile avec glissando, clavier physique AZERTY, enregistrement/relecture fidèle,
+  autosauvegarde locale, partage par lien compressé (lz-string) ou export/import
+  JSON, 3 démos animées. Accessible depuis le menu (« Le jeu ») ou en cliquant sur
+  le toucan de l'accueil. Détail complet : `cahier-des-charges-compose-ta-melodie.md`
+  et `plan-compose-ta-melodie.md`.
 - **Accessibilité** WCAG 2.1 AA : HTML sémantique, skip-link, focus visibles, contrastes
   ≥ 4.5:1, cibles tactiles ≥ 44px, respect de `prefers-reduced-motion`.
 - **SEO** : `title` / `meta description` / Open Graph par page, **JSON-LD `MusicEvent`**
@@ -126,6 +149,22 @@ Tout le contenu éditorial vit dans **`assets/data/`** — pas besoin de toucher
   intégrées à la demande du client. Vérifier la licence d'embarquement web avant mise
   en ligne publique. (Maven Pro est sous OFL.)
 - **Contenu groupes** : descriptions, photos et liens d'écoute définitifs à fournir.
+- **Guitare (V1)** : interface boutons-notes sur les 6 cordes à vide plutôt que des
+  cordes horizontales grattables (décision prise à l'étape 6, cf. plan de
+  développement) ; les cordes grattables, l'overdub et l'export WAV sont prévus en V1.1.
+
+### Bibliothèques et licences vendorisées (jeu « Compose ta mélodie »)
+
+Aucun CDN (CSP `script-src 'self'`) : deux bibliothèques sont copiées dans
+`assets/vendor/` en version figée, détaillées avec leurs licences dans
+`assets/vendor/LICENCES.md` :
+
+- **Tone.js 14.7.77** (MIT) — moteur audio (Sampler, horloge, rejeu)
+- **lz-string 1.5.0** (MIT) — compression des liens de partage
+
+Les samples audio (`assets/audio/melodie/`) proviennent du dépôt libre
+`nbrosowsky/tonejs-instruments` (licences CC, créditées dans `LICENCES.md` et en
+bas de la page du jeu).
 
 ---
 
