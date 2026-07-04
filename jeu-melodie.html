@@ -50,7 +50,12 @@
           <p class="melodie__intro-text">Choisis un instrument, joue en direct et enregistre ta mélodie.</p>
           <button class="btn btn--primary" type="button" data-melodie-start>Commencer</button>
         </div>
-        <button class="melodie-key" type="button" data-melodie-test hidden>Do</button>
+        <p class="melodie__loading" data-melodie-loading role="status" aria-live="polite" hidden></p>
+        <div class="melodie__test-row" data-melodie-test-row hidden>
+          <button class="melodie-key" type="button" data-melodie-test="piano">Piano</button>
+          <button class="melodie-key" type="button" data-melodie-test="guitare">Guitare</button>
+          <button class="melodie-key" type="button" data-melodie-test="trompette">Trompette</button>
+        </div>
       </div>
     </section>
   </main>

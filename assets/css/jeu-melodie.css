@@ -23,6 +23,18 @@
   margin-bottom: var(--space-6);
 }
 
+.melodie__loading {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie__test-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
 .melodie-key {
   font-family: var(--font-display);
   font-size: var(--text-xl);

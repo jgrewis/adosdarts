@@ -21,6 +21,9 @@ est copié ici en version figée.
 
 ## Samples audio (piano, guitare, trompette)
 
-- **Origine** : dépôt `nbrosowsky/tonejs-instruments` (GitHub)
+- **Origine** : dépôt `nbrosowsky/tonejs-instruments` (GitHub, https://github.com/nbrosowsky/tonejs-instruments)
 - **Licence** : Creative Commons (voir le dépôt d'origine)
 - **Usage** : samples des instruments joués dans `assets/audio/melodie/`
+  - Piano : `samples/piano` (C3, G3, C4, G4, C5, G5)
+  - Guitare : `samples/guitar-nylon` (E2, A2, D3, G3, B3, E4)
+  - Trompette : `samples/trumpet` (C4, F4, G4, As4 — note la plus proche de A4 disponible dans le dépôt)
