@@ -32,6 +32,39 @@
   margin-top: var(--space-8);
 }
 
+.melodie-instruments {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.melodie-instrument-btn {
+  font-family: var(--font-body);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--brand-cream);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--brand-cream);
+  cursor: pointer;
+}
+.melodie-instrument-btn[aria-pressed="true"] {
+  background: var(--brand-cream);
+  color: var(--brand-ink);
+}
+
+.melodie-toggle {
+  display: block;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+.melodie-piano.hide-letters .melodie-key__letter {
+  display: none;
+}
+
 .piano-octaves {
   display: flex;
   justify-content: center;

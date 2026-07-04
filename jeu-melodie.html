@@ -52,6 +52,15 @@
         </div>
         <p class="melodie__loading" data-melodie-loading role="status" aria-live="polite" hidden></p>
         <div class="melodie__instrument" data-melodie-instrument hidden>
+          <div class="melodie-instruments" data-melodie-instruments role="group" aria-label="Choisir un instrument">
+            <button class="melodie-instrument-btn" type="button" data-instrument="piano" aria-pressed="true">Piano</button>
+            <button class="melodie-instrument-btn" type="button" data-instrument="guitare" aria-pressed="false">Guitare</button>
+            <button class="melodie-instrument-btn" type="button" data-instrument="trompette" aria-pressed="false">Trompette</button>
+          </div>
+          <label class="melodie-toggle">
+            <input type="checkbox" data-melodie-letters checked />
+            Afficher les lettres du clavier
+          </label>
           <div class="melodie-piano" data-melodie-piano></div>
         </div>
       </div>
