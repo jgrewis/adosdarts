@@ -286,7 +286,7 @@ async function setupDemos() {
   demos.forEach((demo) => {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "btn btn--ghost btn--sm";
+    btn.className = "btn btn--on-dark btn--sm";
     btn.textContent = demo.title;
     btn.addEventListener("click", () => {
       setLastRecording(demo);
