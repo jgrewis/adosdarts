@@ -19,6 +19,8 @@ import { createRecorder } from "./melodie/recorder.js";
 import { play as playRecording, stop as stopPlayback } from "./melodie/player.js";
 import { saveLast, loadLast } from "./melodie/storage.js";
 import { renderTransport } from "./melodie/ui-transport.js";
+import { encodeToUrl, decodeFromUrl, downloadRecording, importFromFile } from "./melodie/serialize.js";
+import { loadDemos } from "./melodie/demos.js";
 
 renderLayout();
 initNav();
@@ -36,10 +38,28 @@ const transportRoot = root?.querySelector("[data-melodie-transport]");
 const instrumentBtns = root?.querySelectorAll("[data-instrument]");
 const lettersToggle = root?.querySelector("[data-melodie-letters]");
 const modeInputs = root?.querySelectorAll('[name="melodie-mode"]');
+const sharedBanner = root?.querySelector("[data-melodie-shared]");
+const sharedPlayBtn = root?.querySelector("[data-melodie-shared-play]");
+const sharedError = root?.querySelector("[data-melodie-shared-error]");
+const shareCopyBtn = root?.querySelector("[data-share-copy]");
+const shareExportBtn = root?.querySelector("[data-share-export]");
+const shareImportInput = root?.querySelector("[data-share-import]");
+const shareStatus = root?.querySelector("[data-share-status]");
+const demosWrap = root?.querySelector("[data-melodie-demos]");
+const demosList = root?.querySelector("[data-melodie-demos-list]");
 
 const RENDERERS = { piano: renderPiano, guitare: renderGuitare, trompette: renderTrompette };
 
 if (resumeBtn && loadLast()) resumeBtn.hidden = false;
+
+/* Mélodie partagée par lien : décodée tout de suite (avant même « Commencer »),
+   mais la lecture ne démarre qu'au clic (l'audio n'est pas encore débloqué). */
+let sharedRecording = null;
+if (location.hash.startsWith("#m=")) {
+  sharedRecording = decodeFromUrl(location.hash);
+  if (sharedRecording && sharedBanner) sharedBanner.hidden = false;
+  else if (sharedError) sharedError.hidden = false;
+}
 
 /* Allume/éteint visuellement une touche ou un pad sans jamais re-rendre le
    clavier (interdit pendant le jeu, cf. CDC §5.4) : uniquement classList. */
@@ -140,9 +160,18 @@ function stopMetronome() {
   metronomeTimer = null;
 }
 
+/* Point d'entrée unique pour changer la performance active : garde le
+   transport et les boutons de partage synchronisés avec sa présence. */
+function setLastRecording(recording) {
+  lastRecording = recording;
+  if (transportRefs) transportRefs.playBtn.disabled = !recording;
+  if (shareCopyBtn) shareCopyBtn.disabled = !recording;
+  if (shareExportBtn) shareExportBtn.disabled = !recording;
+}
+
 function finishRecording(recording) {
   if (!transportRefs) return;
-  const { recordBtn, stopBtn, playBtn, status } = transportRefs;
+  const { recordBtn, stopBtn, status } = transportRefs;
   clearInterval(recordTimerInterval);
   recordTimerInterval = null;
   recordStartWall = null;
@@ -150,9 +179,8 @@ function finishRecording(recording) {
   recordBtn.disabled = false;
   stopBtn.disabled = true;
   if (recording && recording.events.length) {
-    lastRecording = recording;
+    setLastRecording(recording);
     saveLast(recording);
-    playBtn.disabled = false;
     status.textContent = "Enregistrement terminé, prêt à réécouter.";
   } else {
     status.textContent = "Enregistrement arrêté (aucune note jouée).";
@@ -209,6 +237,59 @@ function setupTransport() {
   });
 }
 
+/* ------------------------------------------------------------ Partage -- */
+function setupShare() {
+  shareCopyBtn?.addEventListener("click", async () => {
+    if (!lastRecording) return;
+    const url = encodeToUrl(lastRecording);
+    if (!url) {
+      if (shareStatus) shareStatus.textContent = "Performance trop longue pour un lien — exportez le fichier.";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      if (shareStatus) shareStatus.textContent = "Lien copié !";
+    } catch {
+      if (shareStatus) shareStatus.textContent = url;
+    }
+  });
+
+  shareExportBtn?.addEventListener("click", () => {
+    if (lastRecording) downloadRecording(lastRecording);
+  });
+
+  shareImportInput?.addEventListener("change", async () => {
+    const file = shareImportInput.files?.[0];
+    shareImportInput.value = "";
+    if (!file) return;
+    const recording = await importFromFile(file);
+    if (recording) {
+      setLastRecording(recording);
+      if (shareStatus) shareStatus.textContent = "Mélodie importée, prête à réécouter.";
+    } else if (shareStatus) {
+      shareStatus.textContent = "Fichier illisible : ce n'est pas une mélodie valide.";
+    }
+  });
+}
+
+/* -------------------------------------------------------------- Démos -- */
+async function setupDemos() {
+  const demos = await loadDemos();
+  if (!demos.length || !demosList || !demosWrap) return;
+  demosWrap.hidden = false;
+  demos.forEach((demo) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn--ghost btn--sm";
+    btn.textContent = demo.title;
+    btn.addEventListener("click", () => {
+      setLastRecording(demo);
+      triggerPlay();
+    });
+    demosList.appendChild(btn);
+  });
+}
+
 /* --------------------------------------------------------- Démarrage -- */
 let sessionStarted = false;
 
@@ -247,6 +328,8 @@ async function beginSession() {
   });
   applyMode(getState().mode);
   setupTransport();
+  setupShare();
+  await setupDemos();
 }
 
 startBtn?.addEventListener("click", beginSession);
@@ -254,8 +337,14 @@ resumeBtn?.addEventListener("click", async () => {
   await beginSession();
   const recording = loadLast();
   if (recording) {
-    lastRecording = recording;
-    if (transportRefs) transportRefs.playBtn.disabled = false;
+    setLastRecording(recording);
+    triggerPlay();
+  }
+});
+sharedPlayBtn?.addEventListener("click", async () => {
+  await beginSession();
+  if (sharedRecording) {
+    setLastRecording(sharedRecording);
     triggerPlay();
   }
 });

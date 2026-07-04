@@ -50,6 +50,11 @@
           <p class="melodie__intro-text">Choisis un instrument, joue en direct et enregistre ta mélodie.</p>
           <button class="btn btn--primary" type="button" data-melodie-start>Commencer</button>
           <button class="btn btn--ghost" type="button" data-melodie-resume hidden>Reprendre ma dernière création</button>
+          <div class="melodie__shared" data-melodie-shared hidden>
+            <p>Quelqu'un vous a partagé une mélodie.</p>
+            <button class="btn btn--primary" type="button" data-melodie-shared-play>▶ Écouter</button>
+          </div>
+          <p class="melodie__shared-error" data-melodie-shared-error hidden>Lien illisible : cette mélodie n'a pas pu être chargée.</p>
         </div>
         <p class="melodie__loading" data-melodie-loading role="status" aria-live="polite" hidden></p>
         <div class="melodie__instrument" data-melodie-instrument hidden>
@@ -77,6 +82,21 @@
           <div class="melodie-chords" data-melodie-chords></div>
           <div class="melodie-play" data-melodie-play></div>
           <div class="melodie-transport-wrap" data-melodie-transport></div>
+
+          <div class="melodie-share" data-melodie-share>
+            <button type="button" class="btn btn--ghost btn--sm" data-share-copy disabled>Copier le lien</button>
+            <button type="button" class="btn btn--ghost btn--sm" data-share-export disabled>Exporter</button>
+            <label class="btn btn--ghost btn--sm melodie-share__import">
+              Importer
+              <input type="file" accept="application/json,.json" data-share-import class="visually-hidden" />
+            </label>
+            <p class="melodie-share__status" data-share-status role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="melodie-demos" data-melodie-demos hidden>
+            <p class="melodie-demos__label">Exemples :</p>
+            <div class="melodie-demos__list" data-melodie-demos-list></div>
+          </div>
         </div>
       </div>
     </section>
@@ -93,6 +113,7 @@
   </aside>
 
   <script src="assets/vendor/tone.min.js"></script>
+  <script src="assets/vendor/lz-string.min.js"></script>
   <script type="module" src="assets/js/boot-jeu-melodie.js"></script>
 </body>
 </html>

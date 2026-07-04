@@ -241,6 +241,53 @@
   gap: var(--space-2);
 }
 
+.melodie__shared {
+  margin-top: var(--space-4);
+}
+
+.melodie__shared-error {
+  margin-top: var(--space-4);
+  color: var(--brand-cream);
+}
+
+.melodie-share {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.melodie-share__import {
+  cursor: pointer;
+}
+
+.melodie-share__status {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie-demos {
+  margin-top: var(--space-6);
+  text-align: center;
+}
+
+.melodie-demos__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.melodie-demos__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
 .piano-octaves {
   display: flex;
   justify-content: center;

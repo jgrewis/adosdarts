@@ -14,10 +14,10 @@ est copié ici en version figée.
 
 ## lz-string
 
-- **Version** : 1.5.0
+- **Version** : 1.5.0 (vendorisée)
 - **Origine** : https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js
 - **Licence** : MIT
-- **Usage** : compression des enregistrements pour le partage par URL
+- **Usage** : compression des enregistrements pour le partage par URL (`assets/js/melodie/serialize.js`)
 
 ## Samples audio (piano, guitare, trompette)
 
