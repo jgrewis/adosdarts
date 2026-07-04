@@ -7,6 +7,8 @@ import { unlockAudio } from "./melodie/engine.js";
 import { loadAll, isFallback, noteOn, noteOff } from "./melodie/instruments.js";
 import { getState, setState } from "./melodie/store.js";
 import { renderPiano } from "./melodie/ui-piano.js";
+import { renderChords } from "./melodie/ui-chords.js";
+import { chordOn, chordOff } from "./melodie/chords.js";
 import { attachPointerNotes } from "./melodie/pointer-notes.js";
 import { attachKeyboard } from "./melodie/keyboard.js";
 
@@ -20,28 +22,50 @@ const intro = root?.querySelector("[data-melodie-intro]");
 const loading = root?.querySelector("[data-melodie-loading]");
 const instrumentPanel = root?.querySelector("[data-melodie-instrument]");
 const pianoRoot = root?.querySelector("[data-melodie-piano]");
+const chordsRoot = root?.querySelector("[data-melodie-chords]");
 const instrumentBtns = root?.querySelectorAll("[data-instrument]");
 const lettersToggle = root?.querySelector("[data-melodie-letters]");
+const modeInputs = root?.querySelectorAll('[name="melodie-mode"]');
 
-/* Allume/éteint visuellement une touche sans jamais re-rendre le clavier
-   (interdit pendant le jeu, cf. CDC §5.4). */
-function lightNote(note, on) {
-  pianoRoot?.querySelectorAll(`[data-note="${note}"]`).forEach((key) => {
+/* Allume/éteint visuellement une touche ou un pad sans jamais re-rendre le
+   clavier (interdit pendant le jeu, cf. CDC §5.4) : uniquement classList. */
+function lightKey(container, note, on) {
+  container?.querySelectorAll(`[data-note="${note}"]`).forEach((key) => {
     key.classList.toggle("is-active", on);
   });
 }
 
 function playNoteOn(notes) {
   noteOn(notes, getState().instrument);
-  notes.forEach((n) => lightNote(n, true));
+  notes.forEach((n) => lightKey(pianoRoot, n, true));
 }
 function playNoteOff(notes) {
   noteOff(notes, getState().instrument);
-  notes.forEach((n) => lightNote(n, false));
+  notes.forEach((n) => lightKey(pianoRoot, n, false));
+}
+function playChordOn(chordId) {
+  chordOn(chordId, getState().instrument);
+  lightKey(chordsRoot, chordId, true);
+}
+function playChordOff(chordId) {
+  chordOff(chordId, getState().instrument);
+  lightKey(chordsRoot, chordId, false);
 }
 
 let pointerHandle = null;
+let chordsPointerHandle = null;
 let keyboardHandle = null;
+
+function releaseEverything() {
+  pointerHandle?.releaseAll();
+  chordsPointerHandle?.releaseAll();
+  keyboardHandle?.releaseAll();
+}
+
+function applyMode(mode) {
+  if (pianoRoot) pianoRoot.hidden = mode === "chords";
+  if (chordsRoot) chordsRoot.hidden = mode === "notes";
+}
 
 startBtn?.addEventListener("click", async () => {
   await unlockAudio();          // DOIT rester dans ce gestionnaire de clic
@@ -63,15 +87,24 @@ startBtn?.addEventListener("click", async () => {
     const zone = renderPiano(pianoRoot);
     pointerHandle = attachPointerNotes(zone, { onNoteOn: playNoteOn, onNoteOff: playNoteOff });
   }
-  keyboardHandle = attachKeyboard({ onNoteOn: playNoteOn, onNoteOff: playNoteOff });
+  if (chordsRoot) {
+    const zone = renderChords(chordsRoot);
+    chordsPointerHandle = attachPointerNotes(zone, {
+      onNoteOn: (ids) => ids.forEach(playChordOn),
+      onNoteOff: (ids) => ids.forEach(playChordOff),
+    });
+  }
+  keyboardHandle = attachKeyboard({
+    onNoteOn: playNoteOn,
+    onNoteOff: playNoteOff,
+    onChordOn: playChordOn,
+    onChordOff: playChordOff,
+  });
+  applyMode(getState().mode);
 });
 
 /* « Panic » : un Alt+Tab ou changement d'onglet pendant une note tenue ne
    doit jamais la laisser sonner à l'infini (CDC §8.3.3). */
-function releaseEverything() {
-  pointerHandle?.releaseAll();
-  keyboardHandle?.releaseAll();
-}
 window.addEventListener("blur", releaseEverything);
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) releaseEverything();
@@ -86,4 +119,13 @@ instrumentBtns?.forEach((btn) => {
 
 lettersToggle?.addEventListener("change", () => {
   pianoRoot?.classList.toggle("hide-letters", !lettersToggle.checked);
+});
+
+modeInputs?.forEach((input) => {
+  input.addEventListener("change", () => {
+    if (!input.checked) return;
+    releaseEverything();
+    setState({ mode: input.value });
+    applyMode(input.value);
+  });
 });

@@ -67,6 +67,13 @@ export function isFallback(instrument) {
   return Boolean(fallback[instrument]);
 }
 
+/** Accès direct au sampler, réservé à chords.js pour le strum guitare
+    (décalage manuel des triggerAttack). Le reste du code passe par
+    noteOn/noteOff : voir §5.3 du CDC. */
+export function getSampler(instrument) {
+  return samplers[instrument];
+}
+
 export function noteOn(notes, instrument) {
   samplers[instrument]?.triggerAttack(notes);
 }

@@ -6,6 +6,7 @@ import { getState } from "./store.js";
 
 const NOTE_KEYS = { q: 0, s: 1, d: 2, f: 3, g: 4, h: 5, j: 6, k: 7 };
 const NOTE_STEPS = ["C", "D", "E", "F", "G", "A", "B", "C"]; // le 8e Do est l'octave suivante
+const CHORD_KEYS = { a: "C", z: "Dm", e: "Em", r: "F", t: "G", y: "Am" };
 
 function noteForKey(key) {
   const idx = NOTE_KEYS[key];
@@ -15,27 +16,43 @@ function noteForKey(key) {
   return `${NOTE_STEPS[idx]}${octave}`;
 }
 
-export function attachKeyboard({ onNoteOn, onNoteOff }) {
+export function attachKeyboard({ onNoteOn, onNoteOff, onChordOn, onChordOff }) {
   // Mémorise la note réellement déclenchée par touche (et non le raccourci),
   // pour la relâcher correctement même si l'octave a changé pendant l'appui.
   const held = new Map();
+  const heldChords = new Map();
 
   function keydown(e) {
     if (e.repeat) return;
     const key = e.key.toLowerCase();
-    if (held.has(key)) return;
+    if (held.has(key) || heldChords.has(key)) return;
+
     const note = noteForKey(key);
-    if (!note) return;
-    held.set(key, note);
-    onNoteOn([note]);
+    if (note) {
+      held.set(key, note);
+      onNoteOn([note]);
+      return;
+    }
+    const chordId = CHORD_KEYS[key];
+    if (chordId && onChordOn) {
+      heldChords.set(key, chordId);
+      onChordOn(chordId);
+    }
   }
 
   function keyup(e) {
     const key = e.key.toLowerCase();
     const note = held.get(key);
-    if (!note) return;
-    held.delete(key);
-    onNoteOff([note]);
+    if (note) {
+      held.delete(key);
+      onNoteOff([note]);
+      return;
+    }
+    const chordId = heldChords.get(key);
+    if (chordId && onChordOff) {
+      heldChords.delete(key);
+      onChordOff(chordId);
+    }
   }
 
   document.addEventListener("keydown", keydown);
@@ -45,6 +62,8 @@ export function attachKeyboard({ onNoteOn, onNoteOff }) {
     releaseAll() {
       held.forEach((note) => onNoteOff([note]));
       held.clear();
+      heldChords.forEach((chordId) => onChordOff?.(chordId));
+      heldChords.clear();
     },
   };
 }

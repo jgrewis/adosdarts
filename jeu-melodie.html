@@ -61,6 +61,19 @@
             <input type="checkbox" data-melodie-letters checked />
             Afficher les lettres du clavier
           </label>
+          <fieldset class="melodie-mode" data-melodie-mode>
+            <legend class="visually-hidden">Mode de jeu</legend>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="notes" checked /> Notes
+            </label>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="chords" /> Accords
+            </label>
+            <label class="melodie-mode__option">
+              <input type="radio" name="melodie-mode" value="both" /> Les deux
+            </label>
+          </fieldset>
+          <div class="melodie-chords" data-melodie-chords></div>
           <div class="melodie-piano" data-melodie-piano></div>
         </div>
       </div>
