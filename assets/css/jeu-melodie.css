@@ -28,29 +28,70 @@
   font-size: var(--text-sm);
 }
 
-.melodie__test-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-4);
+.melodie__instrument {
+  margin-top: var(--space-8);
 }
 
-.melodie-key {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  min-width: 96px;
-  min-height: 96px;
-  padding: var(--space-4) var(--space-6);
-  border: var(--border-width) solid var(--brand-cream);
-  border-radius: var(--radius-md);
-  background: var(--brand-toucan-deep);
-  color: var(--brand-cream);
-  cursor: pointer;
+.piano-octaves {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* Zone de jeu : touch-action à none obligatoire (R6/§3.9), sinon le doigt
+   fait défiler la page pendant qu'on joue au lieu de jouer une note. */
+.piano-keys {
+  position: relative;
+  height: 200px;
+  max-width: 720px;
+  margin: 0 auto;
   touch-action: none;
   user-select: none;
 }
 
+.melodie-key {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: var(--space-2);
+  border: var(--border-width) solid var(--brand-ink);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.melodie-key--white {
+  height: 100%;
+  background: var(--brand-cream);
+  color: var(--brand-ink);
+  z-index: var(--z-base);
+}
+
+.melodie-key--black {
+  height: 62%;
+  background: var(--brand-ink);
+  color: var(--brand-cream);
+  z-index: var(--z-decor);
+  transform: translateX(-50%);
+}
+
+.melodie-key__letter {
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Allumage instantané (jamais d'animation à l'attaque), extinction en fondu
+   uniquement à la désactivation — cf. CDC §4.2. */
 .melodie-key.is-active {
   background: var(--brand-teal);
-  box-shadow: 0 0 0 6px rgba(23, 166, 161, 0.45);
+  color: var(--brand-cream);
+  transition: none;
+}
+.melodie-key--white:not(.is-active),
+.melodie-key--black:not(.is-active) {
+  transition: background-color var(--duration-slow) var(--ease-out);
 }

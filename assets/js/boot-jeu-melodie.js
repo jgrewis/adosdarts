@@ -5,6 +5,9 @@ import { initNav } from "./nav.js";
 import { initCookieBanner } from "./cookie.js";
 import { unlockAudio } from "./melodie/engine.js";
 import { loadAll, isFallback, noteOn, noteOff } from "./melodie/instruments.js";
+import { getState } from "./melodie/store.js";
+import { renderPiano } from "./melodie/ui-piano.js";
+import { attachPointerNotes } from "./melodie/pointer-notes.js";
 
 renderLayout();
 initNav();
@@ -14,7 +17,16 @@ const root = document.querySelector("[data-melodie]");
 const startBtn = root?.querySelector("[data-melodie-start]");
 const intro = root?.querySelector("[data-melodie-intro]");
 const loading = root?.querySelector("[data-melodie-loading]");
-const testRow = root?.querySelector("[data-melodie-test-row]");
+const instrumentPanel = root?.querySelector("[data-melodie-instrument]");
+const pianoRoot = root?.querySelector("[data-melodie-piano]");
+
+/* Allume/éteint visuellement une touche sans jamais re-rendre le clavier
+   (interdit pendant le jeu, cf. CDC §5.4). */
+function lightNote(note, on) {
+  pianoRoot?.querySelectorAll(`[data-note="${note}"]`).forEach((key) => {
+    key.classList.toggle("is-active", on);
+  });
+}
 
 startBtn?.addEventListener("click", async () => {
   await unlockAudio();          // DOIT rester dans ce gestionnaire de clic
@@ -27,18 +39,24 @@ startBtn?.addEventListener("click", async () => {
 
   const fallbackUsed = ["piano", "guitare", "trompette"].some(isFallback);
   if (loading) {
-    loading.hidden = true;
-    if (fallbackUsed) {
-      loading.hidden = false;
-      loading.textContent = "Son de remplacement pour certains instruments (réseau indisponible).";
-    }
+    loading.hidden = !fallbackUsed;
+    if (fallbackUsed) loading.textContent = "Son de remplacement pour certains instruments (réseau indisponible).";
   }
-  if (testRow) testRow.hidden = false;
-});
 
-testRow?.querySelectorAll("[data-melodie-test]").forEach((btn) => {
-  const instrument = btn.dataset.melodieTest;
-  btn.addEventListener("pointerdown", () => noteOn(["C4"], instrument));
-  btn.addEventListener("pointerup", () => noteOff(["C4"], instrument));
-  btn.addEventListener("pointercancel", () => noteOff(["C4"], instrument));
+  if (instrumentPanel) instrumentPanel.hidden = false;
+  if (pianoRoot) {
+    const zone = renderPiano(pianoRoot);
+    attachPointerNotes(zone, {
+      onNoteOn: (notes) => {
+        const instrument = getState().instrument;
+        noteOn(notes, instrument);
+        notes.forEach((n) => lightNote(n, true));
+      },
+      onNoteOff: (notes) => {
+        const instrument = getState().instrument;
+        noteOff(notes, instrument);
+        notes.forEach((n) => lightNote(n, false));
+      },
+    });
+  }
 });
