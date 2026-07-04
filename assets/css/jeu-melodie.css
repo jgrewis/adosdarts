@@ -4,4 +4,41 @@
    ========================================================================== */
 
 .melodie {
+  padding: 0 var(--content-pad) var(--space-16);
+}
+
+.melodie__scene {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--brand-toucan);
+  color: var(--brand-cream);
+  text-align: center;
+}
+
+.melodie__intro-text {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-6);
+}
+
+.melodie-key {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  min-width: 96px;
+  min-height: 96px;
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-width) solid var(--brand-cream);
+  border-radius: var(--radius-md);
+  background: var(--brand-toucan-deep);
+  color: var(--brand-cream);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.melodie-key.is-active {
+  background: var(--brand-teal);
+  box-shadow: 0 0 0 6px rgba(23, 166, 161, 0.45);
 }
