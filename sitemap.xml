@@ -17,6 +17,10 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://jgrewis.github.io/adosdarts/jeu-melodie.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://jgrewis.github.io/adosdarts/contact.html</loc>
     <priority>0.6</priority>
   </url>
