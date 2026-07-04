@@ -9,27 +9,29 @@
    - Core Circus 2D Double : logo + très grands titres d'affiche.
    - Maven Pro (variable)  : titres et éléments forts (jeu sur les graisses).
    - Frutiger LT Std Light Cn : corps de texte (police fine).
+   Formats servis : woff2 uniquement (support universel, ~52% plus léger que
+   les OTF/TTF d'origine, désormais retirés du dépôt).
    NB licence : Core Circus et Frutiger sont des polices commerciales ; elles
    sont intégrées ici à la demande du client (assets fournis). À sécuriser
    côté licence avant mise en production publique. Maven Pro est sous OFL.
    -------------------------------------------------------------------------- */
 @font-face {
   font-family: "Core Circus 2D Double";
-  src: url("../fonts/CoreCircus2DDouble.otf") format("opentype");
+  src: url("../fonts/CoreCircus2DDouble.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Maven Pro";
-  src: url("../fonts/MavenPro.ttf") format("truetype-variations");
+  src: url("../fonts/MavenPro.woff2") format("woff2-variations");
   font-weight: 400 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Frutiger";
-  src: url("../fonts/Frutiger-LightCn.otf") format("opentype");
+  src: url("../fonts/Frutiger-LightCn.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -63,7 +65,7 @@
   --color-accent: var(--brand-teal-deep);     /* fond plein + texte blanc */
   --color-on-accent: var(--white);
   --color-accent-2: var(--brand-coral);
-  --color-on-accent-2: var(--white);
+  --color-on-accent-2: var(--brand-ink);   /* encre sur corail : 5.6:1 (blanc : 3.2:1, insuffisant) */
   --color-focus: var(--brand-toucan);
 
   /* --- Dégradé d'ambiance (fond hero, repris de Fond.svg) --- */
@@ -121,6 +123,7 @@
   --border-width: 3px;
   --shadow-block: 7px 7px 0 var(--color-border);
   --shadow-block-hover: 3px 3px 0 var(--color-border);
+  --shadow-block-night: 4px 4px 0 var(--brand-toucan);  /* variante sur fonds sombres/nuit */
   --shadow-soft: 0 18px 40px -24px rgba(26, 20, 48, 0.55);
 
   /* --- Points de rupture (référence) --- */

@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP en <meta> : X-Content-Type-Options et frame-ancestors n'ont d'effet
+       qu'en en-têtes HTTP réels — à poser côté serveur/CDN en production. -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <title>Contact — Bénévoles &amp; artistes | Festival À Dos d'Arts #8</title>
   <meta name="description" content="Devenez bénévole de la soirée concerts À Dos d'Arts, ou proposez votre groupe pour une prochaine édition. Contact : contact@adosdarts.fr." />
+  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/contact.html" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Contact — À Dos d'Arts #8" />
   <meta property="og:description" content="Bénévoles et groupes de musique : rejoignez l'aventure." />
+  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/contact.html" />
+  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
 
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
+  <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
@@ -121,7 +128,7 @@
               <div class="field">
                 <label for="a-lien">Un lien pour vous écouter (YouTube, Spotify, Deezer, SoundCloud…)</label>
                 <input class="input" id="a-lien" name="lien" type="url"
-                  inputmode="url" placeholder="https://…"
+                  inputmode="url" placeholder="https://…" pattern="https?://.+"
                   data-error-pattern="Indiquez une adresse commençant par http(s)://" />
                 <p class="field__error" data-field-error aria-live="polite"></p>
               </div>

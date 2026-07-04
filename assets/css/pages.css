@@ -28,6 +28,8 @@
 }
 
 .section--alt { background: var(--color-surface-alt); }
+/* Sur le fond crème ambrée, le teal-deep ne fait que 4.19:1 : on passe au bleu toucan */
+.section--alt .eyebrow { color: var(--brand-toucan); }
 .section--night {
   background: var(--gradient-night);
   color: var(--white);
@@ -35,6 +37,14 @@
 .section--night .section__title,
 .section--night .eyebrow { color: var(--white); }
 .section--night .section__lead { color: rgba(255, 255, 255, 0.85); }
+
+/* Focus visible sur les fonds sombres : l'outline bleu toucan par défaut y
+   serait invisible (fond du même bleu) — on bascule sur le jaune de marque. */
+.section--night :focus-visible,
+.page-head :focus-visible,
+.hero :focus-visible {
+  outline-color: var(--brand-yellow);
+}
 
 /* ==========================================================================
    HERO — reprise directe de l'affiche
@@ -102,29 +112,6 @@
      (le logo de l'affiche est fin). */
   filter: drop-shadow(0 1px 1px rgba(26, 20, 48, 0.16));
 }
-/* Logo recomposé en texte (police Core Circus) : « Festival » au-dessus,
-   puis « À Dos » / « d'Arts #8 », chacun sur sa propre ligne — comme l'affiche.
-   À remplacer à terme par le vrai logo vectorisé (tréma corrigé). */
-.hero__logo-festival {
-  display: block;
-  white-space: nowrap;          /* jamais de retour à la ligne dans le mot */
-  font-family: var(--font-display);
-  font-weight: var(--weight-bold);
-  font-size: var(--text-xl);
-  letter-spacing: var(--tracking-wide);
-  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.25);
-  margin-bottom: var(--space-1);
-}
-.hero__logo-line {
-  display: block;
-  white-space: nowrap;
-}
-.hero__logo .hash {
-  color: var(--brand-yellow);
-  font-family: var(--font-display);
-  font-weight: var(--weight-black);
-}
-
 .hero__meta {
   display: flex;
   flex-wrap: wrap;
@@ -274,6 +261,10 @@
   height: 100%;
   object-fit: cover;
 }
+/* Couleur du texte sur le bloc coloré : --band-ink est injectée par
+   programme.js selon le fond (encre sur les fonds clairs, blanc sur le bleu
+   toucan) pour garantir un contraste ≥ 4.5:1. Le halo n'est conservé que
+   pour le texte blanc (--band-shadow: none sinon). */
 .band-card__order {
   position: absolute;
   top: var(--space-3);
@@ -281,8 +272,8 @@
   z-index: 2;
   font-family: var(--font-logo);
   font-size: var(--text-2xl);
-  color: var(--white);
-  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.4);
+  color: var(--band-ink, var(--white));
+  text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.4));
 }
 /* Nom du groupe : affiché en grand directement sur le bloc coloré. */
 .band-card__name {
@@ -296,11 +287,12 @@
   font-size: var(--text-2xl);
   line-height: 1.05;
   text-transform: uppercase;
-  color: var(--white);
-  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.45);
+  color: var(--band-ink, var(--white));
+  text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.45));
   overflow-wrap: anywhere;
 }
-/* Quand une photo est fournie, on pose un voile bas pour la lisibilité du nom. */
+/* Quand une photo est fournie, on pose un voile bas pour la lisibilité du nom
+   (qui repasse en blanc : il est alors toujours lu sur le voile sombre). */
 .band-card__visual--has-img { align-items: end; }
 .band-card__visual--has-img::after {
   content: "";
@@ -312,6 +304,52 @@
 .band-card__visual--has-img .band-card__name {
   align-self: end;
   text-align: left;
+  color: var(--white);
+  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.45);
+}
+.band-card__visual--has-img .band-card__order {
+  color: var(--white);
+  text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.4);
+}
+
+/* Page programmation (cartes complètes) : au survol/focus, la photo du groupe
+   remplace le nom et le fond coloré — l'animation de surélévation existante
+   est conservée. Réservé aux appareils à survol : au doigt, la photo reste
+   affichée en permanence avec le nom sur le voile (comportement ci-dessus). */
+@media (hover: hover) and (pointer: fine) {
+  .band-card:not(.band-card--teaser) .band-card__visual--has-img {
+    align-items: center;
+  }
+  .band-card:not(.band-card--teaser) .band-card__visual--has-img .band-card__name {
+    align-self: center;
+    text-align: center;
+    color: var(--band-ink, var(--white));
+    text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.45));
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .band-card:not(.band-card--teaser) .band-card__visual--has-img .band-card__order {
+    color: var(--band-ink, var(--white));
+    text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.4));
+    transition: color var(--duration-base) var(--ease-out);
+  }
+  .band-card:not(.band-card--teaser) .band-card__visual--has-img img,
+  .band-card:not(.band-card--teaser) .band-card__visual--has-img::after {
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .band-card:not(.band-card--teaser):hover .band-card__visual--has-img img,
+  .band-card:not(.band-card--teaser):focus-within .band-card__visual--has-img img {
+    opacity: 1;
+  }
+  .band-card:not(.band-card--teaser):hover .band-card__visual--has-img .band-card__name,
+  .band-card:not(.band-card--teaser):focus-within .band-card__visual--has-img .band-card__name {
+    opacity: 0;
+  }
+  .band-card:not(.band-card--teaser):hover .band-card__visual--has-img .band-card__order,
+  .band-card:not(.band-card--teaser):focus-within .band-card__visual--has-img .band-card__order {
+    color: var(--white);
+    text-shadow: 2px 2px 0 rgba(26, 20, 48, 0.4);
+  }
 }
 .band-card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; color: var(--color-text); }
 .band-card__meta {
@@ -342,6 +380,20 @@
   cursor: pointer;
 }
 .band-card--teaser .band-card__visual:focus-visible { outline: 3px solid var(--white); outline-offset: -6px; }
+/* Affordance : chevron indiquant que la carte se déplie (pivote à l'ouverture) */
+.band-card__chevron {
+  position: absolute;
+  bottom: var(--space-2);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  font-size: var(--text-lg);
+  line-height: 1;
+  color: var(--band-ink, var(--white));
+  text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.4));
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.band-card--teaser.is-expanded .band-card__chevron { transform: rotate(180deg); }
 .band-card__visual-link {
   margin-top: var(--space-2);
   background: transparent;
@@ -370,8 +422,46 @@
 .band-card--teaser.is-expanded { z-index: var(--z-sticky); }
 .band-card--teaser.is-expanded .band-card__details { grid-template-rows: 1fr; opacity: 1; }
 
-.band-card__media { aspect-ratio: 16 / 9; }
+/* Sur mobile (1 colonne), le panneau flottant recouvrirait la carte suivante :
+   on le remet dans le flux (accordéon qui pousse la grille). */
+@media (max-width: 640px) {
+  .band-card__details {
+    position: static;
+    margin-top: var(--space-2);
+  }
+}
+
+/* Façade « click-to-play » : rien n'est chargé depuis YouTube avant le clic
+   (RGPD) — l'iframe est montée par programme.js à la demande. */
+.band-card__media { aspect-ratio: 16 / 9; position: relative; }
 .band-card__media iframe { width: 100%; height: 100%; border: 0; display: block; }
+.band-card__media-play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-night);
+  color: var(--white);
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  text-transform: uppercase;
+}
+.band-card__media-play:hover { background: var(--brand-toucan); }
+.band-card__media-play[hidden] { display: none; }
+.band-card__media-note {
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-xs);
+  text-transform: none;
+  opacity: 0.8;
+}
 
 /* ==========================================================================
    Horaires (timeline)
@@ -531,7 +621,8 @@
   font-weight: var(--weight-bold);
 }
 .social-link:hover { background: currentColor; }
-.social-link:hover span { color: var(--color-bg); }
+/* Encre (et non crème) : sur fond night le lien devient blanc au survol */
+.social-link:hover span { color: var(--brand-ink); }
 
 /* ==========================================================================
    Pages internes : en-tête
@@ -543,7 +634,9 @@
   padding-block: var(--space-16);
 }
 .page-head .eyebrow { color: var(--brand-yellow); }
-.page-head h1 { font-size: var(--text-3xl); }
+/* Plafond en vw : garantit qu'un titre long d'un seul mot (« PROGRAMMATION »,
+   13 capitales) tient sur une ligne sur mobile ; sans effet au-delà de ~680px. */
+.page-head h1 { font-size: min(var(--text-3xl), 8vw); }
 .page-head__lead { font-size: var(--text-lg); max-width: 56ch; margin-top: var(--space-4); color: rgba(255,255,255,0.9); }
 
 /* --- Bloc contact / deux colonnes --- */
@@ -570,7 +663,8 @@
 .cta-band + .cta-band { margin-top: var(--space-12); }
 .cta-band + .band-grid { margin-top: var(--space-12); }
 .cta-band--alt {
-  background: var(--brand-teal);
+  /* teal-deep (et non teal) : blanc sur teal ne fait que 3.0:1 */
+  background: var(--brand-teal-deep);
   color: var(--white);
   border-color: var(--brand-ink);
 }

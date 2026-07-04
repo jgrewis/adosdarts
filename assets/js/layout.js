@@ -11,6 +11,7 @@
 const NAV = [
   { key: "index", href: "index.html", label: "Accueil" },
   { key: "programmation", href: "programmation.html", label: "Programmation" },
+  { key: "principe", href: "principe.html", label: "Le festival" },
   { key: "infos", href: "infos.html", label: "Infos pratiques" },
   { key: "contact", href: "contact.html", label: "Contact" },
 ];
@@ -86,14 +87,9 @@ function footerHtml() {
             <li><a href="mailto:contact@adosdarts.fr">contact@adosdarts.fr</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h3>Légal</h3>
-          <ul>
-            <li><a href="principe.html">Le festival</a></li>
-            <li><a href="#">Mentions légales</a></li>
-            <li><a href="#">Accessibilité</a></li>
-          </ul>
-        </div>
+        <!-- Colonne « Légal » retirée tant que les pages Mentions légales et
+             Accessibilité n'existent pas (liens morts interdits). À rétablir
+             dès que mentions-legales.html est créée — obligation LCEN. -->
       </div>
       <div class="footer-bottom">
         <p>© 2026 Festival À Dos d'Arts — Rouffach (68)</p>

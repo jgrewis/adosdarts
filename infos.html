@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP en <meta> : X-Content-Type-Options et frame-ancestors n'ont d'effet
+       qu'en en-têtes HTTP réels — à poser côté serveur/CDN en production. -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <title>Infos pratiques — Festival À Dos d'Arts #8 | L'Escapade, Rouffach</title>
   <meta name="description" content="Horaires, lieu, accès, restauration et accessibilité de la soirée concerts du 22 août 2026 à L'Escapade de Rouffach. Entrée libre." />
+  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/infos.html" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Infos pratiques — À Dos d'Arts #8" />
   <meta property="og:description" content="Tout pour venir l'esprit tranquille le 22 août 2026 à Rouffach." />
+  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/infos.html" />
+  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
 
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
+  <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
@@ -86,7 +93,7 @@
         <h2 id="venir-titre" class="section__title">Comment venir</h2>
         <div class="block-grid">
           <article class="card">
-            <h3 class="card__title">🚆 En train</h3>
+            <h3 class="card__title"><span aria-hidden="true">🚆</span> En train</h3>
             <p class="card__desc">Ligne TER Bâle – Mulhouse – Colmar – Strasbourg.</p>
             <ul class="tick-list">
               <li><span>7 min depuis Colmar</span></li>
@@ -95,7 +102,7 @@
             </ul>
           </article>
           <article class="card">
-            <h3 class="card__title">🚌 En bus</h3>
+            <h3 class="card__title"><span aria-hidden="true">🚌</span> En bus</h3>
             <p class="card__desc">Lignes fluo Grand Est régulières depuis Guebwiller, Osenbach, Soultzmatt et Wintzfelden.</p>
             <ul class="tick-list">
               <li><span>10 min depuis Soultzmatt</span></li>
@@ -104,11 +111,11 @@
             </ul>
           </article>
           <article class="card">
-            <h3 class="card__title">🚗 En voiture</h3>
-            <p class="card__desc">Parking accessible à l'avant du bâtiment de l'Escapade. Pour simplifier votre accès et réduire l'impact écologique, n'oubliez pas de privilégier le covoiturage.</p>
+            <h3 class="card__title"><span aria-hidden="true">🚗</span> En voiture</h3>
+            <p class="card__desc">Stationnement possible <a href="https://maps.app.goo.gl/PXp9Yj8td2LUkwUK7" rel="noopener noreferrer" target="_blank">à l'avant du bâtiment de l'Escapade</a> et sur le <a href="https://maps.app.goo.gl/hNrUQ5VLacamFCuK6" rel="noopener noreferrer" target="_blank">parking du Lycée Agricole de Rouffach</a>. Pour simplifier votre accès et réduire l'impact écologique, n'oubliez pas de privilégier le covoiturage.</p>
           </article>
           <article class="card">
-            <h3 class="card__title">🚶 À pied ou à vélo</h3>
+            <h3 class="card__title"><span aria-hidden="true">🚶</span> À pied ou à vélo</h3>
             <p class="card__desc">Pour les locaux (et les aventuriers) : 20 min à pied et 8 min à vélo depuis la gare SNCF.</p>
           </article>
         </div>
@@ -128,7 +135,7 @@
     <!-- Éco-responsabilité -->
     <section class="section" aria-labelledby="eco-titre">
       <div class="container">
-        <h2 id="eco-titre" class="section__title">Un festival éco-responsable</h2>
+        <h2 id="eco-titre" class="section__title">Un festival éco-responsable et inclusif</h2>
         <div class="block-grid">
           <article class="card">
             <h3 class="card__title">Gratuit &amp; ouvert</h3>
@@ -141,6 +148,10 @@
           <article class="card">
             <h3 class="card__title">Accessible à tous</h3>
             <p class="card__desc">Site accessible aux Personnes à Mobilité Réduite, point d'eau potable à disposition, stands de prévention : une soirée pensée pour que tout le monde passe un bon moment.</p>
+          </article>
+          <article class="card">
+            <h3 class="card__title">Ici, tout le monde est le bienvenu</h3>
+            <p class="card__desc">Nous savons pouvoir compter sur votre vigilance bienveillante pour que chacun puisse se sentir en sécurité et pleinement chez soi. En cas de besoin, notre équipe est là, sans jugement, pour vous accompagner.</p>
           </article>
         </div>
       </div>

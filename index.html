@@ -4,23 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- En-têtes de sécurité applicables via <meta> (ébauche statique).
-       À reposer en en-têtes HTTP réels côté serveur/CDN en production. -->
+  <!-- CSP en <meta> (ébauche statique) : X-Content-Type-Options et
+       frame-ancestors n'ont d'effet qu'en en-têtes HTTP réels — à poser
+       côté serveur/CDN en production. -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <title>Festival À Dos d'Arts #8 — Soirée concerts, samedi 22 août 2026 à Rouffach</title>
   <meta name="description" content="8ᵉ édition du festival À Dos d'Arts : soirée concerts gratuite le samedi 22 août 2026 à L'Escapade de Rouffach. 4 groupes, 2 scènes, entrée libre, buvette et restauration locale." />
+  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Festival À Dos d'Arts #8 — Soirée concerts" />
   <meta property="og:description" content="Samedi 22 août 2026, L'Escapade de Rouffach. 4 concerts, 2 scènes, entrée libre." />
   <meta property="og:locale" content="fr_FR" />
-  <meta property="og:image" content="assets/img/affiches/affiche-2026.png" />
+  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/" />
+  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
 
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
+  <!-- Preload des polices critiques above-the-fold (logo hero + titres) -->
+  <link rel="preload" href="assets/fonts/CoreCircus2DDouble.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
@@ -155,24 +162,11 @@
         <p class="eyebrow">La soirée</p>
         <h2 id="prog-titre" class="section__title">4 concerts, 2 scènes</h2>
         <p class="section__lead">Quatre groupes s'enchaînent dès 19h pour clôturer l'été en musique.</p>
-        <div class="cta-band cta-band--alt cta-band--center">
-          <div>
-            <h2>La playlist du festival</h2>
-            <p>Retrouve tous les artistes de cette édition dans une playlist à écouter en boucle avant le grand soir.</p>
-          </div>
-          <div class="cta-band__links">
-            <a class="btn btn--sm" id="playlist-spotify" href="#" hidden target="_blank" rel="noopener noreferrer">
-              <img src="assets/img/elements/spotify.png" alt="" width="20" height="20" /> Écouter sur Spotify
-            </a>
-            <a class="btn btn--sm btn--ghost" id="playlist-deezer" href="#" hidden target="_blank" rel="noopener noreferrer">
-              <img src="assets/img/elements/deezer.png" alt="" width="20" height="20" /> Écouter sur Deezer
-            </a>
-          </div>
-        </div>
+        <div data-playlist></div>
         <div class="band-grid" data-programme>
           <p>Chargement de la programmation…</p>
         </div>
-        <p style="margin-top: var(--space-8)">
+        <p class="mt-8">
           <a class="btn btn--primary" href="programmation.html">Découvrir les groupes</a>
         </p>
       </div>
@@ -190,15 +184,15 @@
             <figcaption class="memory__caption">Édition #1 — 2019</figcaption>
           </figure>
           <figure class="memory">
-            <img src="assets/img/affiches/affiche-2020.png" alt="Affiche de l'édition 2020 (2ᵉ édition)" loading="lazy" />
+            <img src="assets/img/affiches/affiche-2020.webp" alt="Affiche de l'édition 2020 (2ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #2 — 2020</figcaption>
           </figure>
           <figure class="memory">
-            <img src="assets/img/affiches/affiche-2021.png" alt="Affiche de l'édition 2021 (3ᵉ édition)" loading="lazy" />
+            <img src="assets/img/affiches/affiche-2021.webp" alt="Affiche de l'édition 2021 (3ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #3 — 2021</figcaption>
           </figure>
           <figure class="memory">
-            <img src="assets/img/affiches/affiche-2022.png" alt="Affiche de l'édition 2022 (4ᵉ édition)" loading="lazy" />
+            <img src="assets/img/affiches/affiche-2022.webp" alt="Affiche de l'édition 2022 (4ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #4 — 2022</figcaption>
           </figure>
           <figure class="memory">
@@ -206,7 +200,7 @@
             <figcaption class="memory__caption">Édition #5 — 2023</figcaption>
           </figure>
           <figure class="memory">
-            <img src="assets/img/affiches/affiche-2024.png" alt="Affiche de l'édition 2024 (6ᵉ édition)" loading="lazy" />
+            <img src="assets/img/affiches/affiche-2024.webp" alt="Affiche de l'édition 2024 (6ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #6 — 2024</figcaption>
           </figure>
           <figure class="memory">

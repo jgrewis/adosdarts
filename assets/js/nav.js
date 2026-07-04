@@ -8,6 +8,7 @@ export function initNav() {
   const setOpen = (open) => {
     nav.setAttribute("data-open", String(open));
     toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
   };
 
   toggle.addEventListener("click", () => {
@@ -20,7 +21,11 @@ export function initNav() {
     if (event.target.closest("a")) setOpen(false);
   });
 
+  // Échap : ne referme que si le menu est ouvert, et rend le focus au bouton.
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setOpen(false);
+    if (event.key !== "Escape") return;
+    if (nav.getAttribute("data-open") !== "true") return;
+    setOpen(false);
+    toggle.focus();
   });
 }

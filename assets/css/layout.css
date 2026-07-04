@@ -162,11 +162,17 @@
     padding: var(--space-4);
     z-index: var(--z-header);
     transform: translateY(-120%);
-    transition: transform var(--duration-base) var(--ease-out);
+    /* visibility retire les liens du parcours clavier/lecteur d'écran quand
+       le menu est fermé ; la bascule est différée pour laisser finir le slide. */
+    visibility: hidden;
+    transition: transform var(--duration-base) var(--ease-out),
+      visibility 0s linear var(--duration-base);
   }
 
   .main-nav[data-open="true"] {
     transform: translateY(0);
+    visibility: visible;
+    transition: transform var(--duration-base) var(--ease-out), visibility 0s;
   }
 
   .main-nav__list {
@@ -214,10 +220,6 @@
   gap: var(--space-4);
 }
 
-.block-grid--tight {
-  gap: var(--space-2);
-}
-
 /* --- Footer riche (§4.2) --- */
 .site-footer {
   background: var(--color-text);
@@ -229,6 +231,12 @@
 
 .site-footer a {
   color: inherit;
+}
+
+/* Cibles tactiles confortables sur les liens du pied de page */
+.footer-col a {
+  display: inline-block;
+  padding-block: var(--space-2);
 }
 
 .footer-grid {
