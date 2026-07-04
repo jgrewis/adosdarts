@@ -7,6 +7,8 @@ import { unlockAudio } from "./melodie/engine.js";
 import { loadAll, isFallback, noteOn, noteOff } from "./melodie/instruments.js";
 import { getState, setState } from "./melodie/store.js";
 import { renderPiano } from "./melodie/ui-piano.js";
+import { renderGuitare } from "./melodie/ui-guitare.js";
+import { renderTrompette } from "./melodie/ui-trompette.js";
 import { renderChords } from "./melodie/ui-chords.js";
 import { chordOn, chordOff } from "./melodie/chords.js";
 import { attachPointerNotes } from "./melodie/pointer-notes.js";
@@ -21,11 +23,13 @@ const startBtn = root?.querySelector("[data-melodie-start]");
 const intro = root?.querySelector("[data-melodie-intro]");
 const loading = root?.querySelector("[data-melodie-loading]");
 const instrumentPanel = root?.querySelector("[data-melodie-instrument]");
-const pianoRoot = root?.querySelector("[data-melodie-piano]");
+const playRoot = root?.querySelector("[data-melodie-play]");
 const chordsRoot = root?.querySelector("[data-melodie-chords]");
 const instrumentBtns = root?.querySelectorAll("[data-instrument]");
 const lettersToggle = root?.querySelector("[data-melodie-letters]");
 const modeInputs = root?.querySelectorAll('[name="melodie-mode"]');
+
+const RENDERERS = { piano: renderPiano, guitare: renderGuitare, trompette: renderTrompette };
 
 /* Allume/éteint visuellement une touche ou un pad sans jamais re-rendre le
    clavier (interdit pendant le jeu, cf. CDC §5.4) : uniquement classList. */
@@ -37,11 +41,11 @@ function lightKey(container, note, on) {
 
 function playNoteOn(notes) {
   noteOn(notes, getState().instrument);
-  notes.forEach((n) => lightKey(pianoRoot, n, true));
+  notes.forEach((n) => lightKey(playRoot, n, true));
 }
 function playNoteOff(notes) {
   noteOff(notes, getState().instrument);
-  notes.forEach((n) => lightKey(pianoRoot, n, false));
+  notes.forEach((n) => lightKey(playRoot, n, false));
 }
 function playChordOn(chordId) {
   chordOn(chordId, getState().instrument);
@@ -63,8 +67,19 @@ function releaseEverything() {
 }
 
 function applyMode(mode) {
-  if (pianoRoot) pianoRoot.hidden = mode === "chords";
+  if (playRoot) playRoot.hidden = mode === "chords";
   if (chordsRoot) chordsRoot.hidden = mode === "notes";
+}
+
+/* Bascule l'interface de jeu selon l'instrument actif : clavier (piano),
+   cordes/boutons (guitare) ou pistons (trompette). Les pads d'accords
+   restent disponibles quel que soit l'instrument (gérés à part). */
+function renderInstrumentUI(instrument) {
+  if (!playRoot) return;
+  pointerHandle?.releaseAll();
+  const render = RENDERERS[instrument] || renderPiano;
+  const zone = render(playRoot);
+  pointerHandle = attachPointerNotes(zone, { onNoteOn: playNoteOn, onNoteOff: playNoteOff });
 }
 
 startBtn?.addEventListener("click", async () => {
@@ -83,10 +98,7 @@ startBtn?.addEventListener("click", async () => {
   }
 
   if (instrumentPanel) instrumentPanel.hidden = false;
-  if (pianoRoot) {
-    const zone = renderPiano(pianoRoot);
-    pointerHandle = attachPointerNotes(zone, { onNoteOn: playNoteOn, onNoteOff: playNoteOff });
-  }
+  renderInstrumentUI(getState().instrument);
   if (chordsRoot) {
     const zone = renderChords(chordsRoot);
     chordsPointerHandle = attachPointerNotes(zone, {
@@ -112,13 +124,16 @@ document.addEventListener("visibilitychange", () => {
 
 instrumentBtns?.forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (btn.dataset.instrument === getState().instrument) return;
+    releaseEverything();
     setState({ instrument: btn.dataset.instrument });
     instrumentBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    renderInstrumentUI(btn.dataset.instrument);
   });
 });
 
 lettersToggle?.addEventListener("change", () => {
-  pianoRoot?.classList.toggle("hide-letters", !lettersToggle.checked);
+  playRoot?.classList.toggle("hide-letters", !lettersToggle.checked);
 });
 
 modeInputs?.forEach((input) => {
