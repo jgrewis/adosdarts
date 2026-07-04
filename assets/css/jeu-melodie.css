@@ -179,6 +179,68 @@
   transition: background-color var(--duration-slow) var(--ease-out), color var(--duration-slow) var(--ease-out);
 }
 
+.melodie-transport-wrap {
+  margin-top: var(--space-8);
+  border-top: 1px solid rgba(253, 246, 233, 0.25);
+  padding-top: var(--space-6);
+}
+
+.melodie-transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie-transport__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--brand-cream);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--brand-cream);
+  cursor: pointer;
+}
+.melodie-transport__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.melodie-transport__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-red);
+  display: inline-block;
+}
+.melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
+  animation: melodie-rec-pulse 1s infinite;
+}
+@keyframes melodie-rec-pulse {
+  50% { opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
+    animation: none;
+  }
+}
+
+.melodie-transport__timer {
+  font-variant-numeric: tabular-nums;
+  min-width: 3.5em;
+}
+
+.melodie-transport__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .piano-octaves {
   display: flex;
   justify-content: center;
