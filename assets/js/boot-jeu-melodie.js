@@ -52,6 +52,12 @@ const RENDERERS = { piano: renderPiano, guitare: renderGuitare, trompette: rende
 
 if (resumeBtn && loadLast()) resumeBtn.hidden = false;
 
+/* iOS coupe le son si le commutateur silencieux physique est activé, sans
+   moyen fiable de le détecter : on affiche juste une astuce pour cette
+   plateforme (CDC §3.9, §9 étape 9). */
+const iosHint = root?.querySelector("[data-melodie-ios-hint]");
+if (iosHint && /iPad|iPhone|iPod/.test(navigator.userAgent)) iosHint.hidden = false;
+
 /* Mélodie partagée par lien : décodée tout de suite (avant même « Commencer »),
    mais la lecture ne démarre qu'au clic (l'audio n'est pas encore débloqué). */
 let sharedRecording = null;

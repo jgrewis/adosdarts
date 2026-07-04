@@ -12,9 +12,10 @@
   margin: 0 auto;
   padding: var(--space-12) var(--space-6);
   border-radius: var(--radius-lg);
-  background: var(--brand-toucan);
-  color: var(--brand-cream);
+  background: var(--melodie-bg);
+  color: var(--melodie-text);
   text-align: center;
+  box-shadow: var(--shadow-block-night);
 }
 
 .melodie__intro-text {
@@ -42,14 +43,14 @@
 .melodie-instrument-btn {
   font-family: var(--font-body);
   padding: var(--space-2) var(--space-4);
-  border: var(--border-width) solid var(--brand-cream);
+  border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--brand-cream);
+  color: var(--melodie-text);
   cursor: pointer;
 }
 .melodie-instrument-btn[aria-pressed="true"] {
-  background: var(--brand-cream);
+  background: var(--melodie-text);
   color: var(--brand-ink);
 }
 
@@ -80,9 +81,15 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  padding: var(--space-2);
   cursor: pointer;
 }
 
+/* [hidden] doit rester prioritaire sur le display:flex ci-dessous, sinon
+   le mode « Notes » n'arrive jamais à masquer les pads d'accords. */
+.melodie-chords[hidden] {
+  display: none;
+}
 .melodie-chords {
   display: flex;
   flex-wrap: wrap;
@@ -96,10 +103,10 @@
   min-width: 96px;
   min-height: 64px;
   padding: var(--space-3) var(--space-6);
-  border: var(--border-width) solid var(--brand-cream);
+  border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-md);
-  background: var(--brand-toucan-deep);
-  color: var(--brand-cream);
+  background: var(--melodie-surface);
+  color: var(--melodie-text);
   font-family: var(--font-display);
   font-size: var(--text-lg);
   cursor: pointer;
@@ -107,7 +114,7 @@
 }
 
 .melodie-chord.is-active {
-  background: var(--brand-yellow);
+  background: var(--melodie-glow-guitare);
   color: var(--brand-ink);
   transition: none;
 }
@@ -132,15 +139,15 @@
   width: 72px;
   height: 72px;
   border-radius: var(--radius-pill);
-  border: var(--border-width) solid var(--brand-cream);
-  background: var(--brand-toucan-deep);
+  border: var(--border-width) solid var(--melodie-text);
+  background: var(--melodie-surface);
   cursor: pointer;
   user-select: none;
 }
 
 .melodie-piston.is-active {
-  background: var(--brand-coral);
-  box-shadow: 0 0 0 8px rgba(236, 104, 59, 0.4);
+  background: var(--melodie-glow-trompette);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--melodie-glow-trompette) 45%, transparent);
   transition: none;
 }
 .melodie-piston:not(.is-active) {
@@ -162,16 +169,16 @@
   min-height: 64px;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-pill);
-  border: var(--border-width) solid var(--brand-cream);
-  background: var(--brand-toucan-deep);
-  color: var(--brand-cream);
+  border: var(--border-width) solid var(--melodie-text);
+  background: var(--melodie-surface);
+  color: var(--melodie-text);
   font-family: var(--font-body);
   cursor: pointer;
   user-select: none;
 }
 
 .melodie-string.is-active {
-  background: var(--brand-yellow);
+  background: var(--melodie-glow-guitare);
   color: var(--brand-ink);
   transition: none;
 }
@@ -181,7 +188,7 @@
 
 .melodie-transport-wrap {
   margin-top: var(--space-8);
-  border-top: 1px solid rgba(253, 246, 233, 0.25);
+  border-top: 1px solid color-mix(in srgb, var(--melodie-text) 25%, transparent);
   padding-top: var(--space-6);
 }
 
@@ -200,10 +207,10 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  border: var(--border-width) solid var(--brand-cream);
+  border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--brand-cream);
+  color: var(--melodie-text);
   cursor: pointer;
 }
 .melodie-transport__btn:disabled {
@@ -215,7 +222,7 @@
   width: 10px;
   height: 10px;
   border-radius: var(--radius-pill);
-  background: var(--brand-red);
+  background: var(--melodie-rec);
   display: inline-block;
 }
 .melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
@@ -247,7 +254,7 @@
 
 .melodie__shared-error {
   margin-top: var(--space-4);
-  color: var(--brand-cream);
+  color: var(--melodie-text);
 }
 
 .melodie-share {
@@ -322,15 +329,15 @@
 
 .melodie-key--white {
   height: 100%;
-  background: var(--brand-cream);
+  background: var(--melodie-key-white);
   color: var(--brand-ink);
   z-index: var(--z-base);
 }
 
 .melodie-key--black {
   height: 62%;
-  background: var(--brand-ink);
-  color: var(--brand-cream);
+  background: var(--melodie-key-black);
+  color: var(--melodie-text);
   z-index: var(--z-decor);
   transform: translateX(-50%);
 }
@@ -343,11 +350,48 @@
 /* Allumage instantané (jamais d'animation à l'attaque), extinction en fondu
    uniquement à la désactivation — cf. CDC §4.2. */
 .melodie-key.is-active {
-  background: var(--brand-teal);
-  color: var(--brand-cream);
+  background: var(--melodie-glow-piano);
+  color: var(--melodie-text);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--melodie-glow-piano) 45%, transparent);
   transition: none;
 }
 .melodie-key--white:not(.is-active),
 .melodie-key--black:not(.is-active) {
-  transition: background-color var(--duration-slow) var(--ease-out);
+  transition: background-color var(--duration-slow) var(--ease-out), box-shadow var(--duration-slow) var(--ease-out);
+  box-shadow: none;
+}
+
+/* Le focus par défaut du site (outline bleu nuit, --color-focus) est
+   illisible sur le panneau nocturne du jeu : outline clair ici (R6/CDC §9). */
+.melodie__scene :focus-visible {
+  outline-color: var(--melodie-text);
+}
+
+.melodie__ios-hint {
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.melodie__credits {
+  margin-top: var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  opacity: 0.8;
+}
+
+/* Sous prefers-reduced-motion : changement d'état sec, sans halo animé ni
+   transition de lueur (CDC §3.9/§4.2). */
+@media (prefers-reduced-motion: reduce) {
+  .melodie-key--white:not(.is-active),
+  .melodie-key--black:not(.is-active),
+  .melodie-chord:not(.is-active),
+  .melodie-piston:not(.is-active),
+  .melodie-string:not(.is-active) {
+    transition: none;
+  }
+  .melodie-key.is-active,
+  .melodie-piston.is-active {
+    box-shadow: none;
+  }
 }

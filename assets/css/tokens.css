@@ -152,4 +152,18 @@
   /* --- Largeur de contenu --- */
   --content-max: 1180px;
   --content-pad: clamp(1rem, 4vw, 3rem);
+
+  /* --------------------------------------------------------------------
+     Jeu « Compose ta mélodie » — chaque token référence une valeur de
+     marque déjà définie ci-dessus, aucune nouvelle couleur (CDC §4.2).
+     -------------------------------------------------------------------- */
+  --melodie-bg: var(--gradient-night);
+  --melodie-surface: var(--brand-toucan-deep);
+  --melodie-text: var(--brand-cream);
+  --melodie-key-white: var(--brand-cream);
+  --melodie-key-black: var(--brand-ink);
+  --melodie-glow-piano: var(--brand-teal);
+  --melodie-glow-guitare: var(--brand-yellow);
+  --melodie-glow-trompette: var(--brand-coral);
+  --melodie-rec: var(--brand-red);
 }
