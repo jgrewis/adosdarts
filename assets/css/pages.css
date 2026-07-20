@@ -81,8 +81,13 @@
 
 /* Toucan à droite, tout le contenu (titre, date, boutons, compteur) à gauche.
    Ordre DOM naturel : .hero__content (gauche) puis .hero__visual (droite). */
+/* 58ch : la colonne est assez large pour que le logo atteigne sa taille
+   maximale (470 px) et que les deux boutons tiennent côte à côte, tout en
+   gardant les lignes de texte dans la fourchette lisible de 45-75 caractères
+   (§8 des règles d'espacement). Une mesure plus étroite laissait plus de
+   200 px de vide à droite sur desktop et près de 400 px sur tablette. */
 .hero__content {
-  max-width: 44ch;
+  max-width: 58ch;
   justify-self: start;
 }
 
@@ -100,14 +105,19 @@
   text-shadow: none;
 }
 
-/* Le logo est désormais le SVG officiel de l'affiche (inline). */
+/* Logo officiel fourni par le client (PNG détouré, fond transparent).
+   L'image est bornée par la largeur du conteneur : elle ne déborde jamais,
+   même en zoom 200 % ou sur très petit écran. L'aspect-ratio reprend les
+   dimensions réelles du fichier (2552 × 1081) : la place est réservée avant
+   le chargement, donc aucun décalage de mise en page (CLS). */
 .hero__logo {
   margin: 0 0 var(--space-4);
 }
-.hero__logo-svg {
+.hero__logo-img {
   display: block;
   width: min(100%, 470px);
   height: auto;
+  aspect-ratio: 2552 / 1081;
   /* Ombre très légère : on garde un soupçon de relief sans épaissir le trait
      (le logo de l'affiche est fin). */
   filter: drop-shadow(0 1px 1px rgba(26, 20, 48, 0.16));
@@ -380,100 +390,30 @@
   padding-top: var(--space-4);
 }
 
-/* Variante « teaser » (accueil) : seule la partie colorée (nom) reste
-   visible par défaut ; les détails se déroulent au survol/focus, dans un
-   panneau flottant (position absolue) pour ne pas pousser la grille.
-   .band-card a overflow:hidden (pour les coins arrondis de l'image) : on le
-   neutralise ici et on reporte le clip sur .band-card__visual lui-même,
-   pour laisser le panneau déborder sous la carte. */
-.band-card--teaser { overflow: visible; }
+/* Variante « teaser » (accueil) : uniquement le bloc coloré, la carte entière
+   étant un lien vers la page Au programme (le <a> porte .band-card, donc il
+   hérite de la bordure, du rayon et de l'animation de survol communes).
+   Toute la surface est cliquable : cible tactile largement au-dessus du
+   minimum de 44×44 px (WCAG 2.5.5). */
+.band-card--teaser {
+  text-decoration: none;
+  color: inherit;
+}
 .band-card--teaser .band-card__visual {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  cursor: pointer;
+  border-bottom: 0;                 /* pas de corps de carte en dessous */
 }
-.band-card--teaser .band-card__visual:focus-visible { outline: 3px solid var(--white); outline-offset: -6px; }
-/* Affordance : chevron indiquant que la carte se déplie (pivote à l'ouverture) */
-.band-card__chevron {
-  position: absolute;
-  bottom: var(--space-2);
-  left: 50%;
-  translate: -50% 0;
-  z-index: 2;
-  font-size: var(--text-lg);
-  line-height: 1;
-  color: var(--band-ink, var(--white));
-  text-shadow: var(--band-shadow, 2px 2px 0 rgba(26, 20, 48, 0.4));
-  transition: transform var(--duration-base) var(--ease-out);
-}
-.band-card--teaser.is-expanded .band-card__chevron { transform: rotate(180deg); }
-.band-card__visual-link {
-  margin-top: var(--space-2);
-  background: transparent;
-  color: var(--white);
-  border-color: var(--white);
-}
-.band-card__visual-link:hover { background: rgba(255, 255, 255, 0.15); }
-
-.band-card__details {
-  position: absolute;
-  top: calc(100% + var(--space-2));
-  left: 0;
-  right: 0;
-  display: grid;
-  grid-template-rows: 0fr;
-  overflow: hidden;
-  background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-block);
-  opacity: 0;
-  transition: grid-template-rows var(--duration-base) var(--ease-out),
-    opacity var(--duration-base) var(--ease-out);
-}
-.band-card__details > * { overflow: hidden; min-height: 0; }
-.band-card--teaser.is-expanded { z-index: var(--z-sticky); }
-.band-card--teaser.is-expanded .band-card__details { grid-template-rows: 1fr; opacity: 1; }
-
-/* Sur mobile (1 colonne), le panneau flottant recouvrirait la carte suivante :
-   on le remet dans le flux (accordéon qui pousse la grille). */
-@media (max-width: 640px) {
-  .band-card__details {
-    position: static;
-    margin-top: var(--space-2);
-  }
+.band-card--teaser:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
 }
 
-/* Façade « click-to-play » : rien n'est chargé depuis YouTube avant le clic
-   (RGPD) — l'iframe est montée par programme.js à la demande. */
-.band-card__media { aspect-ratio: 16 / 9; position: relative; }
-.band-card__media iframe { width: 100%; height: 100%; border: 0; display: block; }
-.band-card__media-play {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  width: 100%;
-  height: 100%;
-  background: var(--gradient-night);
-  color: var(--white);
-  border: 0;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: var(--weight-bold);
-  font-size: var(--text-base);
-  text-transform: uppercase;
-}
-.band-card__media-play:hover { background: var(--brand-toucan); }
-.band-card__media-play[hidden] { display: none; }
-.band-card__media-note {
-  font-family: var(--font-body);
-  font-weight: var(--weight-regular);
-  font-size: var(--text-xs);
-  text-transform: none;
-  opacity: 0.8;
+/* Séparation playlist ↔ grille des groupes : deux blocs distincts, donc un
+   espace nettement supérieur au gap interne de la grille (24 px) — ratio 2:1
+   exigé par la règle de proximité. Le conteneur [data-playlist] est un
+   wrapper : c'est lui, et non .cta-band qui vit à l'intérieur, qui est le
+   frère de .band-grid. */
+[data-playlist]:not(:empty) + .band-grid {
+  margin-top: clamp(var(--space-12), 6vw, var(--space-16));
 }
 
 /* ==========================================================================
@@ -543,8 +483,11 @@
   letter-spacing: var(--tracking-wide);
 }
 
-/* Galerie photos (anciennes éditions) */
-.memories__subtitle {
+/* Sous-titre de second niveau à l'intérieur d'une section (galerie photos des
+   anciennes éditions, bloc « Un déchet, ça se vise » d'Infos pratiques…).
+   L'espace au-dessus (48 px) est bien supérieur à celui du dessous (12 px) :
+   le titre appartient visuellement au contenu qu'il introduit. */
+.section__subtitle {
   margin-top: var(--space-12);
   margin-bottom: var(--space-3);
   font-family: var(--font-display);

@@ -8,11 +8,14 @@
    dans le HTML initial. Acceptable ici (contenu indexable dans chaque page),
    à garder en tête pour le référencement si le site grossit. */
 
+/* Note : « Compose ta mélodie » (jeu-melodie.html) n'est volontairement PAS
+   dans le menu — c'est un easter egg qui ne s'ouvre qu'en cliquant le toucan
+   de la page d'accueil. La page reste servie et référencée (sitemap), elle
+   n'est simplement pas exposée dans la navigation. */
 const NAV = [
   { key: "index", href: "index.html", label: "Accueil" },
-  { key: "programmation", href: "programmation.html", label: "Programmation" },
+  { key: "programmation", href: "programmation.html", label: "Au programme" },
   { key: "principe", href: "principe.html", label: "Le festival" },
-  { key: "jeu-melodie", href: "jeu-melodie.html", label: "Le jeu" },
   { key: "infos", href: "infos.html", label: "Infos pratiques" },
   { key: "contact", href: "contact.html", label: "Contact" },
 ];
@@ -75,7 +78,7 @@ function footerHtml() {
         <div class="footer-col">
           <h3>Naviguer</h3>
           <ul>
-            <li><a href="programmation.html">Programmation</a></li>
+            <li><a href="programmation.html">Au programme</a></li>
             <li><a href="infos.html">Infos pratiques</a></li>
             <li><a href="contact.html">Contact</a></li>
             <li><a href="principe.html">Le principe du festival</a></li>

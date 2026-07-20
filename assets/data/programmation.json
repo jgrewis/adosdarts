@@ -1,11 +1,23 @@
 {
   "_note": "Photos des groupes (image) et liens d'écoute Deezer/Spotify (ecoute) à compléter dès réception. Les liens nuls (null) sont masqués automatiquement à l'affichage. Le champ playlist (spotify/deezer) ci-dessous suit la même règle pour le bloc playlist du festival.",
+  "_note_ordre": "Le champ « ordre » sert à la fois de clé de tri (croissant) et de numéro affiché sur la carte. La valeur 0 signifie « hors numérotation » : la carte passe en tête de liste et aucun numéro n'est affiché. C'est le cas de la Scène ouverte, qui court sur toute la soirée entre les concerts et n'occupe donc pas un créneau numéroté.",
   "playlist": {
     "spotify": "https://open.spotify.com/playlist/4vAf8c1LFqGeJ59v1g3tnM?si=QdkM09PHSUmJLKBvS6Kksg",
     "deezer": "https://link.deezer.com/s/33FLkJj6aiBd3RlyBGlWs"
   },
   "scenes": ["Grande scène", "Scène ouverte"],
   "groupes": [
+    {
+      "ordre": 0,
+      "nom": "Scène ouverte",
+      "style": "Jam Session",
+      "scene": "Scène ouverte",
+      "description": "Pendant que le groupe suivant se prépare, monte sur scène pour jouer un ou deux morceaux avec d'autres festivaliers ! #jamsession",
+      "image": null,
+      "couleur": "var(--brand-orange)",
+      "youtube": null,
+      "ecoute": null
+    },
     {
       "ordre": 1,
       "nom": "SYMBIOZ",
@@ -48,17 +60,6 @@
       "image": null,
       "couleur": "var(--brand-green)",
       "youtube": "https://m.youtube.com/watch?v=N3ahIjMNnk4",
-      "ecoute": null
-    },
-    {
-      "ordre": 5,
-      "nom": "Scène ouverte",
-      "style": "Jam Session",
-      "scene": "Scène ouverte",
-      "description": "Pendant que le groupe suivant se prépare, monte sur scène pour jouer un ou deux morceaux avec d'autres festivaliers ! #jamsession",
-      "image": null,
-      "couleur": "var(--brand-orange)",
-      "youtube": null,
       "ecoute": null
     }
   ]

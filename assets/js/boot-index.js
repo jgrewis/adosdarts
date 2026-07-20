@@ -7,14 +7,12 @@ import { initLoader } from "./loader.js";
 import { startCountdown } from "./countdown.js";
 import { initProgramme } from "./programme.js";
 import { renderPartenaires } from "./partenaires.js";
-import { initGamePoubelle } from "./game-poubelle.js";
 
 renderLayout();
 initNav();
 initCookieBanner();
 initLoader();
 initProgramme({ teaser: true });
-initGamePoubelle(document.querySelector("[data-jeu-poubelle]"));
 
 fetch("assets/data/edition.json")
   .then((r) => r.json())

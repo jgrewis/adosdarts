@@ -8,7 +8,7 @@
        frame-ancestors n'ont d'effet qu'en en-têtes HTTP réels — à poser
        côté serveur/CDN en production. -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'self'; object-src 'none'" />
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <title>Festival À Dos d'Arts #8 — Soirée concerts, samedi 22 août 2026 à Rouffach</title>
@@ -25,8 +25,10 @@
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
   <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
-  <!-- Preload des polices critiques above-the-fold (logo hero + titres) -->
-  <link rel="preload" href="assets/fonts/CoreCircus2DDouble.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- Preload de la police critique above-the-fold (date, titres du hero).
+       Core Circus n'est plus préchargée : le logo est désormais une image, et
+       cette police ne sert plus qu'aux numéros des cartes, sous la ligne de
+       flottaison. -->
   <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
@@ -81,33 +83,13 @@
       <div class="container hero__inner">
         <div class="hero__content">
           <h1 class="hero__logo">
-            <!-- Logo officiel de l'affiche (vectorisé par le client). « FESTIVAL »
-                 et l'apostrophe de « D'ARTS » sont des tracés ; « À DOS », « D'ARTS »
-                 et « #8 » utilisent la police Core Circus chargée par la page.
-                 SVG inline (et non <img>) pour que la police s'applique. -->
-            <svg class="hero__logo-svg" viewBox="0 0 626.34 289.85" role="img"
-              aria-label="Festival À Dos d'Arts, 8ᵉ édition" xmlns="http://www.w3.org/2000/svg">
-              <defs><style>
-                .lg-fill{fill:#fff;}
-                .lg-main{fill:#fff;font-size:134px;font-family:"Core Circus 2D Double",CoreCircus2DDouble;letter-spacing:-0.22em;}
-                .lg-hash{font-size:89px;fill:#f7e82a;font-family:"Core Circus 2D Double",CoreCircus;letter-spacing:-0.04em;}
-              </style></defs>
-              <g>
-                <path class="lg-fill" d="M419.61,215.29h7.09a99.45,99.45,0,0,1,0,12.18s-.09,1.46-.24,3.05c-.71,7.77-3.54,18.66-4.35,22.75h-5.32c.38-3,1.22-7.64,1.52-10.73.95-9.72,1.18-17.5,1.3-26.35Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M409.19,253.27c-.1-9.75-1.4-28.92-2-38h7.66v38h-5.62" transform="translate(-127.65 -51.84)"/>
-                <text class="lg-main" transform="translate(161.91 257.96)"><tspan xml:space="preserve">D  ARTS</tspan></text>
-                <text class="lg-main" transform="translate(0 148.97)">À DOS </text>
-                <path class="lg-fill" d="M266.55,89.92V52.57h24.7v6.1H274.17v10H289v6.16H274.17V89.92Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M297.69,89.92V52.57h25v6.1H305.3v9.47h15.12V74.3H305.3v9.52h17.42v6.1Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M342.37,90.59a40.27,40.27,0,0,1-5.07-.28,20.25,20.25,0,0,1-4-.89,26.63,26.63,0,0,1-3.67-1.57V80.51a18.09,18.09,0,0,0,5.52,3,19.62,19.62,0,0,0,6.47,1.09,7.34,7.34,0,0,0,4.56-1.2,4.16,4.16,0,0,0,1.54-3.5,3.48,3.48,0,0,0-1.26-2.8,11.31,11.31,0,0,0-3.33-1.85q-2.07-.78-4.54-1.62c-1.15-.41-2.28-.87-3.38-1.38a11.25,11.25,0,0,1-3-1.93,8.37,8.37,0,0,1-2.1-2.94,10.52,10.52,0,0,1-.79-4.34,11,11,0,0,1,.79-4.08,10.13,10.13,0,0,1,2.41-3.62,11.74,11.74,0,0,1,4.2-2.55,17.88,17.88,0,0,1,6.16-.95,25.29,25.29,0,0,1,3.94.28,19.46,19.46,0,0,1,3.28.84,30.33,30.33,0,0,1,3.25,1.4V61.7c-.9-.64-1.85-1.24-2.86-1.82a17,17,0,0,0-3.22-1.43,13.11,13.11,0,0,0-3.67-.62,10.12,10.12,0,0,0-3.47.45,4.72,4.72,0,0,0-2.24,1.51,3.85,3.85,0,0,0-.78,2.41,3.9,3.9,0,0,0,.95,2.77,6.89,6.89,0,0,0,2.69,1.71c1.15.45,2.48.92,4,1.4s2.83,1,4.12,1.49a13.48,13.48,0,0,1,3.42,2,9.09,9.09,0,0,1,2.35,3,10,10,0,0,1,.87,4.37A11.72,11.72,0,0,1,354,84.77,10.73,10.73,0,0,1,349.68,89,15,15,0,0,1,342.37,90.59Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M370.37,89.92V58.67H359.06v-6.1h30.3v6.1H378V89.92Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M394.51,89.92V52.57h7.61V89.92Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M420.94,89.92,406.88,52.57h8.68L426.82,85H424.3l11.2-32.36,8-.06L429,89.92Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M441.27,89.92,455.6,52.57h8.24L477.5,89.92h-7.84L457.45,55.15l3.36-.28L448.6,89.92Zm7.56-9.13L450.62,75H468l.61,5.82Z" transform="translate(-127.65 -51.84)"/>
-                <path class="lg-fill" d="M482.26,89.92V52.57h7.62V83.76h17v6.16Z" transform="translate(-127.65 -51.84)"/>
-              </g>
-              <text class="lg-hash" transform="translate(401.89 139.45)">#8</text>
-            </svg>
+            <!-- Logo officiel fourni par le client (PNG détouré, transparent).
+                 Chargé en priorité : c'est l'élément principal above-the-fold
+                 (candidat LCP), d'où fetchpriority="high" et l'absence de
+                 lazy-loading. -->
+            <img class="hero__logo-img" src="assets/img/elements/logo-adosdarts-8.png"
+              alt="Festival À Dos d'Arts, 8ᵉ édition"
+              width="2552" height="1081" fetchpriority="high" decoding="async" />
           </h1>
           <div class="hero__meta">
             <span class="hero__date" data-date>Samedi 22 août 2026</span>
@@ -116,7 +98,7 @@
           <p class="hero__tagline">Soirée concerts &amp; Scène ouverte · Entrée libre · 4 groupes, 2 scènes</p>
 
           <div class="hero__cta-row">
-            <a class="btn btn--primary" href="programmation.html">Voir la programmation</a>
+            <a class="btn btn--primary" href="programmation.html">Voir le programme</a>
             <a class="btn btn--on-dark" href="infos.html">Infos pratiques</a>
           </div>
 
@@ -155,6 +137,18 @@
             <p class="facts-bar__value">Entrée libre</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== Garden party (après-midi) ===== -->
+    <section class="section section--alt" aria-labelledby="garden-titre">
+      <div class="container">
+        <h2 id="garden-titre" class="section__title">Garden party</h2>
+        <p class="section__lead">
+          Des animations et des espaces tranquilles pour vivre le festival en
+          mode « backstage ». Plus d'infos à venir au courant de l'été,
+          reviens vite !
+        </p>
       </div>
     </section>
 
@@ -206,12 +200,16 @@
             <figcaption class="memory__caption">Édition #6 — 2024</figcaption>
           </figure>
           <figure class="memory">
+            <img src="assets/img/affiches/affiche-2025.webp" alt="Affiche de l'édition 2025 (7ᵉ édition)" loading="lazy" />
+            <figcaption class="memory__caption">Édition #7 — 2025</figcaption>
+          </figure>
+          <figure class="memory">
             <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" loading="lazy" />
             <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
           </figure>
         </div>
 
-        <h3 class="memories__subtitle">En images</h3>
+        <h3 class="section__subtitle">En images</h3>
         <p class="section__lead">Quelques instants des éditions passées, la galerie complète arrive bientôt.</p>
         <div class="gallery" data-galerie>
           <!-- Vignettes de photos d'anciennes éditions à intégrer (4-5 + galerie).
@@ -220,67 +218,6 @@
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Éco-responsabilité + mini-jeu ===== -->
-    <section class="section" aria-labelledby="eco-titre">
-      <div class="container">
-        <p class="eyebrow">Festival propre</p>
-        <h2 id="eco-titre" class="section__title">Un déchet, ça se vise (et ça se trie)</h2>
-        <p class="section__lead">
-          À Dos d'Arts se déroule en plein air, au cœur de la nature de Rouffach.
-          Pour que la fête reste belle, chaque mégot, gobelet ou emballage compte :
-          un déchet laissé au sol met des mois — parfois des siècles — à disparaître,
-          pollue les sols et menace la faune. La bonne nouvelle ? Le bon geste prend
-          deux secondes : viser la poubelle, et déposer chaque déchet dans le bon bac.
-        </p>
-
-        <div class="eco-game" data-jeu-poubelle>
-          <p class="eco-game__lead">
-            <strong>Mettez un maximum de déchets dans la corbeille en 25 secondes !</strong>
-            Vous êtes face à la poubelle, un déchet en main. La distance change à
-            chaque fois et un vent de travers tente de dévier votre lancer.
-            <strong>Faites glisser (ou swipez sur mobile) vers le haut, en direction
-            de la poubelle, pour lancer</strong> : plus le geste est ample, plus le
-            lancer est puissant ; inclinez-le à gauche ou à droite pour compenser le
-            vent. Chaque déchet bien rangé, c'est un de moins par terre.
-          </p>
-
-          <div class="eco-game__hud">
-            <div class="eco-game__chip">
-              <span class="eco-game__chip-label">Distance</span>
-              <span class="eco-game__chip-value" data-jeu-distance>—</span>
-            </div>
-            <div class="eco-game__chip">
-              <span class="eco-game__chip-label">Vent de travers</span>
-              <span class="eco-game__chip-value" data-jeu-vent>—</span>
-            </div>
-            <div class="eco-game__chip">
-              <span class="eco-game__chip-label">Temps restant</span>
-              <span class="eco-game__chip-value" data-jeu-timer>25 s</span>
-            </div>
-            <div class="eco-game__chip">
-              <span class="eco-game__chip-label">Score (réussis / lancers)</span>
-              <span class="eco-game__chip-value" data-jeu-score>0 / 0</span>
-            </div>
-          </div>
-
-          <div class="eco-game__stage">
-            <canvas class="eco-game__canvas" data-jeu-canvas width="800" height="450"
-              role="application" tabindex="0"
-              aria-label="Jeu de lancer à la première personne : une poubelle de tri se trouve devant vous, à distance variable, avec un vent de travers. Faites glisser vers le haut pour lancer le déchet, ou utilisez les flèches du clavier puis Entrée."></canvas>
-            <div class="eco-game__overlay">
-              <button class="btn btn--primary eco-game__start" type="button" data-jeu-demarrer>Démarrer la partie</button>
-            </div>
-          </div>
-
-          <div class="eco-game__buttons">
-            <button class="btn btn--ghost" type="button" data-jeu-suivant hidden>Passer cette poubelle</button>
-          </div>
-
-          <p class="eco-game__status" data-jeu-status role="status" aria-live="polite"></p>
         </div>
       </div>
     </section>
