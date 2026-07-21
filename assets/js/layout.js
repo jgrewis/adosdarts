@@ -92,9 +92,14 @@ function footerHtml() {
             <li><a href="mailto:contact@adosdarts.fr">contact@adosdarts.fr</a></li>
           </ul>
         </div>
-        <!-- Colonne « Légal » retirée tant que les pages Mentions légales et
-             Accessibilité n'existent pas (liens morts interdits). À rétablir
-             dès que mentions-legales.html est créée — obligation LCEN. -->
+        <!-- Colonne « Légal » : n'expose que les pages qui existent réellement
+             (pas de lien mort). La page Accessibilité reste à créer. -->
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="mentions-legales.html">Mentions légales</a></li>
+          </ul>
+        </div>
       </div>
       <div class="footer-bottom">
         <p>© 2026 Festival À Dos d'Arts — Rouffach (68)</p>

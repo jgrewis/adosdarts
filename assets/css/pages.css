@@ -739,3 +739,57 @@
   min-height: 1.6em;
   color: var(--color-text);
 }
+
+/* ==========================================================================
+   Page Mentions légales — document de texte long
+   ========================================================================== */
+
+/* Colonne de lecture contrainte (§8 de la charte : ≤ 65ch), indépendante de
+   la largeur du conteneur. Le rythme vertical repose sur les marges des
+   titres ci-dessous, pas sur un gap : les blocs sont de nature hétérogène
+   (paragraphes, listes, sous-titres). */
+.legal {
+  max-width: 65ch;
+}
+
+.legal h2 {
+  font-size: var(--text-xl);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+}
+
+/* Le premier titre ne pousse pas la section : l'espace vient déjà du
+   padding-block de .section. */
+.legal > h2:first-child {
+  margin-top: 0;
+}
+
+.legal h3 {
+  font-size: var(--text-lg);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+}
+
+.legal p {
+  margin-bottom: var(--space-4);
+}
+
+.legal ul {
+  margin: 0 0 var(--space-4) var(--space-6);
+}
+
+.legal li {
+  margin-bottom: var(--space-2);
+}
+
+/* Information légale non encore fournie. Le rouge seul ne porte pas
+   l'information (WCAG 1.4.1) : le pictogramme, la graisse et le liseré
+   pointillé restent perceptibles sans distinction des couleurs. Le rouge de
+   marque (#e74317) ne fait que 3.75:1 sur le crème — on utilise sa variante
+   foncée, à 4.9:1. */
+.legal__todo {
+  color: var(--brand-red-deep);
+  font-weight: var(--weight-bold);
+  border-bottom: 2px dotted var(--brand-red-deep);
+  white-space: nowrap;
+}
