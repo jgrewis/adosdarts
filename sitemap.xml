@@ -24,4 +24,8 @@
     <loc>https://jgrewis.github.io/adosdarts/contact.html</loc>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://jgrewis.github.io/adosdarts/mentions-legales.html</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>
