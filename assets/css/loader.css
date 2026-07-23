@@ -85,8 +85,8 @@
 
 .loader__skip {
   position: absolute;
-  bottom: var(--space-6);
-  right: var(--space-6);
+  bottom: var(--space-md);
+  right: var(--space-md);
 }
 
 @keyframes leaf-part {

@@ -88,7 +88,7 @@ a {
 
 ul,
 ol {
-  padding-left: var(--space-6);
+  padding-left: var(--space-md);
 }
 
 button,
@@ -109,19 +109,19 @@ textarea {
 /* --- Lien d'évitement clavier --- */
 .skip-link {
   position: absolute;
-  left: var(--space-4);
+  left: var(--space-sm);
   top: -100px;
   z-index: var(--z-skiplink);
   background: var(--color-text);
   color: var(--color-bg);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   font-weight: var(--weight-bold);
   transition: top var(--duration-fast) var(--ease-out);
 }
 
 .skip-link:focus {
-  top: var(--space-4);
+  top: var(--space-sm);
 }
 
 /* --- Masqué visuellement mais lisible par lecteur d'écran --- */
@@ -156,18 +156,31 @@ textarea {
 }
 
 .section {
-  padding-block: var(--space-16);
+  padding-block: var(--space-2xl);
 }
 
 .section__title {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-lg);
+}
+
+/* Un titre suivi d'un lead lui « appartient » : on resserre l'espace qui les
+   sépare (16px) tout en gardant l'espace au-dessus du titre plus grand (§5). */
+.section__title:has(+ .section__lead) {
+  margin-bottom: var(--space-sm);
 }
 
 /* --- Utilitaires d'espacement (remplacent les styles inline, CSP-friendly) --- */
 .mt-8 {
-  margin-top: var(--space-8);
+  margin-top: var(--space-lg);
 }
 
 .mt-12 {
-  margin-top: var(--space-12);
+  margin-top: var(--space-xl);
+}
+
+/* Colonne de texte à la mesure de lecture confortable (1.Regles.md §8 & §13).
+   À poser sur les paragraphes de contenu qui ne vivent pas déjà dans un
+   composant contraint (carte, lead…). */
+.prose {
+  max-width: var(--measure);
 }
