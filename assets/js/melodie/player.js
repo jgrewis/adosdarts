@@ -1,33 +1,35 @@
-/* Rejeu fidèle d'un Recording (notes, durées, timing, instrument) via
-   Tone.Part, avec illumination synchronisée par Tone.Draw.
+/* Rejeu fidèle d'un Recording (notes, durées, timing, instrument).
+
+   On planifie chaque note par setTimeout puis on la déclenche par un
+   triggerAttackRelease IMMÉDIAT sur le sampler — exactement le chemin d'une
+   touche jouée à la main, qui, lui, sonne. On n'utilise PAS Tone.Transport :
+   avec lookAhead=0 (mode faible latence du jeu, réglé dans engine.js), le
+   Transport peut avaler ses premières notes et rendre la lecture muette
+   (exemples et « Réécouter »). L'illumination est déclenchée dans le même
+   setTimeout que la note : synchro à quelques millisecondes.
    Tone est une globale fournie par assets/vendor/tone.min.js. */
 /* global Tone */
 import { getSampler } from "./instruments.js";
 
-let part = null;
+let timers = [];
 let doneTimer = null;
+let playing = false;
 
 export function play(recording, { onEventStart, onEventEnd, onDone } = {}) {
   stop(); // « ▶ » pendant une lecture déjà en cours ne doit jamais en superposer une deuxième
-
-  // Astuce de stabilité (CDC §8.3.10) : lookAhead=0 (jeu live) peut faire
-  // vaciller un Tone.Part ; on le remonte pendant la lecture non interactive.
-  Tone.context.lookAhead = 0.1;
+  playing = true;
 
   const events = recording.events;
-  part = new Tone.Part((time, ev) => {
-    const sampler = getSampler(ev.instrument);
+  events.forEach((ev) => {
     const duration = Math.max(ev.duration, 0.05);
-    sampler?.triggerAttackRelease(ev.notes, duration, time);
-    Tone.Draw.schedule(() => onEventStart?.(ev), time);
-    Tone.Draw.schedule(() => onEventEnd?.(ev), time + duration);
-  }, events.map((ev) => [ev.time, ev]));
-  part.start(0);
+    timers.push(setTimeout(() => {
+      getSampler(ev.instrument)?.triggerAttackRelease(ev.notes, duration);
+      onEventStart?.(ev);
+      timers.push(setTimeout(() => onEventEnd?.(ev), duration * 1000));
+    }, ev.time * 1000));
+  });
 
   const totalDuration = events.reduce((max, ev) => Math.max(max, ev.time + ev.duration), 0);
-  part.stop(totalDuration + 0.2);
-  Tone.Transport.start();
-
   doneTimer = setTimeout(() => {
     stop();
     onDone?.();
@@ -35,11 +37,10 @@ export function play(recording, { onEventStart, onEventEnd, onDone } = {}) {
 }
 
 export function stop() {
+  timers.forEach(clearTimeout);
+  timers = [];
   if (doneTimer) { clearTimeout(doneTimer); doneTimer = null; }
-  if (part) { part.dispose(); part = null; }
-  Tone.Transport.stop();
-  Tone.Transport.cancel();
-  Tone.context.lookAhead = 0;
+  playing = false;
 }
 
-export function isPlaying() { return part !== null; }
+export function isPlaying() { return playing; }

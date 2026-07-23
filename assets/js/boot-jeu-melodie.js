@@ -12,14 +12,13 @@ import { renderPiano } from "./melodie/ui-piano.js";
 import { renderGuitare } from "./melodie/ui-guitare.js";
 import { renderTrompette } from "./melodie/ui-trompette.js";
 import { renderChords } from "./melodie/ui-chords.js";
-import { CHORDS, chordOn, chordOff } from "./melodie/chords.js";
+import { chordOn, chordOff } from "./melodie/chords.js";
 import { attachPointerNotes } from "./melodie/pointer-notes.js";
 import { attachKeyboard } from "./melodie/keyboard.js";
-import { createRecorder } from "./melodie/recorder.js";
 import { play as playRecording, stop as stopPlayback } from "./melodie/player.js";
-import { saveLast, loadLast } from "./melodie/storage.js";
-import { renderTransport } from "./melodie/ui-transport.js";
-import { encodeToUrl, decodeFromUrl, downloadRecording, importFromFile } from "./melodie/serialize.js";
+import { loadBestLevel, saveBestLevel, loadBestScores, saveBestScore } from "./melodie/storage.js";
+import { createChallenge, createKnownChallenge, CHALLENGE_NOTES } from "./melodie/challenge.js";
+import { renderChallenge, renderProgress, renderSongButtons } from "./melodie/ui-challenge.js";
 import { loadDemos } from "./melodie/demos.js";
 
 renderLayout();
@@ -28,44 +27,23 @@ initCookieBanner();
 
 const root = document.querySelector("[data-melodie]");
 const startBtn = root?.querySelector("[data-melodie-start]");
-const resumeBtn = root?.querySelector("[data-melodie-resume]");
 const intro = root?.querySelector("[data-melodie-intro]");
 const loading = root?.querySelector("[data-melodie-loading]");
 const instrumentPanel = root?.querySelector("[data-melodie-instrument]");
 const playRoot = root?.querySelector("[data-melodie-play]");
 const chordsRoot = root?.querySelector("[data-melodie-chords]");
-const transportRoot = root?.querySelector("[data-melodie-transport]");
 const instrumentBtns = root?.querySelectorAll("[data-instrument]");
 const lettersToggle = root?.querySelector("[data-melodie-letters]");
 const modeInputs = root?.querySelectorAll('[name="melodie-mode"]');
-const sharedBanner = root?.querySelector("[data-melodie-shared]");
-const sharedPlayBtn = root?.querySelector("[data-melodie-shared-play]");
-const sharedError = root?.querySelector("[data-melodie-shared-error]");
-const shareCopyBtn = root?.querySelector("[data-share-copy]");
-const shareExportBtn = root?.querySelector("[data-share-export]");
-const shareImportInput = root?.querySelector("[data-share-import]");
-const shareStatus = root?.querySelector("[data-share-status]");
-const demosWrap = root?.querySelector("[data-melodie-demos]");
-const demosList = root?.querySelector("[data-melodie-demos-list]");
+const challengeRoot = root?.querySelector("[data-melodie-challenge]");
 
 const RENDERERS = { piano: renderPiano, guitare: renderGuitare, trompette: renderTrompette };
-
-if (resumeBtn && loadLast()) resumeBtn.hidden = false;
 
 /* iOS coupe le son si le commutateur silencieux physique est activé, sans
    moyen fiable de le détecter : on affiche juste une astuce pour cette
    plateforme (CDC §3.9, §9 étape 9). */
 const iosHint = root?.querySelector("[data-melodie-ios-hint]");
 if (iosHint && /iPad|iPhone|iPod/.test(navigator.userAgent)) iosHint.hidden = false;
-
-/* Mélodie partagée par lien : décodée tout de suite (avant même « Commencer »),
-   mais la lecture ne démarre qu'au clic (l'audio n'est pas encore débloqué). */
-let sharedRecording = null;
-if (location.hash.startsWith("#m=")) {
-  sharedRecording = decodeFromUrl(location.hash);
-  if (sharedRecording && sharedBanner) sharedBanner.hidden = false;
-  else if (sharedError) sharedError.hidden = false;
-}
 
 /* Allume/éteint visuellement une touche ou un pad sans jamais re-rendre le
    clavier (interdit pendant le jeu, cf. CDC §5.4) : uniquement classList. */
@@ -75,38 +53,26 @@ function lightKey(container, note, on) {
   });
 }
 
-const recorder = createRecorder(() => Tone.now(), {
-  onLimit: (recording) => {
-    finishRecording(recording);
-    if (transportRefs) transportRefs.status.textContent = "Limite atteinte (5 000 notes ou 5 minutes) : enregistrement arrêté automatiquement.";
-  },
-});
-
 function playNoteOn(notes) {
   const instrument = getState().instrument;
   noteOn(notes, instrument);
   notes.forEach((n) => lightKey(playRoot, n, true));
-  recorder.noteOn(notes, instrument);
+  submitDefiNote(notes[0]);   // no-op hors du défi (voir setupChallenge)
 }
 function playNoteOff(notes) {
   const instrument = getState().instrument;
   noteOff(notes, instrument);
   notes.forEach((n) => lightKey(playRoot, n, false));
-  recorder.noteOff(notes, instrument);
 }
 function playChordOn(chordId) {
   const instrument = getState().instrument;
   chordOn(chordId, instrument);
   lightKey(chordsRoot, chordId, true);
-  const notes = CHORDS[chordId]?.[instrument];
-  if (notes) recorder.noteOn(notes, instrument);
 }
 function playChordOff(chordId) {
   const instrument = getState().instrument;
   chordOff(chordId, instrument);
   lightKey(chordsRoot, chordId, false);
-  const notes = CHORDS[chordId]?.[instrument];
-  if (notes) recorder.noteOff(notes, instrument);
 }
 
 let pointerHandle = null;
@@ -135,165 +101,244 @@ function renderInstrumentUI(instrument) {
   pointerHandle = attachPointerNotes(zone, { onNoteOn: playNoteOn, onNoteOff: playNoteOff });
 }
 
-/* ------------------------------------------------------- Transport ---- */
-let transportRefs = null;
-let lastRecording = null;
-let recordTimerInterval = null;
-let recordStartWall = null;
-let metronomeSynth = null;
-let metronomeTimer = null;
+/* --------------------------------------------------------- Défi ------- */
+/* Deux modes : « surprise » (séquence aléatoire qui s'allonge) et « connue »
+   (un air d'exemple, noté jusqu'à la première erreur). Les deux forcent le
+   piano à l'octave 0 : c'est le seul instrument dont toutes les notes du défi
+   sont visibles à l'écran. */
+const DEMO_STEP = 0.6;      // secondes entre deux notes (mode surprise)
+const DEMO_DURATION = 0.45; // durée d'une note démontrée (mode surprise)
+let defiRefs = null;
+let defiMode = "surprise";  // "surprise" | "connue"
+let defiPhase = "off";      // "off" | "demo" (saisie bloquée) | "input" | "result"
+let demoTimers = [];
+let challenge = null;       // mode surprise
+let knownChallenge = null;  // mode connue
+let currentSong = null;     // mélodie connue en cours
+let demoMelodies = [];      // airs chargés depuis les démos
 
-function formatTime(seconds) {
-  const s = Math.max(0, Math.round(seconds));
-  const mm = String(Math.floor(s / 60)).padStart(2, "0");
-  const ss = String(s % 60).padStart(2, "0");
-  return `${mm}:${ss}`;
+/* Coupe toute démonstration en cours (surprise ET connue) : annule les notes
+   programmées, arrête la lecture d'un air, relâche et éteint les touches. */
+function stopDemonstration() {
+  demoTimers.forEach(clearTimeout);
+  demoTimers = [];
+  stopPlayback();
+  CHALLENGE_NOTES.forEach((n) => {
+    noteOff([n], "piano");
+    lightKey(playRoot, n, false);
+  });
 }
 
-function updateRecordTimer() {
-  if (!transportRefs || recordStartWall === null) return;
-  transportRefs.timer.textContent = formatTime((performance.now() - recordStartWall) / 1000);
+function setDefiStatus(text, variant) {
+  if (!defiRefs) return;
+  defiRefs.status.className = "melodie-defi__status" + (variant ? ` melodie-defi__status--${variant}` : "");
+  defiRefs.status.textContent = text;
 }
 
-function startMetronome(bpm) {
-  stopMetronome();
-  if (!metronomeSynth) metronomeSynth = new Tone.Synth({ volume: -12 }).toDestination();
-  metronomeSynth.triggerAttackRelease("C6", "32n");
-  metronomeTimer = setInterval(() => metronomeSynth.triggerAttackRelease("C6", "32n"), 60000 / bpm);
-}
-function stopMetronome() {
-  if (metronomeTimer) clearInterval(metronomeTimer);
-  metronomeTimer = null;
-}
-
-/* Point d'entrée unique pour changer la performance active : garde le
-   transport et les boutons de partage synchronisés avec sa présence. */
-function setLastRecording(recording) {
-  lastRecording = recording;
-  if (transportRefs) transportRefs.playBtn.disabled = !recording;
-  if (shareCopyBtn) shareCopyBtn.disabled = !recording;
-  if (shareExportBtn) shareExportBtn.disabled = !recording;
+/* Force piano + octave 0 + mode notes, sans passer par les gestionnaires de
+   clic (qui, eux, interrompraient le défi). */
+function forcePianoForDefi() {
+  releaseEverything();
+  setState({ instrument: "piano", octave: 0, mode: "notes" });
+  instrumentBtns?.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.instrument === "piano")));
+  modeInputs?.forEach((i) => { i.checked = i.value === "notes"; });
+  renderInstrumentUI("piano");
+  applyMode("notes");
 }
 
-function finishRecording(recording) {
-  if (!transportRefs) return;
-  const { recordBtn, stopBtn, status } = transportRefs;
-  clearInterval(recordTimerInterval);
-  recordTimerInterval = null;
-  recordStartWall = null;
-  recordBtn.setAttribute("aria-pressed", "false");
-  recordBtn.disabled = false;
-  stopBtn.disabled = true;
-  if (recording && recording.events.length) {
-    setLastRecording(recording);
-    saveLast(recording);
-    status.textContent = "Enregistrement terminé, prêt à réécouter.";
-  } else {
-    status.textContent = "Enregistrement arrêté (aucune note jouée).";
+/* Retour à l'état inactif, quel que soit le mode : abandonne toute tentative. */
+function resetDefi(message) {
+  defiPhase = "off";        // avant stopDemonstration : neutralise les timers en vol
+  stopDemonstration();
+  releaseEverything();
+  challenge = null;
+  knownChallenge = null;
+  currentSong = null;
+  if (!defiRefs) return;
+  defiRefs.startBtn.hidden = false;
+  defiRefs.quitBtn.hidden = true;
+  defiRefs.level.textContent = "—";
+  defiRefs.replayBtn.hidden = true;
+  defiRefs.changeBtn.hidden = true;
+  defiRefs.knownScoreWrap.hidden = true;
+  setDefiStatus(message || "");
+  renderProgress(defiRefs.progress, 0, 0);
+}
+
+/* --- Mode surprise ---------------------------------------------------- */
+function updateSurpriseScore() {
+  if (!defiRefs) return;
+  defiRefs.level.textContent = challenge ? String(challenge.getLevel()) : "—";
+  const best = loadBestLevel();
+  if (best > 0) {
+    defiRefs.recordWrap.hidden = false;
+    defiRefs.record.textContent = String(best);
   }
 }
 
-function triggerPlay() {
-  if (!lastRecording || !transportRefs) return;
-  const { playBtn, status } = transportRefs;
-  playBtn.disabled = true;   // jamais deux lectures superposées
-  status.textContent = "Lecture en cours";
-  playRecording(lastRecording, {
+/* Rejoue la séquence par le MÊME chemin que les touches (noteOn/noteOff →
+   sampler direct), et non par Tone.Transport : avec lookAhead=0 (mode faible
+   latence), le Transport peut avaler ses premières notes. */
+function demoSequence(sequence) {
+  stopDemonstration();
+  defiPhase = "demo";
+  renderProgress(defiRefs.progress, sequence.length, 0);
+  setDefiStatus("Écoute bien…");
+
+  const stepMs = DEMO_STEP * 1000;
+  const durMs = DEMO_DURATION * 1000;
+
+  sequence.forEach((note, i) => {
+    demoTimers.push(setTimeout(() => {
+      if (defiPhase !== "demo") return;
+      noteOn([note], "piano");
+      lightKey(playRoot, note, true);
+      demoTimers.push(setTimeout(() => {
+        noteOff([note], "piano");
+        lightKey(playRoot, note, false);
+      }, durMs));
+    }, i * stepMs));
+  });
+
+  const endMs = (sequence.length - 1) * stepMs + durMs + 200;
+  demoTimers.push(setTimeout(() => {
+    if (defiPhase !== "demo") return;
+    defiPhase = "input";
+    setDefiStatus("À toi de jouer !");
+  }, endMs));
+}
+
+function startDefi() {
+  if (!defiRefs) return;
+  forcePianoForDefi();
+  challenge = createChallenge();
+  defiRefs.startBtn.hidden = true;
+  defiRefs.quitBtn.hidden = false;
+  const sequence = challenge.start();
+  updateSurpriseScore();
+  demoSequence(sequence);
+}
+
+function submitSurpriseNote(note) {
+  const result = challenge.submitNote(note);
+
+  if (result === "wrong") {
+    defiPhase = "demo";   // bloque la saisie jusqu'à la nouvelle démonstration
+    setDefiStatus("✗ Raté. Réécoute la mélodie…", "wrong");
+    const sequence = challenge.retry();
+    setTimeout(() => { if (defiPhase === "demo") demoSequence(sequence); }, 900);
+    return;
+  }
+
+  renderProgress(defiRefs.progress, challenge.getSequence().length, challenge.getProgress());
+  if (result !== "complete") return;
+
+  const clearedLevel = challenge.getLevel();
+  if (clearedLevel > loadBestLevel()) saveBestLevel(clearedLevel);
+  defiPhase = "demo";
+  setDefiStatus(`✓ Bravo ! Niveau ${clearedLevel} réussi.`, "ok");
+  const sequence = challenge.nextRound();
+  updateSurpriseScore();
+  setTimeout(() => { if (defiPhase === "demo") demoSequence(sequence); }, 1100);
+}
+
+/* --- Mode connue ------------------------------------------------------ */
+function renderKnownSongs() {
+  if (!defiRefs) return;
+  renderSongButtons(defiRefs.songs, demoMelodies, loadBestScores(), pickSong);
+}
+
+/* Démonstration d'un air : rejoue l'enregistrement réel (avec son rythme) via
+   player.js — fiable depuis la correction du chemin de lecture. */
+function demoKnown(recording) {
+  stopDemonstration();
+  defiPhase = "demo";
+  renderProgress(defiRefs.progress, recording.events.length, 0);
+  setDefiStatus("Écoute bien…");
+  playRecording(recording, {
     onEventStart: (ev) => ev.notes.forEach((n) => lightKey(playRoot, n, true)),
     onEventEnd: (ev) => ev.notes.forEach((n) => lightKey(playRoot, n, false)),
     onDone: () => {
-      playBtn.disabled = false;
-      status.textContent = "Lecture terminée.";
+      if (defiPhase !== "demo") return;
+      defiPhase = "input";
+      setDefiStatus("À toi de jouer !");
     },
   });
 }
 
-function setupTransport() {
-  if (!transportRoot || transportRefs) return;
-  transportRefs = renderTransport(transportRoot);
-  const { recordBtn, stopBtn, playBtn, timer, status, metronomeToggle, tempoInput, tempoValue, volumeInput } = transportRefs;
-
-  recordBtn.addEventListener("click", () => {
-    releaseEverything();
-    stopPlayback();
-    recorder.start();
-    recordStartWall = performance.now();
-    timer.textContent = "00:00";
-    recordTimerInterval = setInterval(updateRecordTimer, 200);
-    recordBtn.setAttribute("aria-pressed", "true");
-    recordBtn.disabled = true;
-    stopBtn.disabled = false;
-    playBtn.disabled = true;
-    status.textContent = "Enregistrement en cours";
-  });
-
-  stopBtn.addEventListener("click", () => finishRecording(recorder.stop()));
-  playBtn.addEventListener("click", triggerPlay);
-
-  metronomeToggle.addEventListener("change", () => {
-    if (metronomeToggle.checked) startMetronome(Number(tempoInput.value));
-    else stopMetronome();
-  });
-  tempoInput.addEventListener("input", () => {
-    tempoValue.textContent = `${tempoInput.value} BPM`;
-    if (metronomeToggle.checked) startMetronome(Number(tempoInput.value));
-  });
-  volumeInput.addEventListener("input", () => {
-    Tone.Destination.volume.value = Number(volumeInput.value);
-  });
+function pickSong(melodie) {
+  if (!defiRefs) return;
+  forcePianoForDefi();
+  currentSong = melodie;
+  knownChallenge = createKnownChallenge(melodie.events.map((ev) => ev.notes[0]));
+  defiRefs.replayBtn.hidden = false;
+  defiRefs.changeBtn.hidden = false;
+  defiRefs.knownScoreWrap.hidden = false;
+  defiRefs.score.textContent = "0";
+  defiRefs.total.textContent = String(knownChallenge.getTotal());
+  demoKnown(melodie);
 }
 
-/* ------------------------------------------------------------ Partage -- */
-function setupShare() {
-  shareCopyBtn?.addEventListener("click", async () => {
-    if (!lastRecording) return;
-    const url = encodeToUrl(lastRecording);
-    if (!url) {
-      if (shareStatus) shareStatus.textContent = "Performance trop longue pour un lien — exportez le fichier.";
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      if (shareStatus) shareStatus.textContent = "Lien copié !";
-    } catch {
-      if (shareStatus) shareStatus.textContent = url;
-    }
-  });
-
-  shareExportBtn?.addEventListener("click", () => {
-    if (lastRecording) downloadRecording(lastRecording);
-  });
-
-  shareImportInput?.addEventListener("change", async () => {
-    const file = shareImportInput.files?.[0];
-    shareImportInput.value = "";
-    if (!file) return;
-    const recording = await importFromFile(file);
-    if (recording) {
-      setLastRecording(recording);
-      if (shareStatus) shareStatus.textContent = "Mélodie importée, prête à réécouter.";
-    } else if (shareStatus) {
-      shareStatus.textContent = "Fichier illisible : ce n'est pas une mélodie valide.";
-    }
-  });
+function replaySong() {
+  if (!currentSong || !knownChallenge) return;
+  knownChallenge.reset();
+  defiRefs.score.textContent = "0";
+  demoKnown(currentSong);
 }
 
-/* -------------------------------------------------------------- Démos -- */
-async function setupDemos() {
-  const demos = await loadDemos();
-  if (!demos.length || !demosList || !demosWrap) return;
-  demosWrap.hidden = false;
-  demos.forEach((demo) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn--on-dark btn--sm";
-    btn.textContent = demo.title;
-    btn.addEventListener("click", () => {
-      setLastRecording(demo);
-      triggerPlay();
-    });
-    demosList.appendChild(btn);
-  });
+function endKnownAttempt(perfect) {
+  defiPhase = "result";     // plus de saisie notée, mais Réécouter/Arrêter restent possibles
+  const score = knownChallenge.getProgress();
+  const total = knownChallenge.getTotal();
+  saveBestScore(currentSong.title, score);
+  defiRefs.score.textContent = String(score);
+  setDefiStatus(
+    perfect ? `✓ Parfait ! ${score} / ${total}` : `✗ Raté — score : ${score} / ${total}`,
+    perfect ? "ok" : "wrong"
+  );
+  renderKnownSongs();       // rafraîchit les records affichés sur les boutons d'airs
+}
+
+function submitKnownNote(note) {
+  if (!knownChallenge) return;
+  const result = knownChallenge.submitNote(note);
+  if (result === "wrong") {
+    endKnownAttempt(false);
+    return;
+  }
+  const progress = knownChallenge.getProgress();
+  defiRefs.score.textContent = String(progress);
+  renderProgress(defiRefs.progress, knownChallenge.getTotal(), progress);
+  if (result === "complete") endKnownAttempt(true);
+}
+
+/* --- Aiguillage saisie + bascule de mode ------------------------------ */
+function submitDefiNote(note) {
+  if (defiPhase !== "input" || !note) return;
+  if (defiMode === "connue") submitKnownNote(note);
+  else if (challenge) submitSurpriseNote(note);
+}
+
+function setDefiMode(mode) {
+  if (mode === defiMode || !defiRefs) return;
+  resetDefi("");
+  defiMode = mode;
+  defiRefs.modeBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.defiMode === mode)));
+  defiRefs.panes.forEach((p) => { p.hidden = p.dataset.defiPane !== mode; });
+}
+
+async function setupChallenge() {
+  if (!challengeRoot || defiRefs) return;
+  defiRefs = renderChallenge(challengeRoot);
+  updateSurpriseScore();
+  demoMelodies = await loadDemos();
+  renderKnownSongs();
+
+  defiRefs.startBtn.addEventListener("click", startDefi);
+  defiRefs.quitBtn.addEventListener("click", () => resetDefi("Défi quitté."));
+  defiRefs.replayBtn.addEventListener("click", replaySong);
+  defiRefs.changeBtn.addEventListener("click", () => resetDefi(""));
+  defiRefs.modeBtns.forEach((btn) => btn.addEventListener("click", () => setDefiMode(btn.dataset.defiMode)));
 }
 
 /* --------------------------------------------------------- Démarrage -- */
@@ -333,38 +378,26 @@ async function beginSession() {
     onChordOff: playChordOff,
   });
   applyMode(getState().mode);
-  setupTransport();
-  setupShare();
-  await setupDemos();
+  await setupChallenge();
 }
 
 startBtn?.addEventListener("click", beginSession);
-resumeBtn?.addEventListener("click", async () => {
-  await beginSession();
-  const recording = loadLast();
-  if (recording) {
-    setLastRecording(recording);
-    triggerPlay();
-  }
-});
-sharedPlayBtn?.addEventListener("click", async () => {
-  await beginSession();
-  if (sharedRecording) {
-    setLastRecording(sharedRecording);
-    triggerPlay();
-  }
-});
 
 /* « Panic » : un Alt+Tab ou changement d'onglet pendant une note tenue ne
    doit jamais la laisser sonner à l'infini (CDC §8.3.3). */
 window.addEventListener("blur", releaseEverything);
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) releaseEverything();
+  if (!document.hidden) return;
+  releaseEverything();
+  // Onglet caché pendant un défi : on l'interrompt (une démonstration en cours
+  // deviendrait incohérente au retour).
+  if (defiPhase !== "off") resetDefi("Défi interrompu.");
 });
 
 instrumentBtns?.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.dataset.instrument === getState().instrument) return;
+    if (defiPhase !== "off") resetDefi("Défi interrompu (changement d'instrument).");
     releaseEverything();
     setState({ instrument: btn.dataset.instrument });
     instrumentBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
@@ -379,6 +412,7 @@ lettersToggle?.addEventListener("change", () => {
 modeInputs?.forEach((input) => {
   input.addEventListener("change", () => {
     if (!input.checked) return;
+    if (defiPhase !== "off") resetDefi("Défi interrompu (changement de mode).");
     releaseEverything();
     setState({ mode: input.value });
     applyMode(input.value);

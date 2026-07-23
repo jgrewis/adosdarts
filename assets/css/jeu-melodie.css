@@ -62,7 +62,10 @@
   margin-bottom: var(--space-4);
 }
 
-.melodie-piano.hide-letters .melodie-key__letter {
+/* La classe hide-letters est posée sur le conteneur de jeu `.melodie-play`
+   (data-melodie-play), pas sur une `.melodie-piano` — qui n'existe pas dans le
+   rendu. */
+.melodie-play.hide-letters .melodie-key__letter {
   display: none;
 }
 
@@ -126,6 +129,165 @@
   touch-action: none;
 }
 
+/* Défi « Rejoue la mélodie » : panneau au-dessus du transport. Réutilise les
+   jetons du panneau nocturne (--melodie-text sur --melodie-surface). */
+.melodie-defi {
+  margin-top: var(--space-8);
+  border-top: 1px solid color-mix(in srgb, var(--melodie-text) 25%, transparent);
+  padding-top: var(--space-6);
+  font-family: var(--font-body);
+  text-align: center;
+}
+
+.melodie-defi__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin: 0;
+}
+
+/* Sélecteur des deux types de défi (surprise / connue). */
+.melodie-defi__modes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.melodie-defi__mode {
+  min-height: var(--touch-target, 44px);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--melodie-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.melodie-defi__mode[aria-pressed="true"] {
+  background: var(--melodie-text);
+  color: var(--melodie-surface);
+}
+
+.melodie-defi__pane {
+  margin-top: var(--space-4);
+}
+
+/* Choix d'une mélodie connue : boutons avec titre + meilleur score. */
+.melodie-defi__songs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+.melodie-defi__song {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: var(--touch-target, 44px);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--melodie-text);
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+.melodie-defi__song-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+.melodie-defi__song-best {
+  font-size: var(--text-xs);
+  opacity: 0.8;
+}
+.melodie-defi__score--known b {
+  font-size: var(--text-base);
+}
+
+.melodie-defi__intro {
+  margin: var(--space-2) auto 0;
+  max-width: 42ch;
+  font-size: var(--text-sm);
+  opacity: 0.85;
+}
+
+.melodie-defi__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.melodie-defi__btn {
+  min-height: var(--touch-target, 44px);
+  padding: var(--space-2) var(--space-6);
+  border: var(--border-width) solid var(--melodie-text);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--melodie-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.melodie-defi__btn--start {
+  background: var(--melodie-text);
+  color: var(--melodie-surface);
+}
+.melodie-defi__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.melodie-defi__score {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.melodie-defi__score b {
+  font-variant-numeric: tabular-nums;
+}
+.melodie-defi__record {
+  opacity: 0.85;
+}
+
+.melodie-defi__status {
+  margin: var(--space-4) auto 0;
+  min-height: 1.5em;
+  font-size: var(--text-base);
+  font-weight: 700;
+}
+/* Réussite et erreur ne reposent jamais sur la seule couleur (WCAG 1.4.1) :
+   le préfixe ✓ / ✗ est ajouté en JS. La couleur ne fait que renforcer. */
+.melodie-defi__status--ok    { color: var(--melodie-glow-piano); }
+.melodie-defi__status--wrong { color: var(--melodie-rec); }
+
+.melodie-defi__progress {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  min-height: 14px;
+}
+.melodie-defi__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  border: 2px solid color-mix(in srgb, var(--melodie-text) 45%, transparent);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.melodie-defi__dot.is-done {
+  background: var(--melodie-text);
+  border-color: var(--melodie-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .melodie-defi__dot { transition: none; }
+}
+
 /* Trompette : rangée de pistons ronds, lueur corail à l'appui. */
 .trompette-keys {
   display: flex;
@@ -184,115 +346,6 @@
 }
 .melodie-string:not(.is-active) {
   transition: background-color var(--duration-slow) var(--ease-out), color var(--duration-slow) var(--ease-out);
-}
-
-.melodie-transport-wrap {
-  margin-top: var(--space-8);
-  border-top: 1px solid color-mix(in srgb, var(--melodie-text) 25%, transparent);
-  padding-top: var(--space-6);
-}
-
-.melodie-transport {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-}
-
-.melodie-transport__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  border: var(--border-width) solid var(--melodie-text);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--melodie-text);
-  cursor: pointer;
-}
-.melodie-transport__btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.melodie-transport__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius-pill);
-  background: var(--melodie-rec);
-  display: inline-block;
-}
-.melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
-  animation: melodie-rec-pulse 1s infinite;
-}
-@keyframes melodie-rec-pulse {
-  50% { opacity: 0.3; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .melodie-transport__btn--record[aria-pressed="true"] .melodie-transport__dot {
-    animation: none;
-  }
-}
-
-.melodie-transport__timer {
-  font-variant-numeric: tabular-nums;
-  min-width: 3.5em;
-}
-
-.melodie-transport__option {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.melodie__shared {
-  margin-top: var(--space-4);
-}
-
-.melodie__shared-error {
-  margin-top: var(--space-4);
-  color: var(--melodie-text);
-}
-
-.melodie-share {
-  margin-top: var(--space-6);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.melodie-share__import {
-  cursor: pointer;
-}
-
-.melodie-share__status {
-  width: 100%;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-}
-
-.melodie-demos {
-  margin-top: var(--space-6);
-  text-align: center;
-}
-
-.melodie-demos__label {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-2);
-}
-
-.melodie-demos__list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-3);
 }
 
 .piano-octaves {
