@@ -4,13 +4,13 @@
    ========================================================================== */
 
 .melodie {
-  padding: 0 var(--content-pad) var(--space-16);
+  padding: 0 var(--content-pad) var(--space-2xl);
 }
 
 .melodie__scene {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: var(--space-12) var(--space-6);
+  padding: var(--space-xl) var(--space-md);
   border-radius: var(--radius-lg);
   background: var(--melodie-bg);
   color: var(--melodie-text);
@@ -21,7 +21,8 @@
 .melodie__intro-text {
   font-family: var(--font-body);
   font-size: var(--text-lg);
-  margin-bottom: var(--space-6);
+  max-width: var(--measure);          /* largeur de lecture bornée (§8) */
+  margin: 0 auto var(--space-md);
 }
 
 .melodie__loading {
@@ -30,19 +31,19 @@
 }
 
 .melodie__instrument {
-  margin-top: var(--space-8);
+  margin-top: var(--space-lg);
 }
 
 .melodie-instruments {
   display: flex;
   justify-content: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .melodie-instrument-btn {
   font-family: var(--font-body);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2xs) var(--space-sm);
   border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-pill);
   background: transparent;
@@ -55,11 +56,14 @@
 }
 
 .melodie-toggle {
-  display: block;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: var(--touch-target);   /* cible tactile 44px (§10) */
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-sm);
 }
 
 /* La classe hide-letters est posée sur le conteneur de jeu `.melodie-play`
@@ -72,8 +76,8 @@
 .melodie-mode {
   display: flex;
   justify-content: center;
-  gap: var(--space-4);
-  margin: 0 0 var(--space-6);
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
   padding: 0;
   border: none;
 }
@@ -83,8 +87,9 @@
   font-size: var(--text-sm);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
+  gap: var(--space-2xs);
+  min-height: var(--touch-target);   /* cible tactile 44px (§10) */
+  padding: var(--space-2xs);
   cursor: pointer;
 }
 
@@ -97,15 +102,15 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
   touch-action: none;
 }
 
 .melodie-chord {
   min-width: 96px;
   min-height: 64px;
-  padding: var(--space-3) var(--space-6);
+  padding: var(--space-xs) var(--space-md);
   border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-md);
   background: var(--melodie-surface);
@@ -132,9 +137,9 @@
 /* Défi « Rejoue la mélodie » : panneau au-dessus du transport. Réutilise les
    jetons du panneau nocturne (--melodie-text sur --melodie-surface). */
 .melodie-defi {
-  margin-top: var(--space-8);
+  margin-top: var(--space-lg);
   border-top: 1px solid color-mix(in srgb, var(--melodie-text) 25%, transparent);
-  padding-top: var(--space-6);
+  padding-top: var(--space-md);
   font-family: var(--font-body);
   text-align: center;
 }
@@ -150,12 +155,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
 }
 .melodie-defi__mode {
   min-height: var(--touch-target, 44px);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2xs) var(--space-sm);
   border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-pill);
   background: transparent;
@@ -170,7 +175,7 @@
 }
 
 .melodie-defi__pane {
-  margin-top: var(--space-4);
+  margin-top: var(--space-sm);
 }
 
 /* Choix d'une mélodie connue : boutons avec titre + meilleur score. */
@@ -178,14 +183,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-3);
+  gap: var(--space-xs);
 }
 .melodie-defi__song {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-3xs);
   min-height: var(--touch-target, 44px);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2xs) var(--space-sm);
   border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-md);
   background: transparent;
@@ -206,7 +211,7 @@
 }
 
 .melodie-defi__intro {
-  margin: var(--space-2) auto 0;
+  margin: var(--space-2xs) auto 0;
   max-width: 42ch;
   font-size: var(--text-sm);
   opacity: 0.85;
@@ -217,13 +222,13 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
 }
 
 .melodie-defi__btn {
   min-height: var(--touch-target, 44px);
-  padding: var(--space-2) var(--space-6);
+  padding: var(--space-2xs) var(--space-md);
   border: var(--border-width) solid var(--melodie-text);
   border-radius: var(--radius-pill);
   background: transparent;
@@ -253,7 +258,7 @@
 }
 
 .melodie-defi__status {
-  margin: var(--space-4) auto 0;
+  margin: var(--space-sm) auto 0;
   min-height: 1.5em;
   font-size: var(--text-base);
   font-weight: 700;
@@ -267,15 +272,15 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-2);
+  gap: var(--space-2xs);
   list-style: none;
-  margin: var(--space-4) 0 0;
+  margin: var(--space-sm) 0 0;
   padding: 0;
-  min-height: 14px;
+  min-height: 16px;
 }
 .melodie-defi__dot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: var(--radius-pill);
   border: 2px solid color-mix(in srgb, var(--melodie-text) 45%, transparent);
   transition: background-color var(--duration-fast) var(--ease-out);
@@ -293,7 +298,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-4);
+  gap: var(--space-sm);
   touch-action: none;
 }
 
@@ -322,14 +327,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-3);
+  gap: var(--space-xs);
   touch-action: none;
 }
 
 .melodie-string {
   min-width: 64px;
   min-height: 64px;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-pill);
   border: var(--border-width) solid var(--melodie-text);
   background: var(--melodie-surface);
@@ -351,12 +356,16 @@
 .piano-octaves {
   display: flex;
   justify-content: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 /* Zone de jeu : touch-action à none obligatoire (R6/§3.9), sinon le doigt
-   fait défiler la page pendant qu'on joue au lieu de jouer une note. */
+   fait défiler la page pendant qu'on joue au lieu de jouer une note.
+   Exception assumée à la règle des 44px (§10) : le clavier montre 1,5 octave,
+   donc des touches étroites en largeur (~25px en mobile) mais très hautes
+   (200px), jouables au doigt. Choix retenu avec le client (statu quo) pour
+   garder un vrai clavier plutôt qu'une octave réduite. */
 .piano-keys {
   position: relative;
   height: 200px;
@@ -372,7 +381,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: var(--space-2);
+  padding-bottom: var(--space-2xs);
   border: var(--border-width) solid var(--brand-ink);
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   font-family: var(--font-body);
@@ -421,13 +430,13 @@
 }
 
 .melodie__ios-hint {
-  margin-top: var(--space-4);
+  margin-top: var(--space-sm);
   font-family: var(--font-body);
   font-size: var(--text-sm);
 }
 
 .melodie__credits {
-  margin-top: var(--space-6);
+  margin-top: var(--space-md);
   font-family: var(--font-body);
   font-size: var(--text-xs);
   opacity: 0.8;

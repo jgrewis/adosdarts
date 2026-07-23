@@ -61,8 +61,8 @@ function renderKeys(zone) {
 export function renderPiano(root) {
   root.innerHTML = `
     <div class="piano-octaves">
-      <button class="btn btn--ghost btn--sm" type="button" data-piano-octave="-1" aria-label="Octave inférieure">Octave −</button>
-      <button class="btn btn--ghost btn--sm" type="button" data-piano-octave="1" aria-label="Octave supérieure">Octave +</button>
+      <button class="btn btn--on-dark btn--sm" type="button" data-piano-octave="-1" aria-label="Octave inférieure">Octave −</button>
+      <button class="btn btn--on-dark btn--sm" type="button" data-piano-octave="1" aria-label="Octave supérieure">Octave +</button>
     </div>
     <div class="piano-keys" data-piano-zone></div>
   `;

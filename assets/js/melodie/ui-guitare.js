@@ -18,6 +18,13 @@ export function renderGuitare(root) {
     btn.className = "melodie-string";
     btn.dataset.note = note;
     btn.setAttribute("aria-label", `Corde ${LABELS[step]}${octave}`);
+    // Nom de note visible sur la pastille (sinon les 6 cordes sont des ronds
+    // vides, indistinguables). Même classe que le piano : masqué par le même
+    // interrupteur « Afficher les lettres ».
+    const label = document.createElement("span");
+    label.className = "melodie-key__letter";
+    label.textContent = LABELS[step];
+    btn.appendChild(label);
     zone.appendChild(btn);
   });
   root.appendChild(zone);

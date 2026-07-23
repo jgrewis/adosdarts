@@ -118,19 +118,6 @@
   --space-3xl: 6rem;     /*  96px */
   --space-4xl: 8rem;     /* 128px */
 
-  /* Alias de compatibilité (ancienne nomenclature --space-N).
-     Conservés uniquement pour le jeu « Compose ta mélodie » (hors périmètre de
-     l'audit design) ; à retirer lors de la migration de jeu-melodie.css. */
-  --space-1: var(--space-3xs);
-  --space-2: var(--space-2xs);
-  --space-3: var(--space-xs);
-  --space-4: var(--space-sm);
-  --space-6: var(--space-md);
-  --space-8: var(--space-lg);
-  --space-12: var(--space-xl);
-  --space-16: var(--space-2xl);
-  --space-24: var(--space-3xl);
-
   /* --- Rayons, bordures, ombres --- */
   --radius-sm: 6px;
   --radius-md: 14px;
