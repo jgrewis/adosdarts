@@ -1,6 +1,6 @@
-/* Validation accessible des formulaires côté client.
-   NB : pas d'envoi réel — le back serverless + e-mail transactionnel relève
-   de la phase de production. On simule la confirmation. */
+/* Validation accessible des formulaires côté client, puis envoi réel au
+   script PHP (assets/php/envoi-contact.php) via fetch(). Sans JavaScript,
+   le <form action method> natif prend le relais et le script répond en HTML. */
 
 function setFieldError(field, message) {
   const errorEl = field.querySelector(".field__error");
@@ -30,6 +30,49 @@ function validateField(field) {
   return true;
 }
 
+function showStatus(status, kind, message) {
+  if (!status) return;
+  status.hidden = false;
+  status.className = `form-status form-status--${kind}`;
+  status.textContent = message;
+  status.setAttribute("role", "status");
+  status.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function envoyerFormulaire(form, status, submitButton) {
+  try {
+    const reponse = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "X-Requested-With": "fetch" },
+    });
+    const donnees = await reponse.json();
+
+    if (donnees.ok) {
+      showStatus(
+        status,
+        "success",
+        form.dataset.successMessage || donnees.message
+      );
+      form.reset();
+    } else {
+      showStatus(
+        status,
+        "error",
+        donnees.message || "Le formulaire contient des erreurs. Vérifiez les champs signalés."
+      );
+    }
+  } catch (erreur) {
+    showStatus(
+      status,
+      "error",
+      "L'envoi a échoué. Vérifiez votre connexion et réessayez, ou écrivez-nous directement à contact@adosdarts.fr."
+    );
+  } finally {
+    if (submitButton) submitButton.disabled = false;
+  }
+}
+
 export function initForms() {
   const forms = document.querySelectorAll("[data-validate]");
 
@@ -43,22 +86,12 @@ export function initForms() {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const status = form.querySelector("[data-form-status]");
+      const submitButton = form.querySelector('button[type="submit"]');
 
-      const showSuccess = () => {
-        if (!status) return;
-        status.hidden = false;
-        status.className = "form-status form-status--success";
-        status.textContent =
-          form.dataset.successMessage ||
-          "Merci ! Votre message a bien été pris en compte (démonstration).";
-        status.setAttribute("role", "status");
-        status.scrollIntoView({ behavior: "smooth", block: "center" });
-      };
-
-      // Honeypot anti-spam : succès silencieux si le champ piège est rempli.
+      // Honeypot anti-spam : succès silencieux si le champ piège est rempli, pas d'envoi.
       const honeypot = form.querySelector("[data-honeypot]");
       if (honeypot && honeypot.value.trim() !== "") {
-        showSuccess();
+        showStatus(status, "success", form.dataset.successMessage || "Merci !");
         form.reset();
         return;
       }
@@ -76,18 +109,13 @@ export function initForms() {
       const checkInvalid = requiredChecks.find((c) => !c.checked);
 
       if (firstInvalid || checkInvalid) {
-        if (status) {
-          status.hidden = false;
-          status.className = "form-status form-status--error";
-          status.textContent =
-            "Le formulaire contient des erreurs. Vérifiez les champs signalés.";
-        }
+        showStatus(status, "error", "Le formulaire contient des erreurs. Vérifiez les champs signalés.");
         (firstInvalid?.querySelector("input, select, textarea") || checkInvalid)?.focus();
         return;
       }
 
-      showSuccess();
-      form.reset();
+      if (submitButton) submitButton.disabled = true;
+      envoyerFormulaire(form, status, submitButton);
     });
   });
 }

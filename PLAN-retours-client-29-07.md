@@ -167,9 +167,9 @@ Distances calculées depuis L'Escapade de Rouffach (47.9524311, 7.2991145, elle-
 
 ---
 
-## 9. Point ouvert au moment du commit
+## 9. Commit — tranché le 03/08/2026
 
-Les 4 fichiers modifiés portent aussi des modifications non commitées du chantier galerie/admin :
+Les 4 fichiers modifiés portaient aussi des modifications non commitées du chantier galerie/admin :
 
 | Fichier | Contenu 29.07 | Contenu galerie/admin déjà présent |
 |---|---|---|
@@ -178,4 +178,29 @@ Les 4 fichiers modifiés portent aussi des modifications non commitées du chant
 | `mentions-legales.html` | §2, §4, date | URLs canoniques |
 | `assets/data/programmation.json` | 5 textes | *(rien)* |
 
-Décision à prendre par JP : commit sélectif par hunks, ou commit assumant les deux chantiers. **Aucun commit effectué.**
+**Décision retenue : commit sélectif.** Commit `d14283e` ne contient que les retours du 29.07
+(sur-titre, 5 textes, lien parking, §2/§4 des mentions légales, date). Le bloc galerie de
+`index.html` et le reste du chantier admin sont restés hors du commit, pour la branche
+`admin-photos`.
+
+---
+
+## 10. Mise en ligne — 03/08/2026
+
+Déployé sur `https://adosdarts.fr` par JP (dépôt manuel Ionos, cf. `PROCESS-mise-en-ligne.md`),
+puis **vérifié en comparant les fichiers servis par le serveur aux fichiers locaux** :
+
+| Fichier | État en ligne |
+|---|---|
+| `index.html` | ✅ à jour (le seul écart restant est le bloc galerie, non déployé, chantier en cours) |
+| `infos.html` | ✅ identique |
+| `mentions-legales.html` | ✅ identique |
+| `assets/data/programmation.json` | ✅ identique |
+| `contact.html`, `assets/js/forms.js`, `404.html`, `assets/css/layout.css` | ✅ identiques *(formulaires + bascule de domaine, cf. `PLAN-formulaires-production.md`)* |
+
+**Cette branche est close.** Ce qui reste non commité dans l'arbre de travail
+(`admin.html`, `galerie.html`, `assets/php/admin-api.php`, `assets/js/galerie.js`,
+`assets/js/boot-galerie.js`, `.htaccess`, plus les hunks galerie de `index.html`,
+`robots.txt`, `sitemap.xml`, `assets/js/layout.js`, `assets/js/boot-index.js`,
+`assets/css/pages.css`, `README.md`) appartient au chantier `admin-photos`, **qui n'est pas
+déployé** : `galerie.html` et `admin.html` répondent 404 en ligne au 03/08/2026.

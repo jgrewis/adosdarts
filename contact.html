@@ -11,12 +11,12 @@
 
   <title>Contact — Bénévoles &amp; artistes | Festival À Dos d'Arts #8</title>
   <meta name="description" content="Devenez bénévole de la soirée concerts À Dos d'Arts, ou proposez votre groupe pour une prochaine édition. Contact : contact@adosdarts.fr." />
-  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/contact.html" />
+  <link rel="canonical" href="https://adosdarts.fr/contact.html" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Contact — À Dos d'Arts #8" />
   <meta property="og:description" content="Bénévoles et groupes de musique : rejoignez l'aventure." />
-  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/contact.html" />
-  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
+  <meta property="og:url" content="https://adosdarts.fr/contact.html" />
+  <meta property="og:image" content="https://adosdarts.fr/assets/img/affiches/affiche-2026.png" />
 
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
@@ -53,8 +53,11 @@
             <p class="card__desc">Nous recherchons des talents bénévoles pour nous aider à l'organisation du festival : préparer, aider au bar, devenir l'un des photographes officiels… N'hésitez pas à nous contacter !</p>
 
             <form class="form" data-validate novalidate
-              data-success-message="Merci ! Votre proposition de coup de main est bien arrivée (démonstration — aucun envoi réel).">
+              action="assets/php/envoi-contact.php" method="post"
+              data-success-message="Merci ! Votre proposition de coup de main est bien arrivée.">
               <div class="form-status" data-form-status hidden></div>
+
+              <input type="hidden" name="formulaire" value="benevole" />
 
               <div class="field">
                 <label for="b-nom">Nom et prénom <span class="required" aria-hidden="true">*</span></label>
@@ -104,8 +107,11 @@
             <p class="card__desc">Vous êtes un groupe et souhaitez participer à une future édition d'À Dos d'Arts ? Présentez-vous, on écoute tout.</p>
 
             <form class="form" data-validate novalidate
-              data-success-message="Merci ! Votre proposition de groupe est bien arrivée (démonstration — aucun envoi réel).">
+              action="assets/php/envoi-contact.php" method="post"
+              data-success-message="Merci ! Votre proposition de groupe est bien arrivée.">
               <div class="form-status" data-form-status hidden></div>
+
+              <input type="hidden" name="formulaire" value="artiste" />
 
               <div class="field">
                 <label for="a-groupe">Nom du groupe <span class="required" aria-hidden="true">*</span></label>

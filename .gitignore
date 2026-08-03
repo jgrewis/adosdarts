@@ -3,6 +3,18 @@
 .env.*
 !.env.example
 
+# Mot de passe de l'administration (haché, mais c'est un secret) — le modèle
+# config-admin.example.php, lui, est versionné.
+assets/php/config-admin.php
+
+# Contenu créé par le client depuis la page d'administration : photos publiées,
+# index de la galerie, journal. Ces fichiers vivent UNIQUEMENT sur le serveur.
+# ⚠️ Ne jamais les inclure dans un paquet de déploiement : les téléverser
+#    écraserait les photos mises en ligne par le client (cf. PROCESS-mise-en-ligne.md).
+#    Le .htaccess de durcissement du dossier, lui, est versionné et se déploie.
+assets/uploads/*
+!assets/uploads/.htaccess
+
 # Dépendances (phase de production)
 node_modules/
 

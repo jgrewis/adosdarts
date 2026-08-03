@@ -7,6 +7,12 @@
       "runtimeArgs": [".claude/devserver.py"],
       "port": 4599,
       "autoPort": true
+    },
+    {
+      "name": "adodart-php",
+      "runtimeExecutable": "php",
+      "runtimeArgs": ["-S", "localhost:8765", "-t", "."],
+      "port": 8765
     }
   ]
 }

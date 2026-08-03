@@ -31,7 +31,6 @@
   letter-spacing: 0.02em;
   text-decoration: none;
   color: var(--brand-toucan);
-  white-space: nowrap;          /* la marque ne passe jamais sur 2 lignes */
   min-width: 0;
 }
 
@@ -40,6 +39,16 @@
   height: 40px;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
+}
+
+/* Le texte, lui, peut se tronquer proprement (…) plutôt que déborder sur
+   les boutons voisins quand la barre d'en-tête manque de place (mobile). */
+.brand__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .brand__mark svg,
@@ -206,9 +215,12 @@
   }
 }
 
-/* En très petit écran, le CTA du header est redondant avec le menu :
-   on le masque pour laisser respirer la marque et le bouton menu. */
-@media (max-width: 380px) {
+/* En petit écran, le CTA du header est redondant avec le menu : on le
+   masque pour laisser respirer la marque et le bouton menu. Même seuil
+   que le compactage de la marque ci-dessus : sous 480px, la largeur ne
+   suffit plus à accueillir marque + CTA + bouton menu sans les faire
+   se chevaucher sur les téléphones courants (375–430px). */
+@media (max-width: 480px) {
   .header-actions .btn {
     display: none;
   }
