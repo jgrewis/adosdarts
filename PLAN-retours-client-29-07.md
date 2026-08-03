@@ -163,7 +163,7 @@ Distances calculées depuis L'Escapade de Rouffach (47.9524311, 7.2991145, elle-
 
 - **L'exactitude juridique du §2 IONOS** : le texte vient du client, je l'ai transcrit sans le valider sur le fond.
 - **Le numéro SIREN de la CCPAROVIC**, laissé « ⚠ à compléter » par le client : toujours en attente.
-- **La mise en ligne** : rien n'est déployé par ce travail. Le dépôt sur Ionos reste manuel et à la main de JP.
+- **La mise en ligne** : ~~rien n'est déployé par ce travail~~ → **fait le 03/08/2026 par JP** (dépôt manuel Ionos), et vérifié contre le serveur : cf. §10.
 
 ---
 

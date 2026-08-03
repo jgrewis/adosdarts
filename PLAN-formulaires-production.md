@@ -54,20 +54,23 @@
 
 ## 6. Checklist
 
-- [x] Le formulaire bénévole envoie réellement un e-mail à contact@adosdarts.fr avec objet `[Bénévole]` — vérifié en local (`mail()` retourne succès, réponse 200 + message de confirmation affiché)
-- [x] Le formulaire artistes envoie réellement un e-mail à contact@adosdarts.fr avec objet `[Groupe]` — vérifié en local (même flux, `formulaire=artiste`)
-- [x] `Reply-To` du mail reçu = l'adresse saisie par le visiteur — vérifié en lisant le code (`envoi-contact.php`), non observable en boîte de réception locale
+> **Clos le 03/08/2026.** Les mentions « à vérifier en ligne » ci-dessous ont été levées :
+> JP a testé l'envoi des mails en production, tout fonctionne. Détail au §7.
+
+- [x] Le formulaire bénévole envoie réellement un e-mail à contact@adosdarts.fr avec objet `[Bénévole]` — vérifié en local, puis **en production par JP (mail reçu)**
+- [x] Le formulaire artistes envoie réellement un e-mail à contact@adosdarts.fr avec objet `[Groupe]` — vérifié en local, puis **en production par JP (mail reçu)**
+- [x] `Reply-To` du mail reçu = l'adresse saisie par le visiteur — vérifié en lisant le code (`envoi-contact.php`), puis **constaté sur un mail réellement reçu**
 - [x] Validation serveur : champs obligatoires manquants → erreur claire, aucun mail envoyé — testé via curl (`{"ok":false,"message":"Le nom est obligatoire."}`, HTTP 422)
 - [x] Validation serveur : e-mail mal formé → erreur claire, aucun mail envoyé — testé via curl (HTTP 422)
 - [x] Honeypot rempli → succès silencieux affiché, aucun mail envoyé — testé via curl (HTTP 200, pas d'appel à `mail()` dans ce chemin de code)
-- [x] Requête cross-origin (Origin/Referer étranger) → rejetée — vérifié par lecture de code ; le check est désactivé volontairement en local (`php -S`) donc non testable en conditions réelles ici, **à revérifier une fois en ligne sur Ionos**
+- [x] Requête cross-origin (Origin/Referer étranger) → rejetée — vérifié par lecture de code ; le check est désactivé volontairement en local (`php -S`), **actif et vérifié en ligne** (cf. §7)
 - [x] Double clic sur « Envoyer » → un seul mail part (bouton désactivé pendant l'envoi) — `submitButton.disabled = true` posé avant l'appel fetch
 - [x] En cas d'erreur serveur, message d'erreur affiché et champs saisis conservés (pas de `form.reset()`) — `form.reset()` n'est appelé que dans la branche succès
 - [x] Sans JavaScript, la soumission native du formulaire fonctionne quand même (repli PHP) — testé via curl sans header `X-Requested-With` : réponse HTML de confirmation
 - [x] Aucune régression sur la validation client existante (champs requis, pattern URL, etc.) — logique de `validateField` inchangée
 - [x] Aucune erreur console, aucune requête 404 — vérifié dans le navigateur (page contact.html rechargée, soumission testée)
 - [x] Testé responsive mobile (375px) — capture vérifiée, formulaire intact ; desktop déjà vérifié pendant les tests fonctionnels
-- [x] Point signalé explicitement en fin de tâche : la livraison réelle du mail depuis le serveur Ionos est **à vérifier par toi**, je ne peux pas le tester moi-même sans accès au serveur de production
+- [x] Point signalé explicitement en fin de tâche : la livraison réelle du mail depuis le serveur Ionos était **à vérifier par toi** — **fait le 03/08/2026, les mails arrivent** (cf. §7)
 
 ---
 
