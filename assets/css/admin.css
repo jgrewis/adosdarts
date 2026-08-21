@@ -1,0 +1,440 @@
+/* Administration de la galerie photos.
+   Outil interne : sobre, lisible, sans effet décoratif. Il reprend les tokens
+   du site (couleurs, espacements, polices) pour ne pas créer un second système
+   visuel à maintenir — aucune valeur d'espacement n'est écrite en dur ici. */
+
+/* ==========================================================================
+   Structure de page
+   ========================================================================== */
+
+.admin-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;   /* évite le saut lié à la barre d'adresse mobile */
+  background: var(--color-bg);
+}
+
+.admin-main {
+  flex: 1;
+  padding-block: var(--space-xl);
+}
+
+/* ==========================================================================
+   En-tête
+   ========================================================================== */
+
+.admin-header {
+  background: var(--color-surface);
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding-block: var(--space-sm);
+}
+
+.admin-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  /* Le logo mesure 40 px : sans ce minimum, la cible tactile passait sous les
+     44 px exigés (constaté en recette à 375 px). */
+  min-height: var(--touch-target);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.admin-brand img { display: block; }
+
+/* C'est le <h1> de la page, mais l'outil n'a pas besoin d'un titre d'affiche :
+   la hiérarchie est sémantique, la taille est une décision visuelle. */
+.admin-header__titre {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-sm);
+  /* base.css met tous les h1 en capitales, pour les titres d'affiche du site
+     public. Ici c'est une étiquette discrète d'en-tête : le niveau de titre est
+     une décision sémantique, pas visuelle. */
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Repoussé à droite sur grand écran, replié en dessous sur mobile. */
+.admin-header__actions { margin-left: auto; }
+
+.admin-header__actions[hidden] { display: none; }
+
+/* ==========================================================================
+   Panneaux
+   ========================================================================== */
+
+.admin-panneau[hidden] { display: none; }
+
+/* .section__title est calibré pour les titres du site public (jusqu'à 3,2 rem) :
+   sur un outil interne, ce gabarit d'affiche écrase tout le reste et fait
+   descendre le formulaire sous la ligne de flottaison. On reprend la classe
+   pour l'héritage typographique, on redescend d'un cran dans l'échelle. */
+.admin-panneau .section__title {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-md);
+}
+
+/* Un titre reçoit le focus au changement de vue (tabindex="-1") : sans cette
+   règle, le navigateur dessinerait un contour permanent autour du titre. */
+.admin-panneau h2:focus { outline: none; }
+.admin-panneau h2:focus-visible {
+  outline: var(--border-width) solid var(--color-focus);
+  outline-offset: var(--space-3xs);
+}
+
+/* Le référentiel impose de contraindre la colonne de texte : au-delà de ~65
+   caractères, la lecture décroche. */
+.admin-intro,
+.admin-aide {
+  max-width: 65ch;
+}
+
+.admin-intro {
+  margin-bottom: var(--space-lg);
+}
+
+.admin-aide {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Le formulaire de connexion n'a aucune raison d'occuper 1280 px. */
+.admin-form {
+  max-width: 28rem;
+}
+
+/* Espace entre le bloc d'aide et le bouton : l'aide appartient au champ qui la
+   précède (space-2xs), le bouton est un groupe distinct (space-lg).
+   Rapport ≥ 2:1 entre l'inter-groupe et l'intra-groupe. */
+.admin-form .admin-aide {
+  margin-top: calc(var(--space-md) * -1 + var(--space-2xs));
+  margin-bottom: var(--space-lg);
+}
+
+/* ==========================================================================
+   Cartes de contenu
+   ========================================================================== */
+
+.admin-carte {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.admin-carte__titre {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+/* ==========================================================================
+   Diagnostic serveur
+   ========================================================================== */
+
+.admin-verdict {
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-2xs);
+}
+
+/* Le symbole ✓ / ✗ double la couleur : l'information ne repose jamais sur la
+   seule couleur (WCAG 1.4.1). */
+.admin-verdict--ok { color: var(--color-success); }
+.admin-verdict--ko { color: var(--color-error); }
+
+.admin-diag {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3xs) var(--space-sm);
+  margin: var(--space-md) 0 0;
+  font-size: var(--text-sm);
+}
+
+.admin-diag dt {
+  color: var(--color-text-muted);
+}
+
+.admin-diag dd {
+  margin: 0 0 var(--space-2xs);
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;   /* une valeur longue ne pousse jamais la grille */
+}
+
+/* Deux colonnes dès qu'il y a la place. En dessous, libellé au-dessus de la
+   valeur : plus lisible qu'une colonne écrasée à 120 px. */
+@media (min-width: 40rem) {
+  .admin-diag {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    align-items: baseline;
+  }
+  .admin-diag dd { margin-bottom: var(--space-3xs); }
+}
+
+/* ==========================================================================
+   Formulaire d'ajout
+   ========================================================================== */
+
+.admin-form-ajout .admin-aide {
+  /* L'aide appartient au champ qui la précède : on la rapproche de lui, et on
+     laisse un écart franc avant le groupe suivant (rapport ≥ 2:1). */
+  margin-top: calc(var(--space-md) * -1 + var(--space-2xs));
+  margin-bottom: var(--space-lg);
+}
+
+/* Sélecteur de fichiers : l'input reste le contrôle réel (focusable, associé au
+   label, annoncé par les lecteurs d'écran) mais n'est pas dessiné. On ne le met
+   PAS en `display: none` ni `visibility: hidden`, qui le retireraient de l'ordre
+   de tabulation : il est réduit à un point transparent. */
+.admin-fichier-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.admin-fichier-bouton {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: var(--space-2xs) var(--space-md);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.admin-fichier-bouton:hover {
+  background: var(--brand-teal);
+}
+
+/* L'input étant invisible, c'est le label qui doit porter l'anneau de focus —
+   sinon la navigation au clavier se ferait à l'aveugle. */
+.admin-fichier-input:focus-visible + .admin-fichier-bouton {
+  outline: var(--border-width) solid var(--color-focus);
+  outline-offset: var(--space-3xs);
+}
+
+.admin-fichier-choix {
+  margin: var(--space-2xs) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* L'attribut HTML `hidden` masque via `display: none` dans la feuille de style
+   du navigateur — que TOUTE règle d'auteur posant un `display` écrase. Comme
+   `.field` est en `display: flex` (components.css), un champ marqué `hidden`
+   restait visible : on voyait le champ « Qui publie ? » ET la ligne « Vous
+   publiez en tant que… » côte à côte. Constaté en recette.
+   Réparé ici plutôt que dans components.css : le composant partagé sert aussi
+   à contact.html, qui n'a aucun champ masqué — on ne modifie pas ce qui marche. */
+.admin-panneau .field[hidden] { display: none; }
+
+.admin-auteur-actuel {
+  margin-bottom: var(--space-lg);
+}
+
+.admin-auteur-actuel[hidden] { display: none; }
+
+/* Bouton d'apparence textuelle : c'est bien un <button>, parce que ça déclenche
+   une action et non une navigation. La cible reste ≥ 44 px de haut. */
+.admin-lien-bouton {
+  border: 0;
+  background: none;
+  padding: var(--space-2xs);
+  min-height: var(--touch-target);
+  color: var(--color-accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-rappel {
+  max-width: 65ch;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm);
+  border-left: var(--border-width) solid var(--color-accent-2);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   Progression des envois
+   ========================================================================== */
+
+.admin-progression {
+  list-style: none;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.admin-progression:empty { display: none; }
+
+.admin-progression__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-sm);
+  justify-content: space-between;
+  padding: var(--space-2xs) var(--space-xs);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.admin-progression__nom {
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;   /* un nom de fichier long ne déborde pas */
+}
+
+.admin-progression__etat { color: var(--color-text-muted); }
+
+.admin-progression__item--ok {
+  border-color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
+}
+
+.admin-progression__item--ok .admin-progression__etat { color: var(--color-success); }
+
+.admin-progression__item--erreur {
+  border-color: var(--color-error);
+  background: color-mix(in srgb, var(--color-error) 10%, var(--color-surface));
+}
+
+.admin-progression__item--erreur .admin-progression__etat { color: var(--color-error); }
+
+/* ==========================================================================
+   Grille des photos en ligne
+   ========================================================================== */
+
+.admin-compteur {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-regular);
+}
+
+.admin-grille {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-md);
+}
+
+.admin-vignette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xs);
+  background: var(--color-surface);
+}
+
+.admin-vignette img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+.admin-vignette__date {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.admin-vignette__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  margin-top: auto;   /* les boutons s'alignent en bas quelle que soit la hauteur */
+}
+
+.admin-vignette__question {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-error);
+}
+
+.admin-vignette--confirmation {
+  border-color: var(--color-error);
+}
+
+/* ==========================================================================
+   Journal
+   ========================================================================== */
+
+.admin-details summary {
+  min-height: var(--touch-target);
+  padding: var(--space-2xs) 0;
+  cursor: pointer;
+  font-weight: var(--weight-semibold);
+}
+
+/* Le tableau défile dans sa propre boîte : à 320 px, c'est lui qui bouge,
+   jamais la page (règle « aucun défilement horizontal du document »). */
+.admin-table-defilante {
+  overflow-x: auto;
+  margin-top: var(--space-sm);
+}
+
+.admin-journal {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.admin-journal th,
+.admin-journal td {
+  padding: var(--space-2xs) var(--space-xs);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.admin-journal th { font-weight: var(--weight-bold); }
+
+/* ==========================================================================
+   Pied de page
+   ========================================================================== */
+
+.admin-footer {
+  border-top: var(--border-width) solid var(--color-border);
+  padding-block: var(--space-md);
+  font-size: var(--text-sm);
+}
+
+.admin-footer p { margin: 0; }
+
+/* Cible tactile confortable sur le lien de retour, isolé en bas de page. */
+.admin-footer a {
+  display: inline-block;
+  min-height: var(--touch-target);
+  padding-block: var(--space-2xs);
+}

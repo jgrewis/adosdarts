@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP en <meta> : X-Content-Type-Options et frame-ancestors n'ont d'effet
+       qu'en en-têtes HTTP réels — posés côté serveur dans le .htaccess. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <title>La galerie photos — À Dos d'Arts | Rouffach</title>
+  <meta name="description" content="Les photos des éditions passées du festival À Dos d'Arts à Rouffach : concerts, scène ouverte et ambiance de fin d'été." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://adosdarts.fr/galerie" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="La galerie photos — À Dos d'Arts" />
+  <meta property="og:description" content="Les photos des éditions passées du festival À Dos d'Arts à Rouffach." />
+  <meta property="og:url" content="https://adosdarts.fr/galerie" />
+  <meta property="og:image" content="https://adosdarts.fr/assets/img/affiches/affiche-2026.png" />
+
+  <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/elements/apple-touch-icon.png" />
+  <link rel="preload" href="assets/fonts/MavenPro.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <div data-site-header></div>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">Memories</p>
+        <h1>La galerie photos</h1>
+        <p class="page-head__lead">
+          Les images des éditions passées : les concerts, la scène ouverte, et
+          l'ambiance de fin d'été à Rouffach.
+        </p>
+        <p class="galerie-compte" data-galerie-compte></p>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Photos du festival">
+      <div class="container">
+        <!-- Rempli par galerie.js depuis assets/uploads/galerie.json.
+             Tant qu'aucune photo n'est publiée, les cases en pointillés
+             ci-dessous restent affichées : c'est l'état vide. -->
+        <div class="gallery" data-galerie>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+        </div>
+
+        <p class="mt-8">
+          <a class="btn btn--primary" href="./">Retour à l'accueil</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+
+  <aside class="cookie-banner" data-cookie-banner hidden aria-label="Gestion des cookies">
+    <p>Ce site n'utilise aucun traceur publicitaire. Une mesure d'audience respectueuse de la vie privée peut être activée avec votre accord.</p>
+    <div class="cookie-banner__actions">
+      <button class="btn btn--primary btn--sm" type="button" data-cookie-accept>Accepter</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-cookie-refuse>Refuser</button>
+    </div>
+  </aside>
+
+  <script type="module" src="assets/js/boot-galerie.js"></script>
+</body>
+</html>

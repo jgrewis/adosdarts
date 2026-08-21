@@ -13,20 +13,20 @@
    de la page d'accueil. La page reste servie et référencée (sitemap), elle
    n'est simplement pas exposée dans la navigation. */
 const NAV = [
-  { key: "index", href: "index.html", label: "Accueil" },
-  { key: "programmation", href: "programmation.html", label: "Au programme" },
-  { key: "principe", href: "principe.html", label: "Le festival" },
-  { key: "infos", href: "infos.html", label: "Infos pratiques" },
-  { key: "contact", href: "contact.html", label: "Contact" },
+  { key: "index", href: "./", label: "Accueil" },
+  { key: "programmation", href: "programmation", label: "Au programme" },
+  { key: "principe", href: "principe", label: "Le festival" },
+  { key: "infos", href: "infos", label: "Infos pratiques" },
+  { key: "contact", href: "contact", label: "Contact" },
 ];
 
 /* Bouton d'action à droite du menu — spécifique à chaque page. */
 const CTA = {
-  index: { label: "Comment venir", href: "infos.html" },
-  programmation: { label: "Comment venir", href: "infos.html" },
+  index: { label: "Comment venir", href: "infos" },
+  programmation: { label: "Comment venir", href: "infos" },
   infos: { label: "Itinéraire", href: "https://maps.app.goo.gl/QZw5W5pmu2b2eQoy6", external: true },
-  principe: { label: "La soirée", href: "programmation.html" },
-  "jeu-melodie": { label: "Comment venir", href: "infos.html" },
+  principe: { label: "La soirée", href: "programmation" },
+  "jeu-melodie": { label: "Comment venir", href: "infos" },
   contact: { label: "Devenir bénévole", href: "#benevole" },
 };
 
@@ -48,9 +48,9 @@ function headerHtml(page) {
   return `
   <header class="site-header">
     <div class="container site-header__inner">
-      <a class="brand" href="index.html" aria-label="Accueil — À Dos d'Arts">
+      <a class="brand" href="./" aria-label="Accueil — À Dos d'Arts">
         <span class="brand__mark"><img src="assets/img/elements/toucan.svg" alt="" width="40" height="40" /></span>
-        À Dos d'Arts
+        <span class="brand__label">À Dos d'Arts</span>
       </a>
       <nav class="main-nav" id="main-nav" data-main-nav aria-label="Navigation principale">
         <ul class="main-nav__list">${links}</ul>
@@ -78,10 +78,14 @@ function footerHtml() {
         <div class="footer-col">
           <h3>Naviguer</h3>
           <ul>
-            <li><a href="programmation.html">Au programme</a></li>
-            <li><a href="infos.html">Infos pratiques</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="principe.html">Le principe du festival</a></li>
+            <li><a href="programmation">Au programme</a></li>
+            <li><a href="infos">Infos pratiques</a></li>
+            <li><a href="contact">Contact</a></li>
+            <li><a href="principe">Le principe du festival</a></li>
+            <!-- La galerie est accessible ici et depuis l'accueil, mais pas
+                 depuis le menu principal : une 6ᵉ entrée y ferait resurgir le
+                 chevauchement d'en-tête corrigé le 28/07 entre 380 et 480 px. -->
+            <li><a href="galerie">La galerie photos</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -97,7 +101,7 @@ function footerHtml() {
         <div class="footer-col">
           <h3>Légal</h3>
           <ul>
-            <li><a href="mentions-legales.html">Mentions légales</a></li>
+            <li><a href="mentions-legales">Mentions légales</a></li>
           </ul>
         </div>
       </div>

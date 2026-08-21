@@ -13,14 +13,14 @@
 
   <title>Festival À Dos d'Arts #8 — Soirée concerts, samedi 22 août 2026 à Rouffach</title>
   <meta name="description" content="8ᵉ édition du festival À Dos d'Arts : soirée concerts gratuite le samedi 22 août 2026 à L'Escapade de Rouffach. 4 groupes, 2 scènes, entrée libre, buvette et restauration locale." />
-  <link rel="canonical" href="https://jgrewis.github.io/adosdarts/" />
+  <link rel="canonical" href="https://adosdarts.fr/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Festival À Dos d'Arts #8 — Soirée concerts" />
   <meta property="og:description" content="Samedi 22 août 2026, L'Escapade de Rouffach. 4 concerts, 2 scènes, entrée libre." />
   <meta property="og:locale" content="fr_FR" />
-  <meta property="og:url" content="https://jgrewis.github.io/adosdarts/" />
-  <meta property="og:image" content="https://jgrewis.github.io/adosdarts/assets/img/affiches/affiche-2026.png" />
+  <meta property="og:url" content="https://adosdarts.fr/" />
+  <meta property="og:image" content="https://adosdarts.fr/assets/img/affiches/affiche-2026.png" />
 
   <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
@@ -98,8 +98,8 @@
           <p class="hero__tagline">Soirée concerts &amp; Scène ouverte · Entrée libre · 4 groupes, 2 scènes</p>
 
           <div class="hero__cta-row">
-            <a class="btn btn--primary" href="programmation.html">Voir le programme</a>
-            <a class="btn btn--on-dark" href="infos.html">Infos pratiques</a>
+            <a class="btn btn--primary" href="programmation">Voir le programme</a>
+            <a class="btn btn--on-dark" href="infos">Infos pratiques</a>
           </div>
 
           <p class="hero__countdown-label">Ouverture des portes dans</p>
@@ -108,7 +108,7 @@
 
         <div class="hero__visual">
           <img class="hero__leaf hero__leaf--1" src="assets/img/elements/feuille-1-0.svg" alt="" aria-hidden="true" />
-          <a class="hero__toucan-link" href="jeu-melodie.html" aria-label="Jouer à « Compose ta mélodie », le jeu musical du festival">
+          <a class="hero__toucan-link" href="jeu-melodie" aria-label="Jouer à « Compose ta mélodie », le jeu musical du festival">
             <img class="hero__toucan" src="assets/img/elements/toucan-trait.svg" alt="" width="420" height="390" />
           </a>
           <img class="hero__leaf hero__leaf--2" src="assets/img/elements/feuille-2-0.svg" alt="" aria-hidden="true" />
@@ -164,7 +164,7 @@
           <p>Chargement de la programmation…</p>
         </div>
         <p class="mt-8">
-          <a class="btn btn--primary" href="programmation.html">Découvrir les groupes</a>
+          <a class="btn btn--primary" href="programmation">Découvrir les groupes</a>
         </p>
       </div>
     </section>
@@ -211,15 +211,22 @@
         </div>
 
         <h3 class="section__subtitle">En images</h3>
-        <p class="section__lead">Quelques instants des éditions passées, la galerie complète arrive bientôt.</p>
+        <p class="section__lead">Quelques instants des éditions passées.</p>
         <div class="gallery" data-galerie>
-          <!-- Vignettes de photos d'anciennes éditions à intégrer (4-5 + galerie).
-               En attente des fichiers client : placeholders ci-dessous. -->
+          <!-- Rempli par galerie.js avec les 8 photos les plus récentes,
+               publiées depuis admin.html. Tant qu'aucune photo n'est en ligne,
+               les cases en pointillés ci-dessous restent affichées : c'est
+               l'état vide, et c'est aussi ce que voit un visiteur sans JS. -->
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
           <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
         </div>
+
+        <!-- Révélé par galerie.js seulement s'il y a plus de 8 photos. -->
+        <p class="mt-8" data-lien-galerie hidden>
+          <a class="btn btn--primary" href="galerie">Voir toutes les photos</a>
+        </p>
       </div>
     </section>
 
@@ -231,7 +238,7 @@
             <h2 id="cta-titre">Envie de donner un coup de main ?</h2>
             <p>Le festival vit grâce à ses bénévoles. Rejoignez l'aventure de la 8ᵉ édition.</p>
           </div>
-          <a class="btn btn--primary" href="contact.html#benevole">Devenir bénévole</a>
+          <a class="btn btn--primary" href="contact#benevole">Devenir bénévole</a>
         </div>
 
         <div class="cta-band cta-band--alt">
@@ -239,7 +246,7 @@
             <h2>Prêt à faire monter ton groupe sur nos planches ?</h2>
             <p>Vous faites de la musique et rêvez de jouer à À Dos d'Arts ? Proposez votre groupe pour une prochaine édition.</p>
           </div>
-          <a class="btn btn--primary" href="contact.html#artistes">Proposer mon groupe</a>
+          <a class="btn btn--primary" href="contact#artistes">Proposer mon groupe</a>
         </div>
       </div>
     </section>

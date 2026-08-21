@@ -39,6 +39,9 @@ Adodart/
 ├── principe.html           # « Le principe du festival » (page accessoire, en 3 temps)
 ├── jeu-melodie.html        # « Compose ta mélodie » : instrument jouable (piano/guitare/trompette),
 │                           #   accordé au thème du festival, ouvert depuis le menu ou le toucan de l'accueil
+├── galerie.html            # Galerie photos complète (alimentée depuis admin.html)
+├── admin.html              # ⚠️ Page d'administration privée (mot de passe) : publier / supprimer des photos
+│                           #   noindex + Disallow robots.txt. N'est liée depuis aucune page.
 │
 ├── assets/
 │   ├── css/
@@ -66,9 +69,21 @@ Adodart/
 │   │   ├── loader.js       # Overlay de chargement (SVG toucan/feuilles), 1×/session, reduced-motion
 │   │   ├── programme.js    # Rendu des 4 groupes depuis programmation.json
 │   │   ├── partenaires.js  # Rendu organisateurs (mis en avant) + partenaires depuis edition.json
-│   │   ├── forms.js        # Validation accessible + honeypot (envoi simulé)
+│   │   ├── forms.js        # Validation accessible + honeypot, envoi réel vers assets/php/envoi-contact.php
 │   │   ├── cookie.js       # Bannière de consentement RGPD
 │   │   └── melodie/        # Modules du jeu (moteur audio, clavier, accords, enregistrement, partage…)
+│   │
+│   ├── php/                # Le seul code serveur du site (Ionos, PHP)
+│   │   ├── envoi-contact.php    # Envoi réel des 2 formulaires de contact (en production)
+│   │   ├── admin-api.php        # API de la page d'administration (photos, journal, session)
+│   │   └── config-admin.example.php  # Modèle : le vrai config-admin.php (hachage du mot de
+│   │                       #   passe) est gitignoré et ne se dépose qu'une fois sur le serveur
+│   │
+│   ├── uploads/            # ⚠️ CONTENU CRÉÉ PAR LE CLIENT, sur le serveur uniquement.
+│   │                       #   Photos publiées + galerie.json + journal.jsonl.
+│   │                       #   Gitignoré. NE JAMAIS téléverser ce dossier : ça écraserait
+│   │                       #   les photos du client (cf. PROCESS-mise-en-ligne.md §7).
+│   │                       #   Seul le .htaccess de durcissement est versionné.
 │   │
 │   ├── data/               # « CMS » de l'ébauche : éditer ici pour mettre à jour le contenu
 │   │   ├── edition.json    # Date, lieu, horaires, infos pratiques, organisateurs, partenaires, réseaux
@@ -104,8 +119,19 @@ Adodart/
 - **Infos pratiques** : lieu (**lien Google Maps**), horaires, restauration, accessibilité,
   éco-responsabilité.
 - **Contact** : **formulaire bénévole** + **formulaire artistes** (honeypot anti-spam,
-  validation accessible côté client, **envoi simulé** — pas de backend dans l'ébauche).
+  validation accessible côté client **et côté serveur**, **envoi réel** vers
+  `contact@adosdarts.fr` via `assets/php/envoi-contact.php` — en production depuis
+  le 28/07/2026).
 - **Memories** : galerie des anciennes affiches.
+- **Galerie photos** : grille « En images » sur l'accueil (**8 photos les plus récentes**)
+  et page `galerie.html` (toutes les photos). Alimentée par la page d'administration.
+  Tant qu'aucune photo n'est publiée, les cases en pointillés « Photo à venir » restent
+  affichées — c'est aussi ce que voit un visiteur sans JavaScript.
+- **Administration** (`admin.html`) : protégée par mot de passe (bcrypt, limitation de
+  débit, session `HttpOnly`/`SameSite`, jeton anti-CSRF). Permet de **publier** et de
+  **supprimer** des photos, de consulter un **journal** des actions et l'**état du serveur**.
+  Les photos sont **réduites à 1600 px dans le navigateur** avant l'envoi, ce qui supprime
+  au passage leurs métadonnées EXIF (dont la géolocalisation).
 - **Partenaires** : **2 organisateurs mis en avant** (Foyers Clubs d'Alsace, CCPAROVIC)
   + partenaires institutionnels.
 - **Réseaux** : Facebook, Instagram, e‑mail (`contact@adosdarts.fr`). **Pas de TikTok.**
@@ -140,10 +166,13 @@ Tout le contenu éditorial vit dans **`assets/data/`** — pas besoin de toucher
 
 ## 5. Hors périmètre de l'ébauche (= phase de production)
 
-- **Back-end des formulaires** : envoi *simulé*. En production : fonction serverless +
-  e-mail transactionnel, validation **côté serveur**, jeton CSRF, rate limiting.
-- **En-têtes de sécurité en HTTP réel** : ici en `<meta>`. À reposer côté serveur/CDN
-  (`X-Frame-Options`, CSP, etc.). GitHub Pages ne permet pas d'en-têtes personnalisés.
+- **Back-end des formulaires** : ✅ **fait** (28/07/2026). Les deux formulaires de contact
+  envoient réellement un e-mail via `assets/php/envoi-contact.php` (validation côté serveur,
+  honeypot, protection anti-injection d'en-têtes, vérification d'origine). Restent hors
+  périmètre : captcha, limitation de débit, accusé de réception automatique.
+- **En-têtes de sécurité en HTTP réel** : ici en `<meta>`. À reposer côté serveur
+  (`X-Frame-Options`, CSP, etc.) — **désormais possible** via `.htaccess` sur l'hébergement
+  Apache d'Ionos, ça ne l'était pas sur GitHub Pages.
 - **Pages légales** : « Mentions légales » et « Accessibilité » sont des placeholders.
 - **Licence des polices** : Core Circus et Frutiger sont des polices **commerciales**,
   intégrées à la demande du client. Vérifier la licence d'embarquement web avant mise
@@ -170,7 +199,13 @@ bas de la page du jeu).
 
 ## 6. Déploiement
 
-100 % statique : se déploie tel quel (GitHub Pages, Netlify, Cloudflare Pages, Nginx…).
-**Tous les chemins sont relatifs** → compatible avec un déploiement en sous-chemin
-(ex. GitHub Pages `/adosdarts/`). ⚠️ Ne jamais introduire de chemin absolu commençant
-par `/` : cela casserait le site en sous-chemin.
+**En production sur `https://adosdarts.fr`** — hébergement mutualisé **Ionos** (Apache, PHP),
+racine web `/adosdart/`. Le déploiement est **manuel**, via le gestionnaire de fichiers Ionos :
+committer ne met rien en ligne.
+
+📄 **Procédure complète, vérifications et pièges : [`PROCESS-mise-en-ligne.md`](PROCESS-mise-en-ligne.md)
+— à lire avant toute mise en ligne.**
+
+Le site reste 100 % statique hormis le script d'envoi des formulaires.
+**Tous les chemins sont relatifs.** ⚠️ Ne jamais introduire de chemin absolu commençant
+par `/`.

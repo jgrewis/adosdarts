@@ -1,0 +1,70 @@
+# Durcissement du dossier des fichiers téléversés par l'administration.
+#
+# Ce dossier est le SEUL endroit du site où un visiteur peut faire écrire un
+# fichier sur le serveur. On part donc du principe que son contenu est hostile.
+#
+# `2.BonnesPratiques.md` §17.6 demande de stocker les fichiers téléversés hors
+# de la racine web. Inapplicable ici : ces images ont vocation à être servies
+# publiquement. L'intention de la règle — empêcher l'exécution d'un fichier
+# téléversé — est donc obtenue autrement, en défense en profondeur (cf.
+# PLAN-admin-photos.md §3.4).
+
+
+# ==========================================================================
+# 1. Aucune exécution, quel que soit le moteur
+# ==========================================================================
+# On n'utilise volontairement PAS `php_flag engine off` : cette directive
+# n'existe que si PHP tourne en module Apache. Sur un mutualisé en FastCGI ou
+# CGI — cas le plus fréquent chez Ionos — elle provoque une erreur 500 sur tout
+# le dossier. Le retrait de handler ci-dessous fonctionne dans les deux cas.
+
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .cgi .pl .py .jsp .asp .sh
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .cgi .pl .py .jsp .asp .sh
+
+<IfModule mod_mime.c>
+  # Tout ce qui pourrait rester exécutable est renvoyé en texte brut.
+  AddType text/plain .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .cgi .pl .py .jsp .asp .sh
+</IfModule>
+
+
+# ==========================================================================
+# 2. Refus par défaut : seules les images sont servies
+# ==========================================================================
+# Le journal (journal.jsonl) contient un nom de personne et une adresse IP :
+# il ne doit JAMAIS être accessible par URL. Même chose pour l'index technique
+# du compteur anti-force-brute. Plutôt que d'énumérer ce qu'on interdit — liste
+# qu'on finit toujours par oublier de compléter — on interdit tout, puis on
+# autorise explicitement les seules extensions d'images.
+
+# `galerie.json` est la seule exception : c'est l'index que le site public lit
+# pour afficher la grille. Il ne contient QUE des noms de fichiers et des
+# dimensions — jamais de nom de personne, jamais d'adresse IP. Il est autorisé
+# nommément, et non par son extension : `journal.jsonl` et le compteur restent
+# ainsi hors d'atteinte.
+
+<IfModule mod_authz_core.c>
+  Require all denied
+
+  <FilesMatch "^(galerie\.json|.*\.(jpe?g|png|webp|gif|avif))$">
+    Require all granted
+  </FilesMatch>
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+
+  <FilesMatch "^(galerie\.json|.*\.(jpe?g|png|webp|gif|avif))$">
+    Allow from all
+  </FilesMatch>
+</IfModule>
+
+
+# ==========================================================================
+# 3. Pas de listage du dossier
+# ==========================================================================
+Options -Indexes -ExecCGI

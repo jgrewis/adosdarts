@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jgrewis.github.io/adosdarts/sitemap.xml
+# Page d'administration : privée, sans intérêt pour les moteurs.
+# Ce n'est pas une mesure de sécurité — la protection, c'est le mot de passe.
+Disallow: /admin.html
+Disallow: /admin
+
+Sitemap: https://adosdarts.fr/sitemap.xml

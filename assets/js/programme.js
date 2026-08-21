@@ -26,7 +26,7 @@ function bandStyle(couleur) {
 }
 
 /* Page de destination des cartes « teaser » de l'accueil. */
-const PROGRAMME_URL = "programmation.html";
+const PROGRAMME_URL = "programmation";
 
 /* Bloc coloré commun aux deux variantes de carte (accueil et programmation) :
    numéro d'ordre, photo éventuelle, nom du groupe. Factorisé ici pour n'avoir

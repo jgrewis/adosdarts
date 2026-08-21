@@ -519,6 +519,129 @@
   text-align: center;
 }
 
+/* La vignette est un bouton : on lui retire l'apparence de bouton, pas son
+   comportement. Le curseur « loupe » annonce qu'un agrandissement est possible. */
+.gallery__bouton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+/* ==========================================================================
+   Visionneuse (photo agrandie)
+   ==========================================================================
+   Élément <dialog> natif : le centrage, le fond et le piégeage du focus sont
+   assurés par le navigateur. Ici, on ne fait que l'habiller. */
+
+.visionneuse {
+  /* `margin: auto` est ce qui centre un <dialog> modal. Le navigateur le pose
+     par défaut, mais la remise à zéro globale des marges (base.css) l'écrase :
+     sans cette ligne, la visionneuse se colle en haut à gauche de l'écran.
+     Constaté en recette le 03/08 — invisible à la lecture du code. */
+  margin: auto;
+  max-width: min(96vw, 1400px);
+  max-height: 94vh;
+  padding: var(--space-2xs);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  overflow: visible;
+}
+
+.visionneuse::backdrop {
+  background: rgb(26 20 48 / 0.88);   /* --brand-ink : ::backdrop n'hérite pas des variables */
+}
+
+.visionneuse__cadre {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* La contrainte porte sur les deux dimensions : une photo en portrait doit
+   tenir en hauteur, une photo en paysage en largeur. */
+.visionneuse__image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(94vh - var(--space-3xl));
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+.visionneuse__nav,
+.visionneuse__fermer {
+  display: grid;
+  place-items: center;
+  min-width: var(--touch-target);   /* cible tactile : 1.Regles.md */
+  min-height: var(--touch-target);
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.visionneuse__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.visionneuse__nav--precedent { left: var(--space-2xs); }
+.visionneuse__nav--suivant { right: var(--space-2xs); }
+
+/* Posé DANS le cadre, jamais en débord : en débord il sortait de l'écran dès
+   que la photo prenait toute la hauteur. Son fond opaque et sa bordure le
+   gardent lisible sur une photo claire comme sur une photo sombre. */
+.visionneuse__fermer {
+  position: absolute;
+  top: var(--space-2xs);
+  right: var(--space-2xs);
+  z-index: 1;
+}
+
+.visionneuse__compte {
+  margin: var(--space-2xs) 0 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.visionneuse__nav[hidden] { display: none; }
+
+/* Page figée derrière la visionneuse : sans ça, le fond défile sous les doigts
+   sur mobile pendant qu'on regarde une photo.
+   Accroché à l'état réel du <dialog> plutôt qu'à une classe posée par le
+   JavaScript : il n'y a aucun nettoyage à faire, donc aucune façon de fermer la
+   visionneuse ne peut laisser la page bloquée. Si un navigateur ignore `:has()`,
+   le fond défile — c'est un défaut de confort, jamais une page figée. */
+body:has(dialog.visionneuse[open]) { overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .visionneuse[open] { animation: visionneuse-apparition 160ms ease-out; }
+  @keyframes visionneuse-apparition {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* Nombre de photos, affiché sous le titre de galerie.html. Sur le dégradé
+   sombre de .page-head, le texte doit rester clair. */
+.galerie-compte {
+  margin-top: var(--space-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--brand-yellow);
+}
+
 /* ==========================================================================
    Partenaires
    ========================================================================== */

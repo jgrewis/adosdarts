@@ -1,0 +1,170 @@
+# Configuration Apache de la racine web — adosdarts.fr (hébergement Ionos)
+#
+# ⚠️ AVANT DE DÉPOSER CE FICHIER : vérifier via le gestionnaire de fichiers Ionos
+#    qu'aucun .htaccess n'existe déjà à la racine. S'il en existe un, le SAUVEGARDER
+#    et FUSIONNER les deux contenus — ne jamais l'écraser à l'aveugle.
+#
+# Retour arrière : supprimer ce fichier remet le serveur dans son état antérieur,
+# à une exception près — le HSTS (§2) reste mémorisé par les navigateurs pendant
+# la durée de son max-age. C'est pourquoi il démarre volontairement bas.
+#
+# Chaque bloc est encadré par <IfModule> : si un module manque sur le mutualisé,
+# la directive est ignorée au lieu de renvoyer une erreur 500 sur tout le site.
+
+
+# ==========================================================================
+# 1. HTTPS obligatoire
+# ==========================================================================
+# Constaté le 28/07/2026 : http://adosdarts.fr répondait 200 sans redirection.
+# Un mot de passe saisi sur la page d'administration voyageait donc en clair.
+#
+# Deux conditions plutôt qu'une : sur un hébergement mutualisé, le déchiffrement
+# TLS peut être fait par un frontal, auquel cas %{HTTPS} vaut "off" côté Apache
+# et seul l'en-tête X-Forwarded-Proto dit la vérité. Sans la seconde condition,
+# on obtiendrait une boucle de redirection infinie.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+
+# ==========================================================================
+# 1 bis. Adresses sans extension .html
+# ==========================================================================
+# Les fichiers gardent leur extension sur le disque ; seule l'adresse publique
+# la perd. Une URL qui n'annonce pas sa technologie survit à un changement de
+# socle — c'est la raison d'être de ce bloc, pas l'esthétique.
+#
+# ⚠️ Constaté le 03/08/2026 : MultiViews est ACTIF chez Ionos, /contact
+#    répondait donc déjà 200 (en-tête « content-location: contact.html »).
+#    Ces règles ne servent pas à créer la capacité, elles servent à ne plus en
+#    dépendre : MultiViews est une option d'hébergeur, elle peut disparaître
+#    d'un changement d'offre et emporter tout le site en 404.
+#
+# Les chemins de destination commencent par « / », contrairement à la règle du
+# projet : une cible de redirection Apache n'a pas d'autre forme possible.
+# Elles supposent que le site est servi à la racine du domaine, ce qui est le
+# cas (le domaine pointe sur /adosdart, qui devient « / » côté web).
+#
+# Retour arrière : supprimer ce bloc. Le site revient à MultiViews, où les deux
+# formes d'adresses fonctionnent — aucune page ne tombe.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # --- (a) /page.html → /page, et /index.html → / ---------------------------
+  # Le déclencheur est THE_REQUEST, c'est-à-dire la ligne de requête envoyée
+  # par le navigateur, que les réécritures internes ne modifient JAMAIS.
+  # C'est précisément ce qui empêche la boucle infinie avec la règle (c) :
+  # celle-ci réécrit vers .html en interne, mais THE_REQUEST, lui, ne contient
+  # toujours pas « .html », donc (a) ne se redéclenche pas.
+  #
+  # ⚠️ 302 (temporaire) le temps de constater le comportement réel en ligne.
+  #    À passer en 301 une fois vérifié : une 301 fausse reste en cache chez le
+  #    visiteur et ne se rattrape pas. Le 301 est ce que réclame le référentiel
+  #    SEO (§16) — c'est la destination, pas le point de départ.
+
+  # La règle de l'accueil passe en premier : sinon /index.html deviendrait
+  # /index, une troisième adresse pour la même page.
+  # Le motif « (?:.*/)? » impose que « index » soit un segment de chemin entier :
+  # sans lui, une future page /reindex serait redirigée vers /re.
+  RewriteCond %{THE_REQUEST} \s/+((?:.*/)?)index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=302,L]
+
+  # /index se servirait aussi, par la règle (c) : on le ramène à /, sinon
+  # l'accueil aurait trois adresses au lieu d'une.
+  RewriteCond %{THE_REQUEST} \s/+((?:.*/)?)index[\s?] [NC]
+  RewriteRule ^ /%1 [R=302,L]
+
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=302,L]
+
+  # --- (b) /page/ → /page ---------------------------------------------------
+  # Une barre finale ferait croire au navigateur qu'il est dans un dossier :
+  # tous les liens relatifs du site (href="infos", assets/...) se résoudraient
+  # un cran trop bas. La condition !-d épargne les vrais dossiers (/assets/).
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=302,L]
+
+  # --- (c) /page → page.html, sans que l'adresse change ---------------------
+  # Réécriture interne : le visiteur garde /contact dans sa barre d'adresse.
+  # Les trois conditions garantissent qu'on ne détourne jamais un fichier ou un
+  # dossier qui existe pour de vrai.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
+
+
+# ==========================================================================
+# 2. En-têtes de sécurité
+# ==========================================================================
+# Jusqu'ici le site ne posait aucun en-tête HTTP réel : la CSP n'existait qu'en
+# <meta>, où frame-ancestors et nosniff n'ont aucun effet.
+
+<IfModule mod_headers.c>
+
+  # --- HSTS : force le navigateur à n'utiliser que HTTPS pour ce domaine ---
+  # Démarrage prudent à 1 jour (86400 s). Un navigateur ignore cet en-tête reçu
+  # en clair, il n'y a donc pas besoin de le conditionner.
+  #
+  # ⚠️ À passer à 31536000 (1 an) APRÈS une semaine de fonctionnement confirmé.
+  # Ce n'est pas une formalité : tant que le max-age court, un navigateur qui a
+  # vu l'en-tête REFUSERA toute connexion en clair au domaine. Monter à un an
+  # trop tôt, c'est se priver d'un retour arrière rapide en cas de souci TLS.
+  Header always set Strict-Transport-Security "max-age=86400"
+
+  # --- Empêche le navigateur de deviner un type MIME à la place du serveur ---
+  # C'est la seconde barrière qui rend inoffensif un fichier téléversé mal typé.
+  Header always set X-Content-Type-Options "nosniff"
+
+  # --- Ne fuite pas l'URL complète vers les sites tiers ---
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # --- Coupe l'accès aux capteurs pour toute la page ---
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # --- CSP en en-tête réel ---
+  # Reprend la politique des <meta> existantes, avec deux ajouts qui n'étaient
+  # pas possibles en <meta> :
+  #   - frame-ancestors 'none' : interdit l'inclusion du site dans une iframe
+  #     tierce (clickjacking). N'a JAMAIS d'effet en <meta>, uniquement en en-tête.
+  #   - blob: sur img-src : nécessaire aux aperçus de photos de l'administration,
+  #     qui sont générés en mémoire par <canvas> avant envoi.
+  # Les <meta> des pages publiques restent plus strictes : en cas de politiques
+  # multiples, le navigateur applique l'INTERSECTION, donc la plus restrictive.
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+
+  # Doublon volontaire de frame-ancestors pour les navigateurs anciens qui
+  # ignorent la CSP. Les modernes donnent la priorité à frame-ancestors.
+  Header always set X-Frame-Options "DENY"
+
+</IfModule>
+
+
+# ==========================================================================
+# 3. Fichiers qui ne doivent jamais être servis
+# ==========================================================================
+# config-admin.php ne contient que le hachage du mot de passe et n'affiche rien,
+# mais on refuse quand même tout accès direct : défense en profondeur, au cas où
+# une future erreur de configuration servirait les .php en texte brut.
+
+<FilesMatch "^(config-admin\.php|.*\.(jsonl|md|log))$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Note : la page d'erreur 404 n'est volontairement pas configurée ici. Ce serait
+# hors du périmètre validé (options A et C), et la directive ErrorDocument exige
+# un chemin absolu, contraire à la règle « aucun chemin en / » du projet.
+# À traiter séparément si le besoin se confirme.

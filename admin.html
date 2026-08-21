@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSP : même politique que les pages publiques, avec `blob:` en plus sur
+       les images — les aperçus de photos sont générés en mémoire par <canvas>
+       avant l'envoi. frame-ancestors n'est volontairement PAS ici : cette
+       directive est ignorée en <meta> (et journalise un avertissement en
+       console). Elle est posée en en-tête HTTP réel, dans le .htaccess. -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <!-- Page privée : hors moteurs de recherche, hors sitemap, refusée dans
+       robots.txt. Ce n'est pas une protection — la protection, c'est le mot de
+       passe — c'est de l'hygiène. -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Administration — Galerie photos · À Dos d'Arts</title>
+
+  <link rel="icon" href="assets/img/elements/toucan.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/img/elements/favicon.png" sizes="96x96" type="image/png" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <header class="admin-header">
+    <div class="container admin-header__inner">
+      <a class="admin-brand" href="./">
+        <img src="assets/img/elements/toucan.svg" alt="" width="40" height="40" />
+        <span>À Dos d'Arts</span>
+      </a>
+      <!-- Le h1 vit dans l'en-tête, pas dans les panneaux : les deux vues
+           (connexion / tableau de bord) auraient sinon chacune le leur, et la
+           page en compterait deux — un seul est autorisé. -->
+      <h1 class="admin-header__titre">Administration de la galerie</h1>
+
+      <!-- Injecté seulement une fois connecté. -->
+      <div class="admin-header__actions" data-zone-deconnexion hidden>
+        <button class="btn btn--ghost btn--sm" type="button" data-deconnexion>Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="admin-main">
+    <div class="container">
+
+      <!-- ===== État 1 : connexion ===== -->
+      <section class="admin-panneau" data-vue="connexion" aria-labelledby="connexion-titre">
+        <h2 id="connexion-titre" class="section__title" tabindex="-1">Connexion</h2>
+        <p class="admin-intro">
+          Cette page permet d'ajouter et de retirer les photos affichées dans la
+          galerie du site. Elle est réservée aux personnes disposant du mot de passe.
+        </p>
+
+        <noscript>
+          <p class="form-status form-status--error">
+            Cette page a besoin de JavaScript pour fonctionner : les photos sont
+            redimensionnées dans votre navigateur avant d'être envoyées. Activez
+            JavaScript, puis rechargez la page.
+          </p>
+        </noscript>
+
+        <form class="form admin-form" data-form-connexion novalidate>
+          <div class="form-status" data-statut-connexion hidden></div>
+
+          <div class="field">
+            <label for="motdepasse">Mot de passe</label>
+            <input class="input" id="motdepasse" name="motdepasse" type="password"
+              required autocomplete="current-password" autocapitalize="off"
+              spellcheck="false" aria-describedby="motdepasse-aide" />
+            <p class="field__error" data-field-error aria-live="polite"></p>
+          </div>
+          <p class="admin-aide" id="motdepasse-aide">
+            Après 5 tentatives infructueuses, l'accès est bloqué pendant 15 minutes.
+          </p>
+
+          <button class="btn btn--primary" type="submit" data-bouton-connexion>Se connecter</button>
+        </form>
+      </section>
+
+      <!-- ===== État 2 : tableau de bord ===== -->
+      <section class="admin-panneau" data-vue="tableau" hidden aria-labelledby="tableau-titre">
+        <h2 id="tableau-titre" class="section__title" tabindex="-1">Galerie photos</h2>
+
+        <div class="form-status form-status--success" data-statut-general hidden></div>
+
+        <!-- ===== Ajouter des photos ===== -->
+        <section class="admin-carte" aria-labelledby="ajout-titre">
+          <h3 id="ajout-titre" class="admin-carte__titre">Ajouter des photos</h3>
+
+          <form class="admin-form-ajout" data-form-ajout novalidate>
+            <div class="form-status" data-statut-ajout hidden></div>
+
+            <!-- Demandé une seule fois par appareil : une fois renseigné, le
+                 serveur mémorise le nom dans un cookie d'un an et ce bloc
+                 laisse place à la ligne « Tu publies en tant que… ». -->
+            <div class="field" data-champ-auteur hidden>
+              <label for="auteur">Qui publie ces photos ?</label>
+              <input class="input" id="auteur" name="auteur" type="text"
+                list="auteurs-connus" maxlength="40" autocomplete="off"
+                aria-describedby="auteur-aide" />
+              <datalist id="auteurs-connus" data-auteurs-connus></datalist>
+              <p class="field__error" data-field-error aria-live="polite"></p>
+            </div>
+            <p class="admin-aide" id="auteur-aide" data-aide-auteur hidden>
+              Votre prénom suffit. Il sert uniquement à savoir qui a ajouté quoi
+              dans cette page : il n'apparaît nulle part sur le site public.
+              La question n'est posée qu'une fois sur cet appareil.
+            </p>
+
+            <p class="admin-auteur-actuel" data-auteur-actuel hidden>
+              Vous publiez en tant que <strong data-auteur-nom></strong>
+              <button class="admin-lien-bouton" type="button" data-changer-auteur>changer</button>
+            </p>
+
+            <!-- Le bouton natif du <input type="file"> n'est ni localisé de
+                 façon fiable ni stylable de l'intérieur (son libellé s'est
+                 avéré invisible en recette). L'input reste donc le vrai
+                 contrôle — focusable et associé au label — mais c'est le
+                 <label> qui est affiché et cliquable, et le nombre de photos
+                 choisies est écrit à côté plutôt que laissé au navigateur. -->
+            <div class="field">
+              <input class="admin-fichier-input" id="photos" name="photos" type="file"
+                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+                multiple aria-describedby="photos-aide" />
+              <label class="admin-fichier-bouton" for="photos">Choisir des photos…</label>
+              <p class="admin-fichier-choix" data-fichiers-choisis>Aucune photo choisie</p>
+              <p class="field__error" data-field-error aria-live="polite"></p>
+            </div>
+            <p class="admin-aide" id="photos-aide">
+              Plusieurs photos à la fois, c'est possible. Elles sont automatiquement
+              réduites dans votre navigateur avant l'envoi : inutile de les
+              retoucher, et leurs données de localisation sont supprimées au passage.
+            </p>
+
+            <!-- Rappel du droit à l'image (risque R8 du plan) : placé juste
+                 avant le bouton, là où la décision se prend. -->
+            <p class="admin-rappel">
+              <strong>Avant de publier :</strong> assurez-vous d'avoir l'accord des
+              personnes reconnaissables sur les photos — en particulier des mineurs,
+              pour lesquels l'autorisation des parents est nécessaire.
+            </p>
+
+            <button class="btn btn--primary" type="submit" data-bouton-publier>Publier</button>
+
+            <!-- Progression, remplie pendant l'envoi. -->
+            <ul class="admin-progression" data-progression aria-live="polite"></ul>
+          </form>
+        </section>
+
+        <!-- ===== Photos en ligne ===== -->
+        <section class="admin-carte" aria-labelledby="photos-titre">
+          <h3 id="photos-titre" class="admin-carte__titre">
+            Photos en ligne <span class="admin-compteur" data-compteur></span>
+          </h3>
+          <div data-liste-photos>
+            <p class="admin-aide">Chargement…</p>
+          </div>
+        </section>
+
+        <!-- ===== Journal ===== -->
+        <section class="admin-carte" aria-labelledby="journal-titre">
+          <h3 id="journal-titre" class="admin-carte__titre">Journal</h3>
+          <p class="admin-aide">
+            Qui s'est connecté, qui a publié ou supprimé quoi. Visible uniquement
+            ici, jamais sur le site. Les entrées de plus d'un an sont effacées
+            automatiquement.
+          </p>
+          <details class="admin-details">
+            <summary data-ouvrir-journal>Afficher le journal</summary>
+            <div data-journal>
+              <p class="admin-aide">Chargement…</p>
+            </div>
+          </details>
+        </section>
+
+        <!-- Diagnostic serveur : construit par admin.js à partir de la réponse
+             de l'API. Il éprouve réellement l'écriture disque, il ne se contente
+             pas de la supposer. -->
+        <section class="admin-carte" aria-labelledby="diagnostic-titre">
+          <h3 id="diagnostic-titre" class="admin-carte__titre">État du serveur</h3>
+          <div data-diagnostic>
+            <p class="admin-aide">Vérification en cours…</p>
+          </div>
+        </section>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="admin-footer">
+    <div class="container">
+      <p><a href="./">← Retour au site</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="assets/js/boot-admin.js"></script>
+</body>
+</html>

@@ -7,12 +7,17 @@ import { initLoader } from "./loader.js";
 import { startCountdown } from "./countdown.js";
 import { initProgramme } from "./programme.js";
 import { renderPartenaires } from "./partenaires.js";
+import { initGalerie } from "./galerie.js";
 
 renderLayout();
 initNav();
 initCookieBanner();
 initLoader();
 initProgramme({ teaser: true });
+
+/* Galerie « En images » : les 8 dernières photos, et le lien vers la galerie
+   complète seulement s'il y en a davantage. */
+initGalerie({ limite: 8, lienComplet: "[data-lien-galerie]" });
 
 fetch("assets/data/edition.json")
   .then((r) => r.json())
