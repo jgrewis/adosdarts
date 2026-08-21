@@ -229,30 +229,65 @@ Et **une copie manuelle de tout le dossier `assets/`** les emporterait tout auta
 
 ---
 
-## 8. État du site en ligne — constaté le 03/08/2026
+## 8. État du site en ligne — constaté le 21/08/2026
 
-Relevé par comparaison réelle des fichiers servis par `https://adosdarts.fr` avec les
-fichiers locaux (cf. §2), pas par lecture de `git status`.
+Relevé par comparaison réelle des fichiers servis par `https://adosdarts.fr` avec les fichiers
+locaux (cf. §2), pas par lecture de `git status` : 104 fichiers interrogés par le script, plus
+les 10 pages HTML comparées **via leurs URLs propres** (voir l'angle mort signalé plus bas).
 
-### En ligne et à jour
+> **Le chantier `admin-photos` est intégralement en ligne.** Ce document affirmait le contraire
+> jusqu'au 21/08/2026 (« `galerie.html`, `admin.html` : 404 », « `.htaccess` racine : absent ») :
+> ces lignes décrivaient l'état du 03/08 **avant** le dépôt, et n'ont jamais été corrigées après.
+> Le déploiement a bien eu lieu ; seul le commit manquait. C'est exactement le piège du §2, dans
+> son sens le moins attendu : ce n'est pas le serveur qui était en retard sur le local, c'est le
+> **dépôt Git** qui était en retard sur les deux.
 
-| Ensemble | Détail |
+### Tout est en ligne et à jour
+
+| Ensemble | Constat du 21/08/2026 |
 |---|---|
-| Pages et contenus | `index.html`, `contact.html`, `infos.html`, `mentions-legales.html`, `programmation.html`, `principe.html`, `jeu-melodie.html`, `404.html`, `assets/data/programmation.json` |
-| Retours client du 29.07 | Sur-titre « L'après-midi », 5 descriptions de groupes, lien parking, §2/§4 des mentions légales *(commit `d14283e`)* |
-| Formulaires de contact | `assets/php/envoi-contact.php` + `contact.html` + `assets/js/forms.js` — **envoi réel confirmé en boîte de réception** |
-| Bascule de domaine | URLs canoniques, `og:url`, `og:image`, `robots.txt`, `sitemap.xml` : plus aucune référence à `jgrewis.github.io` |
+| Les 10 pages (`index`, `contact`, `infos`, `jeu-melodie`, `mentions-legales`, `principe`, `programmation`, `galerie`, `admin`, `404`) | **identiques octet pour octet** au local, HTTP 200 sur leur URL propre |
+| URLs sans `.html` | actives : `contact.html` renvoie **302 → `/contact`**, `index.html` → `/` |
+| `.htaccess` racine | actif : `http://adosdarts.fr` → **301** vers HTTPS, HSTS (`max-age=86400`), CSP `script-src 'self'`, `X-Frame-Options: DENY`, `nosniff`, Referrer-Policy, Permissions-Policy |
+| `assets/php/admin-api.php`, `envoi-contact.php` | déployés (**405** sur GET : normal, ils n'acceptent que POST) |
+| `assets/php/config-admin.php` | présent et **403** |
+| `assets/uploads/journal.jsonl`, `.compteur-connexions.json`, `.htaccess` | **403** — le durcissement du dossier fonctionne |
+| Galerie du client | **8 photos publiées** sur le serveur |
 
-### Développé en local, PAS en ligne (chantier `admin-photos`)
+### Le seul écart signalé par le script — et pourquoi on n'y touche pas
 
-| Fichier | Statut serveur |
-|---|---|
-| `galerie.html`, `admin.html` | **404** |
-| `assets/js/galerie.js`, `assets/js/boot-galerie.js` | **404** |
-| `assets/php/admin-api.php`, `config-admin.php` | absents |
-| Hunks galerie de `index.html`, `robots.txt`, `sitemap.xml`, `layout.js`, `boot-index.js`, `pages.css` | non déployés |
-| **`.htaccess` de la racine** | **absent — conséquence vérifiable : `http://adosdarts.fr` répond 200 sans redirection vers HTTPS, et aucun en-tête de sécurité n'est posé** |
+Le script classe `assets/uploads/galerie.json` en « à mettre à jour » et
+`assets/uploads/aab50f224c2df4db.jpg` en « absent du serveur ». **Ce sont des résidus de test
+locaux du 29/07**, pas du retard de déploiement. Le `galerie.json` local contient 1 photo, celui
+du serveur en contient 8 — celles du client.
 
-> ⚠️ **Ordre de déploiement à respecter pour le chantier admin :** le `.htaccess` (HTTPS
-> obligatoire + en-têtes) doit être en place **avant** `admin.html`. Sans lui, le mot de
-> passe d'administration voyagerait en clair sur `http://`.
+> **Les téléverser écraserait les 8 photos publiées.** Elles n'existent ni dans Git ni en local.
+> Cet écart est **permanent et attendu** : il réapparaîtra à chaque exécution du script. Ce n'est
+> pas un travail à faire, c'est un piège à reconnaître (cf. §7).
+
+### ⚠️ Angle mort du script : les URLs propres
+
+Depuis le déploiement du `.htaccess`, **toutes les pages `.html` répondent 302**. Le script les
+range donc en « réponses inattendues » et **ne compare pas leur contenu** — il ne reste que les
+fichiers `assets/` dans le décompte des « déjà identiques ».
+
+**Un « 302 » dans le rapport ne veut pas dire « à jour ».** Pour comparer réellement les pages,
+il faut suivre la redirection (`curl -sL`) et viser l'URL propre :
+
+```bash
+for p in "" contact infos jeu-melodie mentions-legales principe programmation galerie admin 404; do
+  f="${p:-index}.html"
+  curl -sL -o /tmp/live "https://adosdarts.fr/$p"
+  diff -q "$f" /tmp/live >/dev/null 2>&1 && echo "IDENTIQUE  $f" || echo "DIFFERENT  $f"
+done
+```
+
+### Points ouverts, sans urgence
+
+- **`assets/vendor/LICENCES.md` répond 403** : le `.htaccess` bloque les `.md` sans exception,
+  alors que les licences MIT/CC des bibliothèques embarquées demandent qu'il reste consultable.
+  À corriger par une exception sur ce chemin précis.
+- **Les redirections d'URLs propres sont encore en 302** (temporaire), comme prévu au moment du
+  dépôt. Le comportement est constaté correct depuis le 03/08 : le passage en **301** réclamé
+  par le référentiel SEO peut être fait, en connaissance de cause (une 301 reste en cache chez
+  le visiteur et ne se rattrape pas).
