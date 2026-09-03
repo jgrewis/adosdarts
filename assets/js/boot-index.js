@@ -13,7 +13,11 @@ renderLayout();
 initNav();
 initCookieBanner();
 initLoader();
-initProgramme({ teaser: true });
+
+/* Plus de bloc "cartes groupes" sur l'accueil depuis le retrait du teaser
+   programmation (contenu redondant avec la page dédiée) : seule la Playlist,
+   mutualisée avec programmation.html, est encore rendue ici. */
+initProgramme();
 
 /* Galerie « En images » : les 8 dernières photos, et le lien vers la galerie
    complète seulement s'il y en a davantage. */

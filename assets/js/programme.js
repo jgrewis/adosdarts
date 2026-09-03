@@ -132,20 +132,27 @@ function renderPlaylistLinks(playlist) {
 
 export function initProgramme({ teaser = false } = {}) {
   const container = document.querySelector("[data-programme]");
-  if (!container) return;
 
+  /* La Playlist (mutualisée accueil + programmation) est indépendante du
+     bloc « cartes groupes » : elle doit s'afficher même sur une page qui n'a
+     pas (ou plus) de conteneur [data-programme], donc son rendu ne doit
+     jamais dépendre de la présence de `container`. */
   renderPlaylistBlock();
 
   fetch("assets/data/programmation.json")
     .then((r) => r.json())
     .then((data) => {
-      const groups = [...(data.groupes || [])].sort((a, b) => a.ordre - b.ordre);
-      const render = teaser ? bandTeaser : bandCard;
-      container.innerHTML = groups.map(render).join("");
+      if (container) {
+        const groups = [...(data.groupes || [])].sort((a, b) => a.ordre - b.ordre);
+        const render = teaser ? bandTeaser : bandCard;
+        container.innerHTML = groups.map(render).join("");
+      }
       renderPlaylistLinks(data.playlist);
     })
     .catch(() => {
-      container.innerHTML =
-        '<p>La programmation n\'a pas pu être chargée. Rechargez la page ou retrouvez-la sur nos réseaux.</p>';
+      if (container) {
+        container.innerHTML =
+          '<p>La programmation n\'a pas pu être chargée. Rechargez la page ou retrouvez-la sur nos réseaux.</p>';
+      }
     });
 }
