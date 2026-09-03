@@ -36,13 +36,26 @@ function monteCompteur(tally) {
 }
 
 /* Une image encore en cours de chargement se révélerait vide : on attend son
-   décodage. decode() échoue sur certains navigateurs pour une image déjà en
-   cache — d'où le repli silencieux, qui révèle malgré tout. */
+   arrivée. Mais JAMAIS indéfiniment — l'affiche est masquée pendant l'attente,
+   une promesse qui ne se résout pas la laisserait invisible pour de bon.
+   D'où la course contre une échéance courte : au pire, on révèle une image
+   encore en train de peindre, ce qui reste infiniment préférable à un trou
+   dans le mur.
+
+   (img.decode() a été écarté : sur un onglet en arrière-plan, il peut rester
+   en attente sans jamais aboutir. Les événements load/error, eux, sont sûrs.) */
+const ATTENTE_MAX = 600;
+
 function imagePrete(figure) {
   const img = figure.querySelector("img");
-  if (!img) return Promise.resolve();
-  img.loading = "eager";
-  return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+  if (!img || img.complete) return Promise.resolve();
+  return Promise.race([
+    new Promise((resoudre) => {
+      img.addEventListener("load", resoudre, { once: true });
+      img.addEventListener("error", resoudre, { once: true });
+    }),
+    new Promise((resoudre) => window.setTimeout(resoudre, ATTENTE_MAX)),
+  ]);
 }
 
 export function initMemories() {
@@ -58,7 +71,14 @@ export function initMemories() {
   /* Mise en scène : on recule d'un cran. À partir d'ici, l'affichage ment le
      temps de l'animation — d'où le déclenchement garanti plus bas. */
   if (tally) monteCompteur(tally);
-  if (affiche) affiche.classList.add("memory--a-reveler");
+  if (affiche) {
+    affiche.classList.add("memory--a-reveler");
+    /* On sort cette affiche du chargement paresseux dès la mise en scène :
+       elle a alors tout le temps du défilement pour arriver, et la révélation
+       ne bute pas sur une image encore vide. */
+    const img = affiche.querySelector("img");
+    if (img) img.loading = "eager";
+  }
 
   let fait = false;
   const reveler = () => {
