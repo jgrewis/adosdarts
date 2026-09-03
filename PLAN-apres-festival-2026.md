@@ -96,6 +96,8 @@ donc la vérité (`2.BonnesPratiques` §16) — jamais un compteur figé sur 7.
 | Casser la mise en page du hero en retirant le bloc du compte à rebours. | Faible | Bloc remplacé, pas retiré : la colonne garde sa hauteur. Vérification visuelle aux 3 tailles d'écran. |
 | L'animation gêne un visiteur sensible au mouvement. | Faible | `prefers-reduced-motion` déjà géré globalement dans `base.css` ; vérification que les deux nouvelles animations tombent bien sous cette règle et que l'état final reste lisible. |
 | Régression sur les pages non liées (galerie, jeu, contact) par la modification de `layout.js`. | Moyen | `layout.js` est chargé par les 7 pages. Recette page par page après modification. |
+| **Cache d'assets.** Défaut réellement rencontré en recette le 03/09 : `pages.css` a été modifié deux fois sous le même `?v=20260903`, le navigateur a donc gardé la version d'avant et l'animation du compteur ne s'appliquait pas. | Corrigé | Version passée à `v=20260903b`. **Règle** : toute modification de `pages.css` impose de changer ce suffixe dans les 8 pages, sinon un visiteur déjà venu garde l'ancienne feuille. |
+| Les modules JS (`layout.js`, `memories.js`, `boot-*.js`) n'ont, eux, aucun numéro de version, et Ionos ne renvoie ni `Cache-Control` ni `Expires` — seulement un ETag. | Ouvert | Le navigateur revalide et finit par récupérer les nouveaux fichiers, mais avec un délai imprévisible. Non traité dans ce lot : la correction propre est une politique de cache dans `.htaccess`, à décider séparément. |
 
 ---
 
