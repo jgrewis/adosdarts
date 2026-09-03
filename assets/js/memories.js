@@ -58,6 +58,35 @@ function imagePrete(figure) {
   ]);
 }
 
+/* Déclenche `action` la première fois que `cible` est réellement à l'écran.
+   Un seul tir, puis l'observateur se débranche.
+
+   Pas de minuteur de secours ici, volontairement : un déclenchement à retardement
+   jouerait l'animation alors que la zone n'a jamais été vue, et le visiteur
+   n'en découvrirait que le résultat. Si l'observation n'aboutit jamais, rien ne
+   bouge — mais rien n'est visible non plus, donc personne ne le constate. */
+function auPremierPassage(cible, seuil, action) {
+  let fait = false;
+  const declencher = () => {
+    if (fait) return;
+    fait = true;
+    action();
+  };
+
+  const observateur = new IntersectionObserver(
+    (entrees) => {
+      if (entrees.some((e) => e.isIntersecting)) {
+        declencher();
+        observateur.disconnect();
+      }
+    },
+    /* Marge basse négative : la zone doit être franchement entrée dans l'écran,
+       pas seulement affleurer le bord inférieur. */
+    { threshold: seuil, rootMargin: "0px 0px -12% 0px" }
+  );
+  observateur.observe(cible);
+}
+
 export function initMemories() {
   const section = document.querySelector("[data-memories]");
   if (!section) return;
@@ -68,43 +97,32 @@ export function initMemories() {
 
   if (mouvementRefuse() || !("IntersectionObserver" in window)) return;
 
-  /* Mise en scène : on recule d'un cran. À partir d'ici, l'affichage ment le
-     temps de l'animation — d'où le déclenchement garanti plus bas. */
+  /* Mise en scène : on recule d'un cran. */
   if (tally) monteCompteur(tally);
   if (affiche) {
     affiche.classList.add("memory--a-reveler");
-    /* On sort cette affiche du chargement paresseux dès la mise en scène :
-       elle a alors tout le temps du défilement pour arriver, et la révélation
-       ne bute pas sur une image encore vide. */
+    /* Hors du chargement paresseux dès maintenant : l'image a tout le temps du
+       défilement pour arriver, la révélation ne bute pas sur un cadre vide. */
     const img = affiche.querySelector("img");
     if (img) img.loading = "eager";
   }
 
-  let fait = false;
-  const reveler = () => {
-    if (fait) return;
-    fait = true;
-    if (tally) tally.classList.add("tally--bascule");
-    if (!affiche) return;
-    imagePrete(affiche).then(() => affiche.classList.add("memory--revelee"));
-  };
+  /* Deux déclencheurs distincts, et c'est le point important : le compteur est
+     dans le titre, tout en haut de la section, tandis que l'affiche est la
+     dernière du mur. Sur téléphone, le mur fait plusieurs hauteurs d'écran —
+     lier les deux animations à la position de l'affiche ferait basculer le
+     compteur alors qu'il est déjà sorti par le haut. Chacun s'anime donc
+     lorsque c'est LUI qui est à l'écran. */
+  if (tally) {
+    /* Le compteur est un petit élément : on exige qu'il soit entièrement visible. */
+    auPremierPassage(tally, 1, () => tally.classList.add("tally--bascule"));
+  }
 
-  /* Seuil bas et marge basse négative : la révélation se joue quand le mur est
-     franchement entré dans l'écran, pas dès que son premier pixel affleure. */
-  const observateur = new IntersectionObserver(
-    (entrees) => {
-      if (entrees.some((e) => e.isIntersecting)) {
-        reveler();
-        observateur.disconnect();
-      }
-    },
-    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
-  );
-  observateur.observe(affiche || section);
-
-  /* Filet de sécurité : si l'observateur ne se déclenche jamais (section déjà
-     entièrement visible sur un très grand écran, onglet ouvert en arrière-plan,
-     seuil jamais atteint), on révèle quand même. L'affichage ne doit pas rester
-     bloqué sur « 7 éditions ». */
-  window.setTimeout(reveler, 2500);
+  if (affiche) {
+    /* L'affiche est haute : un tiers visible suffit à ce que la révélation se
+       joue sous les yeux du visiteur plutôt qu'au ras du bord. */
+    auPremierPassage(affiche, 0.35, () => {
+      imagePrete(affiche).then(() => affiche.classList.add("memory--revelee"));
+    });
+  }
 }
