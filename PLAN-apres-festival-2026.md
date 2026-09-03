@@ -13,10 +13,10 @@ le site en mode « édition passée, rendez-vous l'an prochain ».
 | # | Demande |
 |---|---|
 | D1 | Avertir clairement le visiteur que le festival est terminé, depuis la page d'accueil. |
-| D2 | Poser un encart en haut de **toutes les autres pages** : festival terminé, merci aux participants, bénévoles et partenaires, + lien vers l'accueil pour lire le mot complet. |
+| D2 | Poser un encart en haut de **toutes les autres pages** (7 au total : mentions légales incluse) : festival terminé, merci aux participants, bénévoles et partenaires, + lien vers l'accueil pour lire le mot complet. |
 | D3 | Ne pas toucher au hero : on arrive sur le toucan comme aujourd'hui. |
 | D4 | Remonter la section **Memories** juste en dessous du hero. |
-| D5 | Dans le titre de Memories, le **8** s'anime et devient un **9**. |
+| D5 | Dans le titre de Memories, le compteur s'anime : **7** devient **8** (corrigé par JP le 03/09 — l'édition qui vient d'avoir lieu est la huitième). |
 | D6 | L'affiche 2026 **vient se mettre en place** dans le mur des affiches (entrée animée). |
 | D7 | Conserver : le texte, le toucan, la **playlist**, **Memories**, les **partenaires**, et les **liens vers les deux formulaires** (bénévoles / artistes). |
 | D8 | Publier le pavé « MERCI À TOUS ! » validé par le client, sur la page d'accueil, **après** Memories. |
@@ -49,7 +49,7 @@ L'Escapade ! ». Vérifié en ligne le 03/09/2026. Traité dans ce lot.
 
 | Sujet | Décision retenue |
 |---|---|
-| Quel « 8 » s'anime | Le titre de la section Memories, « 8 éditions de souvenirs ». |
+| Quel chiffre s'anime | Le compteur du titre de Memories. **Correction JP du 03/09 : 7 → 8**, et non 8 → 9. L'édition passée étant la huitième, le mur passe de sept à huit affiches sous les yeux du visiteur. |
 | Quelle affiche | Celle de 2026, déjà présente dans le mur : on lui donne une entrée animée. |
 | Sections devenues fausses | **Basculées au passé**, pas supprimées (barre de faits, Garden party, teaser concerts). |
 | Autres pages | **Encart seul**, contenu inchangé. |
@@ -67,16 +67,21 @@ L'Escapade ! ». Vérifié en ligne le 03/09/2026. Traité dans ce lot.
 | Métadonnées | `<title>`, description, Open Graph et JSON-LD `MusicEvent` mis au passé sur `index.html`. | Le site annonce aujourd'hui un événement à venir dans les résultats de recherche et les partages sociaux. |
 | Attributs `width`/`height` des 8 affiches | Ajoutés. | Absents aujourd'hui (`2.BonnesPratiques` §24). L'animation d'entrée de l'affiche 2026 provoquerait un décalage de mise en page sans eux. |
 
-### 3.3 À confirmer par JP au feu vert
+### 3.3 L'animation du compteur — tranchée
 
-**Formulation exacte de l'animation 8 → 9.** « 9 éditions de souvenirs » serait faux : il y a bien
-huit éditions passées. Proposition retenue, à valider :
+Corrigée par JP le 03/09/2026 : **7 → 8**, et non 8 → 9. L'édition du 22 août 2026 était la
+huitième ; le mur comptait sept affiches avant elle.
 
-> Titre au chargement : « **8** éditions de souvenirs »
-> Au défilement : le chiffre bascule et le titre devient « La **9**ᵉ s'écrit l'an prochain »
+> État au chargement : « **7** éditions de souvenirs », mur à sept affiches
+> Au défilement : l'affiche 2026 vient se mettre en place **et** le compteur passe à « **8** »
 
-Les deux états sont exacts. Repli si la formulation ne convient pas : garder le `h2` fixe et poser
-l'animation 8 → 9 sur un élément dédié sous le mur d'affiches.
+Les deux états sont exacts, et l'état final correspond à la réalité. Cela lie D5 et D6 en un seul
+geste : le chiffre change parce que l'affiche arrive.
+
+**Sens de l'amélioration progressive** : le HTML servi contient l'état **final et vrai** (huit
+affiches, « 8 éditions de souvenirs »). C'est le JavaScript qui recule l'affichage à l'état « 7 »
+avant de l'animer. Sans JavaScript, sans animation, ou pour un moteur de recherche, la page dit
+donc la vérité (`2.BonnesPratiques` §16) — jamais un compteur figé sur 7.
 
 ---
 
@@ -85,7 +90,7 @@ l'animation 8 → 9 sur un élément dédié sous le mur d'affiches.
 | Risque | Niveau | Dérisquage |
 |---|---|---|
 | **Incohérence assumée** : l'encart annonce un festival terminé, les pages Infos/Programmation continuent d'annoncer « ouverture des portes à 15h00 », « buvette dès 18h00 ». | Assumé par JP | Aucun. Tracé ici. Rattrapable en un second lot si le client le remonte. |
-| **Le « 9 » du titre Memories** peut se lire comme « il y a eu 9 éditions ». | Assumé par JP | Formulation §3.3 qui rend le 9 explicitement tourné vers l'avenir. |
+| Sans JavaScript, le compteur resterait bloqué sur « 7 » et le mur à sept affiches — une information fausse. | Écarté | Le HTML servi porte l'état final vrai ; le JS ne fait que reculer l'affichage avant de l'animer (§3.3). |
 | L'encart est injecté par JS : invisible sans JavaScript et pour un moteur qui n'exécute pas le JS. | Moyen | Le pavé MERCI de l'accueil, lui, est en HTML statique : le message principal reste lu sans JS sur la page d'entrée. Même compromis que l'en-tête et le menu actuels, déjà documenté dans `layout.js`. |
 | Suppression de `countdown.js` : perte du compte à rebours pour l'édition #9. | Faible | Récupérable par `git show` sur le commit précédent. Noté ici. |
 | Casser la mise en page du hero en retirant le bloc du compte à rebours. | Faible | Bloc remplacé, pas retiré : la colonne garde sa hauteur. Vérification visuelle aux 3 tailles d'écran. |
@@ -128,7 +133,7 @@ Chaque tranche est livrable seule : le site reste cohérent si l'on s'arrête en
 - [ ] D2 — Un encart en haut de programmation, principe, infos, contact, galerie, jeu-mélodie : festival terminé + remerciements + lien vers l'accueil.
 - [ ] D3 — Le hero est inchangé : toucan, logo, dégradé, mise en page identiques.
 - [ ] D4 — Memories est la première section sous le hero.
-- [ ] D5 — Le 8 du titre Memories s'anime en 9 au défilement.
+- [ ] D5 — Le compteur du titre Memories passe de 7 à 8 au défilement, en même temps que l'affiche.
 - [ ] D6 — L'affiche 2026 a une entrée animée dans le mur.
 - [ ] D7 — Playlist, Memories, partenaires et les deux liens de formulaire sont toujours présents et fonctionnels.
 - [ ] D8 — Le pavé MERCI est publié intégralement, sans coupe ni reformulation, après Memories.

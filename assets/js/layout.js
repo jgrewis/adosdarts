@@ -96,7 +96,7 @@ function footerHtml() {
       <div class="footer-grid">
         <div class="footer-col">
           <h3>À Dos d'Arts</h3>
-          <p>La soirée concerts gratuite qui clôt l'été à Rouffach. 8ᵉ édition le samedi 22 août 2026.</p>
+          <p>La soirée concerts gratuite qui clôt l'été à Rouffach. La 8ᵉ édition s'est tenue le samedi 22 août 2026.</p>
         </div>
         <div class="footer-col">
           <h3>Naviguer</h3>

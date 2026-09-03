@@ -102,7 +102,7 @@ function renderPlaylistBlock() {
     <div class="cta-band cta-band--alt cta-band--center">
       <div>
         <h2>La playlist du festival</h2>
-        <p>Retrouve les artistes de cette édition et ceux de toutes les anciennes dans une playlist à écouter en boucle avant le grand soir.</p>
+        <p>Retrouve les artistes de cette édition et ceux de toutes les anciennes dans une playlist à écouter en boucle, toute l'année.</p>
       </div>
       <div class="cta-band__links">
         <a class="btn btn--sm" id="playlist-spotify" href="#" hidden target="_blank" rel="noopener noreferrer">

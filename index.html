@@ -123,11 +123,14 @@
     </section>
 
     <!-- ===== Faits en un coup d'œil ===== -->
-    <section class="section" aria-label="Informations clés">
+    <!-- Barre de faits conservée : elle ne présente plus un événement à venir
+         mais le relevé de l'édition qui vient d'avoir lieu (arbitrage JP du
+         03/09 : basculer au passé plutôt que supprimer). -->
+    <section class="section" aria-label="L'édition #8 en un coup d'œil">
       <div class="container">
         <div class="facts-bar">
           <div class="facts-bar__item">
-            <p class="facts-bar__label">Quand</p>
+            <p class="facts-bar__label">C'était le</p>
             <p class="facts-bar__value">Samedi 22 août 2026</p>
           </div>
           <div class="facts-bar__item">
@@ -140,7 +143,7 @@
           </div>
           <div class="facts-bar__item">
             <p class="facts-bar__label">Tarif</p>
-            <p class="facts-bar__value">Entrée libre</p>
+            <p class="facts-bar__value">C'était gratuit</p>
           </div>
         </div>
       </div>
@@ -152,8 +155,8 @@
         <p class="eyebrow">L'après-midi</p>
         <h2 id="garden-titre" class="section__title">Garden party</h2>
         <p class="section__lead">
-          Des animations et des espaces tranquilles pour vivre le festival en
-          mode « backstage ».
+          Des animations et des espaces tranquilles ont fait vivre le festival
+          en mode « backstage », dès l'ouverture des portes.
         </p>
       </div>
     </section>
@@ -163,14 +166,25 @@
       <div class="container">
         <p class="eyebrow">La soirée</p>
         <h2 id="prog-titre" class="section__title">4 concerts, 2 scènes</h2>
-        <p class="section__lead">Quatre groupes s'enchaînent dès 19h pour clôturer l'été en musique.</p>
-        <div data-playlist></div>
+        <p class="section__lead">Quatre groupes se sont succédé dès 19h pour clôturer l'été en musique.</p>
         <div class="band-grid" data-programme>
           <p>Chargement de la programmation…</p>
         </div>
         <p class="mt-8">
-          <a class="btn btn--primary" href="programmation">Découvrir les groupes</a>
+          <a class="btn btn--primary" href="programmation">Revoir les groupes</a>
         </p>
+      </div>
+    </section>
+
+    <!-- ===== Playlist =====
+         Sortie de la section « 4 concerts, 2 scènes » pour vivre par elle-même :
+         le client tient à la conserver, elle ne doit pas dépendre d'une section
+         de teaser dont le contenu est désormais au passé.
+         Le bloc lui-même est injecté par programme.js (source unique partagée
+         avec la page programmation). -->
+    <section class="section" aria-label="La playlist du festival">
+      <div class="container">
+        <div data-playlist></div>
       </div>
     </section>
 
@@ -273,7 +287,7 @@
         <div class="cta-band">
           <div>
             <h2 id="cta-titre">Envie de donner un coup de main ?</h2>
-            <p>Le festival vit grâce à ses bénévoles. Rejoignez l'aventure de la 8ᵉ édition.</p>
+            <p>Le festival vit grâce à ses bénévoles. Rejoignez l'aventure de la prochaine édition.</p>
           </div>
           <a class="btn btn--primary" href="contact#benevole">Devenir bénévole</a>
         </div>
