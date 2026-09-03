@@ -8,6 +8,7 @@ import { initProgramme } from "./programme.js";
 import { renderPartenaires } from "./partenaires.js";
 import { initGalerie } from "./galerie.js";
 import { initMemories } from "./memories.js";
+import { initMerciGlow } from "./merci-glow.js";
 
 renderLayout();
 initNav();
@@ -25,6 +26,9 @@ initGalerie({ limite: 8, lienComplet: "[data-lien-galerie]" });
 
 /* Arrivée de l'affiche 2026 dans le mur + compteur d'éditions 7 → 8. */
 initMemories();
+
+/* Contour lumineux au survol de la carte « Merci à tous ». */
+initMerciGlow();
 
 fetch("assets/data/edition.json")
   .then((r) => r.json())

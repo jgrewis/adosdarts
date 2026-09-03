@@ -127,6 +127,17 @@ Fichiers : `index.html` (wrapper `.memory__reveal` ajouté autour de l'image/lé
 d'animation déplacées sur `.memory__reveal` ; règle de survol `.memory--revelee:hover` supprimée
 car devenue inutile — et fausse — une fois les deux transforms sur des éléments distincts).
 
+## 7ter. Compléments demandés après recette (03/09/2026)
+
+Trois points supplémentaires remontés par le client après la première recette, tranchés en
+échange direct (pas de nouveau document de cadrage séparé, ampleur trop limitée) :
+
+| Demande | Décision | Détail |
+|---|---|---|
+| Lien « Au programme » toujours dans le menu principal | Retiré | Explicitement hors périmètre du plan initial (§2), le client a confirmé vouloir l'enlever maintenant. Retiré du tableau `NAV` dans `layout.js` (source unique, les 8 pages suivent). Le lien du **pied de page** ("Naviguer"), lui, n'a pas été touché — ce n'est pas "le menu principal" et il n'a pas été mentionné. |
+| Contour lumineux autour de la carte « Merci à tous » | Fait, en CSS + JS vanilla | Le client proposait de porter un composant React + GSAP (`MagicBento`). Recommandation faite et retenue : le site est explicitement sans dépendance/sans build (README) — un import React+GSAP pour un seul encart aurait été disproportionné et hors style (esthétique SaaS sombre/violette, à l'opposé du flat/low-poly de l'affiche). Implémenté avec la seule technique qui fait l'effet (radial-gradient masqué en anneau, `mask-composite: exclude`) en CSS pur + `assets/js/merci-glow.js` (~20 lignes), couleurs de marque (teal + corail) au lieu du violet. Dégradé progressif : rien sans JS ni au tactile (la carte garde sa bordure/ombre normales). |
+| Affiche 2026 invisible sur mobile | Corrigé (cf. §7bis ci-dessus) | Signalé par le client, tracé séparément. |
+
 ## 7. Suite
 
 Développement sur `preprod`, recette sur https://jgrewis.github.io/adosdarts/, puis fusion dans

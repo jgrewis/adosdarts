@@ -12,9 +12,11 @@
    dans le menu — c'est un easter egg qui ne s'ouvre qu'en cliquant le toucan
    de la page d'accueil. La page reste servie et référencée (sitemap), elle
    n'est simplement pas exposée dans la navigation. */
+/* "Au programme" retiré du menu principal (édition passée, la mise en avant
+   de la programmation n'a plus lieu d'être) — la page reste servie, référencée
+   au sitemap et accessible depuis le pied de page et par lien direct. */
 const NAV = [
   { key: "index", href: "./", label: "Accueil" },
-  { key: "programmation", href: "programmation", label: "Au programme" },
   { key: "principe", href: "principe", label: "Le festival" },
   { key: "infos", href: "infos", label: "Infos pratiques" },
   { key: "contact", href: "contact", label: "Contact" },
