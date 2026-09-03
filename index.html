@@ -122,6 +122,105 @@
       </div>
     </section>
 
+    <!-- ===== Memories ===== -->
+    <section class="section section--alt" aria-labelledby="mem-titre" data-memories>
+      <div class="container">
+        <p class="eyebrow">Memories</p>
+        <!-- Le HTML porte l'état VRAI : huit éditions, huit affiches. C'est
+             memories.js qui recule l'affichage à « 7 » avant de l'animer vers
+             « 8 ». Sans JavaScript, en mouvement réduit ou pour un moteur de
+             recherche, la page annonce donc directement le bon chiffre. -->
+        <h2 id="mem-titre" class="section__title"><span class="tally" data-tally>8</span> éditions de souvenirs</h2>
+        <p class="section__lead">Depuis 2019, le festival rythme la fin de l'été à Rouffach. Petit retour en images.</p>
+        <div class="memories">
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2019.png" alt="Affiche de l'édition 2019 (1ʳᵉ édition)" width="633" height="792" loading="lazy" />
+            <figcaption class="memory__caption">Édition #1 — 2019</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2020.webp" alt="Affiche de l'édition 2020 (2ᵉ édition)" width="608" height="760" loading="lazy" />
+            <figcaption class="memory__caption">Édition #2 — 2020</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2021.webp" alt="Affiche de l'édition 2021 (3ᵉ édition)" width="587" height="734" loading="lazy" />
+            <figcaption class="memory__caption">Édition #3 — 2021</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2022.webp" alt="Affiche de l'édition 2022 (4ᵉ édition)" width="593" height="742" loading="lazy" />
+            <figcaption class="memory__caption">Édition #4 — 2022</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2023.png" alt="Affiche de l'édition 2023 (5ᵉ édition)" width="633" height="791" loading="lazy" />
+            <figcaption class="memory__caption">Édition #5 — 2023</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2024.webp" alt="Affiche de l'édition 2024 (6ᵉ édition)" width="614" height="767" loading="lazy" />
+            <figcaption class="memory__caption">Édition #6 — 2024</figcaption>
+          </figure>
+          <figure class="memory">
+            <img src="assets/img/affiches/affiche-2025.webp" alt="Affiche de l'édition 2025 (7ᵉ édition)" width="939" height="1174" loading="lazy" />
+            <figcaption class="memory__caption">Édition #7 — 2025</figcaption>
+          </figure>
+          <!-- L'affiche qui vient rejoindre le mur : c'est elle qui est révélée
+               au défilement, en même temps que le compteur passe de 7 à 8. -->
+          <figure class="memory" data-affiche-nouvelle>
+            <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" width="633" height="791" loading="lazy" />
+            <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
+          </figure>
+        </div>
+
+        <h3 class="section__subtitle">En images</h3>
+        <p class="section__lead">Quelques instants des éditions passées.</p>
+        <div class="gallery" data-galerie>
+          <!-- Rempli par galerie.js avec les 8 photos les plus récentes,
+               publiées depuis admin.html. Tant qu'aucune photo n'est en ligne,
+               les cases en pointillés ci-dessous restent affichées : c'est
+               l'état vide, et c'est aussi ce que voit un visiteur sans JS. -->
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
+        </div>
+
+        <!-- Révélé par galerie.js seulement s'il y a plus de 8 photos. -->
+        <p class="mt-8" data-lien-galerie hidden>
+          <a class="btn btn--primary" href="galerie">Voir toutes les photos</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== Mot de l'équipe =====
+         Texte fourni et validé par le client (notes du 03/09/2026), repris
+         mot pour mot. Les cœurs sont décoratifs : aria-hidden, pour qu'un
+         lecteur d'écran n'annonce pas « emoji cœur rouge » au milieu du
+         titre. La casse du titre est faite en CSS et non en dur, afin que la
+         synthèse vocale lise « Merci à tous » et non les lettres épelées. -->
+    <section class="section section--merci" id="merci" aria-labelledby="merci-titre">
+      <div class="container">
+        <div class="merci">
+          <h2 id="merci-titre" class="merci__titre">
+            <span aria-hidden="true">❤️</span>
+            Merci à tous&nbsp;!
+            <span aria-hidden="true">❤️</span>
+          </h2>
+
+          <p>Cette année encore, vous étiez nombreux à assister à la 8ème soirée concerts du Festival À Dos d'Arts ! Une soirée placée sous le signe de la musique, du partage, de la création et de la convivialité.</p>
+
+          <p>Votre présence a fait la magie de cet événement. Merci pour votre énergie et cette ambiance unique : vous êtes le cœur de cette aventure.</p>
+
+          <p>Nous remercions également tous nos partenaires institutionnels, financiers et associatifs, ainsi que les équipes techniques et bénévoles dont l'implication a rendu cette édition possible.</p>
+
+          <p>Nos artistes, de la programmation principale à la scène ouverte, ont fait vibrer l'Escapade et révélé de nouveaux talents. Merci à eux !</p>
+
+          <p>À Dos d'Arts reste une aventure collective portée par des jeunes, des bénévoles, des artistes et des habitants qui croient en la culture comme moment de rencontre.</p>
+
+          <p class="merci__rdv">On se donne rendez-vous l'année prochaine !</p>
+
+          <p class="merci__signature">Le comité d'organisation du Festival À Dos d'Arts <span aria-hidden="true">❤️</span></p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Faits en un coup d'œil ===== -->
     <!-- Barre de faits conservée : elle ne présente plus un événement à venir
          mais le relevé de l'édition qui vient d'avoir lieu (arbitrage JP du
@@ -185,99 +284,6 @@
     <section class="section" aria-label="La playlist du festival">
       <div class="container">
         <div data-playlist></div>
-      </div>
-    </section>
-
-    <!-- ===== Memories ===== -->
-    <section class="section section--alt" aria-labelledby="mem-titre">
-      <div class="container">
-        <p class="eyebrow">Memories</p>
-        <h2 id="mem-titre" class="section__title">8 éditions de souvenirs</h2>
-        <p class="section__lead">Depuis 2019, le festival rythme la fin de l'été à Rouffach. Petit retour en images.</p>
-        <div class="memories">
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2019.png" alt="Affiche de l'édition 2019 (1ʳᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #1 — 2019</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2020.webp" alt="Affiche de l'édition 2020 (2ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #2 — 2020</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2021.webp" alt="Affiche de l'édition 2021 (3ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #3 — 2021</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2022.webp" alt="Affiche de l'édition 2022 (4ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #4 — 2022</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2023.png" alt="Affiche de l'édition 2023 (5ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #5 — 2023</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2024.webp" alt="Affiche de l'édition 2024 (6ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #6 — 2024</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2025.webp" alt="Affiche de l'édition 2025 (7ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #7 — 2025</figcaption>
-          </figure>
-          <figure class="memory">
-            <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" loading="lazy" />
-            <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
-          </figure>
-        </div>
-
-        <h3 class="section__subtitle">En images</h3>
-        <p class="section__lead">Quelques instants des éditions passées.</p>
-        <div class="gallery" data-galerie>
-          <!-- Rempli par galerie.js avec les 8 photos les plus récentes,
-               publiées depuis admin.html. Tant qu'aucune photo n'est en ligne,
-               les cases en pointillés ci-dessous restent affichées : c'est
-               l'état vide, et c'est aussi ce que voit un visiteur sans JS. -->
-          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
-          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
-          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
-          <figure class="gallery__item gallery__item--empty"><span>Photo à venir</span></figure>
-        </div>
-
-        <!-- Révélé par galerie.js seulement s'il y a plus de 8 photos. -->
-        <p class="mt-8" data-lien-galerie hidden>
-          <a class="btn btn--primary" href="galerie">Voir toutes les photos</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- ===== Mot de l'équipe =====
-         Texte fourni et validé par le client (notes du 03/09/2026), repris
-         mot pour mot. Les cœurs sont décoratifs : aria-hidden, pour qu'un
-         lecteur d'écran n'annonce pas « emoji cœur rouge » au milieu du
-         titre. La casse du titre est faite en CSS et non en dur, afin que la
-         synthèse vocale lise « Merci à tous » et non les lettres épelées. -->
-    <section class="section section--merci" id="merci" aria-labelledby="merci-titre">
-      <div class="container">
-        <div class="merci">
-          <h2 id="merci-titre" class="merci__titre">
-            <span aria-hidden="true">❤️</span>
-            Merci à tous&nbsp;!
-            <span aria-hidden="true">❤️</span>
-          </h2>
-
-          <p>Cette année encore, vous étiez nombreux à assister à la 8ème soirée concerts du Festival À Dos d'Arts ! Une soirée placée sous le signe de la musique, du partage, de la création et de la convivialité.</p>
-
-          <p>Votre présence a fait la magie de cet événement. Merci pour votre énergie et cette ambiance unique : vous êtes le cœur de cette aventure.</p>
-
-          <p>Nous remercions également tous nos partenaires institutionnels, financiers et associatifs, ainsi que les équipes techniques et bénévoles dont l'implication a rendu cette édition possible.</p>
-
-          <p>Nos artistes, de la programmation principale à la scène ouverte, ont fait vibrer l'Escapade et révélé de nouveaux talents. Merci à eux !</p>
-
-          <p>À Dos d'Arts reste une aventure collective portée par des jeunes, des bénévoles, des artistes et des habitants qui croient en la culture comme moment de rencontre.</p>
-
-          <p class="merci__rdv">On se donne rendez-vous l'année prochaine !</p>
-
-          <p class="merci__signature">Le comité d'organisation du Festival À Dos d'Arts <span aria-hidden="true">❤️</span></p>
-        </div>
       </div>
     </section>
 

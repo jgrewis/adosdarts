@@ -7,6 +7,7 @@ import { initLoader } from "./loader.js";
 import { initProgramme } from "./programme.js";
 import { renderPartenaires } from "./partenaires.js";
 import { initGalerie } from "./galerie.js";
+import { initMemories } from "./memories.js";
 
 renderLayout();
 initNav();
@@ -17,6 +18,9 @@ initProgramme({ teaser: true });
 /* Galerie « En images » : les 8 dernières photos, et le lien vers la galerie
    complète seulement s'il y en a davantage. */
 initGalerie({ limite: 8, lienComplet: "[data-lien-galerie]" });
+
+/* Arrivée de l'affiche 2026 dans le mur + compteur d'éditions 7 → 8. */
+initMemories();
 
 fetch("assets/data/edition.json")
   .then((r) => r.json())

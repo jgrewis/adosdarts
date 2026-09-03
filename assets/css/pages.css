@@ -1110,3 +1110,108 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   padding-top: var(--space-md);
   border-top: 2px solid var(--color-border);
 }
+
+/* --- Memories : arrivée de la nouvelle affiche et compteur d'éditions ---
+   Mis en scène par memories.js. Sans ce script, aucune de ces classes n'est
+   posée : le mur et le compteur s'affichent directement dans leur état final.
+   Le mouvement réduit est couvert deux fois — le script ne met rien en scène,
+   et base.css neutralise de toute façon animations et transitions. */
+
+/* Le rouleau du compteur : les deux chiffres occupent la même cellule de
+   grille, l'un s'efface vers le haut pendant que l'autre monte. Pas de
+   découpe, donc pas de risque de rogner le chiffre ni de décaler la ligne
+   de base du titre. */
+.tally--anime {
+  display: inline-grid;
+  /* Chiffres à chasse fixe : le 7 et le 8 occupent la même largeur, le reste
+     du titre ne bouge pas d'un pixel pendant la bascule. */
+  font-variant-numeric: tabular-nums;
+}
+
+.tally__piste {
+  display: inline-grid;
+}
+
+.tally__chiffre {
+  grid-area: 1 / 1;
+  transition: opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-slow) var(--ease-bounce);
+}
+
+/* Chiffre sortant (7) : en place, puis il s'échappe vers le haut. */
+.tally__chiffre:first-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Chiffre entrant (8) : attend sous la ligne. */
+.tally__chiffre:last-child {
+  opacity: 0;
+  transform: translateY(0.45em);
+}
+
+.tally--bascule .tally__chiffre:first-child {
+  opacity: 0;
+  transform: translateY(-0.45em);
+}
+
+.tally--bascule .tally__chiffre:last-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nécessaire au reflet, qui est un pseudo-élément positionné sur la carte. */
+.memory {
+  position: relative;
+}
+
+/* État de départ de l'affiche révélée : légèrement en retrait, masquée par le
+   bas. Le volet se lève ensuite sur l'image (clip-path), pendant qu'elle se
+   pose (translation + échelle). */
+.memory--a-reveler {
+  opacity: 0;
+  transform: translateY(20px) scale(0.94);
+  clip-path: inset(0 0 100% 0);
+}
+
+.memory--revelee {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  clip-path: inset(0 0 0 0);
+  /* Le volet est plus lent que le reste : c'est lui qui porte l'effet, la
+     translation ne fait que l'accompagner. */
+  transition: clip-path 900ms var(--ease-out),
+    opacity var(--duration-slow) var(--ease-out),
+    transform 900ms var(--ease-out);
+}
+
+/* Reflet qui balaie l'affiche une fois, juste après le volet. Décoratif et
+   inerte : il ne doit intercepter aucun clic ni survol. */
+.memory--a-reveler::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 62%
+  );
+  transform: translateX(-130%);
+}
+
+.memory--revelee::after {
+  animation: memory-shine 1100ms var(--ease-out) 380ms 1 both;
+}
+
+@keyframes memory-shine {
+  from { transform: translateX(-130%); }
+  to   { transform: translateX(130%); }
+}
+
+/* Le survol de la carte reprend la main une fois la révélation terminée : sans
+   cela, la transformation de repos écraserait la rotation au survol. */
+.memory--revelee:hover {
+  transform: rotate(-1.5deg) scale(1.02);
+}
