@@ -146,6 +146,6 @@ export function initProgramme({ teaser = false } = {}) {
     })
     .catch(() => {
       container.innerHTML =
-        '<p>La programmation complète arrive très bientôt. Suivez-nous sur les réseaux !</p>';
+        '<p>La programmation n\'a pas pu être chargée. Rechargez la page ou retrouvez-la sur nos réseaux.</p>';
     });
 }

@@ -37,3 +37,18 @@ handoff*.md
 #   site ont été extraits et optimisés dans assets/.
 _client_assets/
 Download*.zip
+
+# Sauvegardes locales de l'état du site avant modifications (lourdes : ~250 Mo
+# à elles deux). Elles vivent uniquement sur le poste de JP — le dépôt est
+# public et n'a pas à héberger une copie complète du site.
+ADODART_Etat_Avant_changements.zip
+Sauvegarde/
+
+# Référentiel de travail et notes de session (dépôt public : on ne les publie
+# pas). Les PLAN-*.md déjà versionnés restent suivis, ce choix ne vaut que
+# pour ces fichiers-ci.
+1.Regles.md
+2.BonnesPratiques.md
+3.Planification.md
+PLAN-cartes-pdf-22-08.md
+PLAN-retours-client-21-08.md

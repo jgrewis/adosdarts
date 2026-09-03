@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
-  <link rel="stylesheet" href="assets/css/pages.css" />
+  <link rel="stylesheet" href="assets/css/pages.css?v=20260822" />
 </head>
 <body>
   <a class="skip-link" href="#main">Aller au contenu principal</a>
@@ -51,7 +51,7 @@
             <span class="timeline__time">15h00</span>
             <div>
               <p class="timeline__title">Ouverture des portes</p>
-              <p class="timeline__detail">Animations et spectacles divers — détail à venir.</p>
+              <p class="timeline__detail">Animations et spectacles divers.</p>
             </div>
           </div>
           <div class="timeline__item">
@@ -77,13 +77,75 @@
           <div>
             <h2 class="section__title">Sur place</h2>
             <ul class="tick-list">
-              <li><span>Buvette dès l'ouverture des portes et restauration locale dès 18h00 — carte à venir courant de l'été.</span></li>
+              <li><span>Buvette dès l'ouverture des portes et restauration locale dès 18h00 — <a href="#la-carte">voir la carte</a>.</span></li>
               <li><span>Carte bancaire et espèces acceptées.</span></li>
               <li><span>Parking, WC, point d'eau potable sur site.</span></li>
               <li><span>Accès PMR et dispositif de prévention.</span></li>
             </ul>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- La carte -->
+    <section class="section" id="la-carte" aria-labelledby="carte-titre">
+      <div class="container">
+        <h2 id="carte-titre" class="section__title">La carte</h2>
+        <p class="section__lead">Buvette dès l'ouverture des portes, restauration dès 18h00. Carte bancaire et espèces acceptées.</p>
+
+        <!-- Les 4 visuels sont les pages des 2 PDF fournis par le client, converties
+             en WebP (800 et 1600 px de large). Ce sont des images de texte : le
+             contenu réel de la carte ne vit donc plus que dans l'attribut alt, seul
+             endroit où un lecteur d'écran, un moteur de recherche ou un traducteur
+             peut encore le lire. Écart assumé avec 2.BonnesPratiques §5.5, tranché
+             par JP le 22/08 : le client veut sa carte, à l'identique de son visuel. -->
+        <div class="carte__grille">
+
+          <figure class="carte__visuel">
+            <img src="assets/img/cartes/carte-tarte-flambee-800.webp"
+                 srcset="assets/img/cartes/carte-tarte-flambee-800.webp 800w,
+                         assets/img/cartes/carte-tarte-flambee-1600.webp 1600w"
+                 sizes="(min-width: 74rem) 575px, (min-width: 40rem) 50vw, 100vw"
+                 width="1600" height="1131" loading="lazy" decoding="async"
+                 alt="Tarte flambée, 7 € : classique (lardons, crème) ; gratinée (lardons, crème, fromage râpé) ; végé' (champignons, crème, fromage râpé). CB et espèces acceptées." />
+          </figure>
+
+          <figure class="carte__visuel">
+            <img src="assets/img/cartes/carte-petite-restauration-800.webp"
+                 srcset="assets/img/cartes/carte-petite-restauration-800.webp 800w,
+                         assets/img/cartes/carte-petite-restauration-1600.webp 1600w"
+                 sizes="(min-width: 74rem) 575px, (min-width: 40rem) 50vw, 100vw"
+                 width="1600" height="1131" loading="lazy" decoding="async"
+                 alt="Petite restauration : empanada casera 2 € — pollo (blanc de poulet, coriandre, légumes, fromage) ou vegetariano (coriandre, légumes, fromage) ; bretzel ; crêpe (sucre ou chocolat) ; barbe à papa. CB et espèces acceptées." />
+          </figure>
+
+          <figure class="carte__visuel">
+            <img src="assets/img/cartes/carte-biere-pression-800.webp"
+                 srcset="assets/img/cartes/carte-biere-pression-800.webp 800w,
+                         assets/img/cartes/carte-biere-pression-1600.webp 1600w"
+                 sizes="(min-width: 74rem) 575px, (min-width: 40rem) 50vw, 100vw"
+                 width="1600" height="1131" loading="lazy" decoding="async"
+                 alt="Bière pression de La Brasserie d'Émile, Guebwiller : blonde 4,9°, blonde au sarrasin 4,5°, blanche au sureau 4,5°, ambrée 5,3°. 25 cl 4 €, 50 cl 7 €. Consigne écocup 1 €. CB et espèces acceptées." />
+          </figure>
+
+          <figure class="carte__visuel">
+            <img src="assets/img/cartes/carte-vin-soft-800.webp"
+                 srcset="assets/img/cartes/carte-vin-soft-800.webp 800w,
+                         assets/img/cartes/carte-vin-soft-1600.webp 1600w"
+                 sizes="(min-width: 74rem) 575px, (min-width: 40rem) 50vw, 100vw"
+                 width="1600" height="1131" loading="lazy" decoding="async"
+                 alt="Vin d'Alsace du Domaine Éric Rominger, Westhalten : crémant brut, pinot gris, pinot noir — 12 cl 4 €, 75 cl 15 €. Soda et eau de source des Sources de Soultzmatt : Elsass Cola, T'Glacé, Cristaline — 25 cl 2 €, 50 cl 4 €. Consigne écocup 1 €, verre de vin 2 €. CB et espèces acceptées." />
+          </figure>
+
+        </div>
+
+        <p class="carte__evin">L'abus d'alcool est dangereux pour la santé, à consommer avec modération.</p>
+
+        <p class="carte__pdf">
+          <span>Version imprimable :</span>
+          <a href="assets/doc/carte-nourriture.pdf" target="_blank" rel="noopener">carte nourriture (PDF, 755 Ko)</a>
+          <a href="assets/doc/carte-boissons.pdf" target="_blank" rel="noopener">carte boissons (PDF, 695 Ko)</a>
+        </p>
       </div>
     </section>
 

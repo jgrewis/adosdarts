@@ -913,14 +913,73 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   margin-bottom: var(--space-2xs);
 }
 
-/* Information légale non encore fournie. Le rouge seul ne porte pas
-   l'information (WCAG 1.4.1) : le pictogramme, la graisse et le liseré
-   pointillé restent perceptibles sans distinction des couleurs. Le rouge de
-   marque (#e74317) ne fait que 3.75:1 sur le crème — on utilise sa variante
-   foncée, à 4.9:1. */
-.legal__todo {
-  color: var(--brand-red-deep);
-  font-weight: var(--weight-bold);
-  border-bottom: 2px dotted var(--brand-red-deep);
-  white-space: nowrap;
+/* ==========================================================================
+   La carte de la buvette (infos pratiques)
+   ==========================================================================
+   Le client a fourni sa carte sous forme de 2 PDF de 2 pages. Ces 4 pages sont
+   affichées telles quelles, converties en WebP (800 et 1600 px). Le texte HTML
+   qui les retranscrivait a été retiré le 22/08 sur décision de JP : le client
+   veut voir sa carte, pas une reconstitution. Ce qui reste en texte, et qui n'a
+   pas à en sortir : la mention loi Évin (obligation légale) et les liens PDF. */
+
+/* Quatre visuels, donc deux colonnes dès qu'il y a la place : l'auto-fit de
+   .block-grid en alignait trois et laissait le quatrième orphelin. En deçà de
+   40rem on empile — une page paysage sur une demi-largeur de téléphone serait
+   illisible, et c'est du texte en image, donc non zoomable par reflow. */
+.carte__grille {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .carte__grille {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.carte__visuel {
+  margin: 0;
+}
+
+/* width/height sont sur le <img> pour réserver la place (pas de CLS) ; le CSS
+   reprend la main ensuite. Le rayon reprend celui des cartes du site pour que
+   les visuels du client ne détonnent pas au milieu des autres blocs. */
+.carte__visuel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* Mention obligatoire (loi Évin) dès lors que des boissons alcoolisées sont
+   présentées. Elle figure sur les visuels, mais un visuel n'est pas du texte :
+   elle est donc doublée ici, en corps lisible et contraste AA. */
+.carte__evin {
+  margin-top: var(--space-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  border-left: 4px solid var(--brand-red-deep);
+  padding-left: var(--space-xs);
+}
+
+/* Flex plutôt qu'une phrase avec séparateurs : au repli sur téléphone, un « · »
+   écrit en dur reste orphelin en fin de ligne. C'est l'espacement qui sépare,
+   il disparaît de lui-même quand les liens passent l'un sous l'autre. */
+.carte__pdf {
+  margin-top: var(--space-sm);
+  font-size: var(--text-sm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-md);
+}
+
+/* Cible tactile de 44px : sans elle les deux liens se touchent presque au
+   doigt lorsqu'ils sont côte à côte (§10). */
+.carte__pdf a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
