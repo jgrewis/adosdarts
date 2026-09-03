@@ -135,7 +135,22 @@ Trois points supplémentaires remontés par le client après la première recett
 | Demande | Décision | Détail |
 |---|---|---|
 | Lien « Au programme » toujours dans le menu principal | Retiré | Explicitement hors périmètre du plan initial (§2), le client a confirmé vouloir l'enlever maintenant. Retiré du tableau `NAV` dans `layout.js` (source unique, les 8 pages suivent). Le lien du **pied de page** ("Naviguer"), lui, n'a pas été touché — ce n'est pas "le menu principal" et il n'a pas été mentionné. |
-| Contour lumineux autour de la carte « Merci à tous » | Fait, en CSS + JS vanilla | Le client proposait de porter un composant React + GSAP (`MagicBento`). Recommandation faite et retenue : le site est explicitement sans dépendance/sans build (README) — un import React+GSAP pour un seul encart aurait été disproportionné et hors style (esthétique SaaS sombre/violette, à l'opposé du flat/low-poly de l'affiche). Implémenté avec la seule technique qui fait l'effet (radial-gradient masqué en anneau, `mask-composite: exclude`) en CSS pur + `assets/js/merci-glow.js` (~20 lignes), couleurs de marque. **Ajustements du 03/09 après retour client** : orange remplacé par `--brand-orange` plein (même orange que le hero, au lieu du corail à 50 % d'opacité, jugé trop terne) ; ajout d'une variante tactile (`@media (hover: none)`) — sans souris, le contour tourne tout seul en boucle (conic-gradient + `animation: rotate`, 5s), mêmes couleurs, toujours actif. Vérifié dans les deux cas que l'anneau ne déborde jamais sur le texte (largeur = `--border-width`, 3px). **Bordure fixe retirée** de `.merci` (le contour animé est désormais la seule mise en avant, plus de doublon visuel) — ombre de signature et coins arrondis conservés. |
+| Contour lumineux autour de la carte « Merci à tous » | Fait, en CSS + JS vanilla | Le client proposait de porter un composant React + GSAP (`MagicBento`). Recommandation faite et retenue : le site est explicitement sans dépendance/sans build (README) — un import React+GSAP pour un seul encart aurait été disproportionné et hors style (esthétique SaaS sombre/violette, à l'opposé du flat/low-poly de l'affiche). Implémenté avec la seule technique qui fait l'effet (radial-gradient masqué en anneau, `mask-composite: exclude`) en CSS pur + `assets/js/merci-glow.js` (~20 lignes), couleurs de marque. **Ajustements du 03/09 après retour client** : orange remplacé par `--brand-orange` plein (même orange que le hero, au lieu du corail à 50 % d'opacité, jugé trop terne) ; ajout d'une variante tactile (`@media (hover: none)`) — sans souris, le contour tourne tout seul en boucle (conic-gradient + `animation: rotate`, 5s), mêmes couleurs, toujours actif. Vérifié dans les deux cas que l'anneau ne déborde jamais sur le texte (largeur = `--border-width`, 3px). **Bordure fixe retirée** de `.merci` (le contour animé est désormais la seule mise en avant, plus de doublon visuel), puis **ombre de signature retirée aussi** (`--shadow-block` : c'est elle qui laissait un trait à droite et en dessous de la carte) — seuls le fond blanc et les coins arrondis restent. Couleurs repoussées au-delà des tokens de marque (orange `#ff5c00`, teal `#00e6cc`) avec halo `filter: drop-shadow` pour un rendu néon, à la demande du client. |
+
+### Défaut corrigé : le trait qui traversait l'écran sur mobile
+
+Signalé deux fois par le client, à raison. **Cause** : l'animation du contour tactile tournait via
+`transform: rotate()` appliqué au pseudo-élément entier. Ce pseudo-élément épouse toute la carte
+(un rectangle très haut sur mobile) : faire tourner son anneau faisait donc passer les arêtes de
+cet anneau en diagonale à travers le texte, et déborder de l'écran. J'avais d'abord attribué à
+tort ce tracé diagonal à mon propre test d'épaississement — c'était bien le défaut lui-même.
+
+**Correctif** : ce n'est plus l'élément qui tourne (`transform: none`) mais uniquement l'angle du
+dégradé, via un custom property `--merci-angle` déclaré en `@property` (nécessaire pour qu'un
+custom property s'interpole) et animé de 0 à 360°. L'anneau reste collé aux bords de la carte.
+Vérifié en mobile émulé, anneau temporairement épaissi : le tracé longe les quatre bords et ne
+croise jamais le contenu. **À ne pas refaire : tout `transform: rotate()` sur ce pseudo-élément
+ramène le défaut.**
 | Affiche 2026 invisible sur mobile | Corrigé (cf. §7bis ci-dessus) | Signalé par le client, tracé séparément. |
 
 ## 7. Suite

@@ -1041,11 +1041,12 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   max-width: var(--measure);
   margin-inline: auto;
   background: var(--color-surface);
-  /* Pas de bordure statique ici, à la différence des autres cartes du site :
-     le contour lumineux ci-dessous (::after) est la seule mise en avant du
-     bloc — un contour fixe en plus aurait fait doublon (retour client). */
+  /* Ni bordure ni ombre de signature ici, à la différence des autres cartes
+     du site : le contour lumineux ci-dessous (::after) est la SEULE mise en
+     avant du bloc — border et box-shadow (var(--shadow-block), le trait
+     visible à droite et en dessous des autres cartes) feraient doublon
+     avec lui (retour client, deux passes). */
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-block);
   padding: clamp(var(--space-md), 5vw, var(--space-2xl));
   /* Position pilotée par merci-glow.js au mousemove ; 50/50 par défaut pour
      le rendu sans JS (le halo reste invisible tant que .merci--glow n'est
@@ -1055,9 +1056,11 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
 }
 
 /* Contour lumineux : un dégradé masqué en anneau (mask-composite: exclude)
-   autour de la carte, largeur = --border-width pour se superposer exactement
-   à la bordure existante. Orange plein (même --brand-orange que le hero) au
-   cœur, teal en accent — même logique de couleurs que --gradient-hero.
+   autour de la carte, largeur = --border-width. Couleurs poussées au-delà
+   des tokens de marque (orange et teal saturés au maximum) et doublées d'un
+   halo flou (filter: drop-shadow, qui épouse le tracé déjà masqué en anneau
+   plutôt que le rectangle de la carte) pour un vrai rendu néon — demandé
+   explicitement par le client, sinon les tokens de marque restent trop mats.
    Éteint par défaut (opacity: 0) : rien à l'écran sans JS ni hors survol. */
 .merci::after {
   content: "";
@@ -1067,14 +1070,15 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   border-radius: inherit;
   background: radial-gradient(
     260px circle at var(--glow-x) var(--glow-y),
-    rgba(240, 129, 17, 1) 0%,
-    rgba(23, 166, 161, 0.85) 45%,
+    #ff5c00 0%,
+    #00e6cc 45%,
     transparent 72%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(255, 92, 0, 0.85)) drop-shadow(0 0 16px rgba(0, 230, 204, 0.55));
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out);
@@ -1084,27 +1088,41 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   opacity: 1;
 }
 
+/* Angle du dégradé tournant, déclaré pour être animable : un custom property
+   non enregistré ne s'interpole pas, l'animation serait saccadée (ou nulle). */
+@property --merci-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 /* Pas de souris sur écran tactile, donc pas de survol possible : le contour
    tourne alors tout seul en continu, mêmes couleurs. Un conic-gradient (plutôt
    que le radial-gradient du survol) donne un point chaud qui voyage le long
-   de l'anneau au lieu d'un simple point fixe. */
+   de l'anneau au lieu d'un simple point fixe.
+
+   ATTENTION — c'est SEULEMENT l'angle du dégradé qui tourne, jamais l'élément.
+   Un `transform: rotate()` sur le pseudo-élément ferait tourner l'anneau
+   lui-même : comme cet anneau épouse un rectangle haut (la carte), ses arêtes
+   passeraient en diagonale à travers le texte et déborderaient de l'écran.
+   Défaut réellement constaté sur mobile avant correction — ne pas y revenir. */
 @media (hover: none) and (prefers-reduced-motion: no-preference) {
   .merci::after {
     opacity: 1;
     background: conic-gradient(
-      from 0deg,
-      rgba(240, 129, 17, 0) 0deg,
-      rgba(240, 129, 17, 1) 35deg,
-      rgba(23, 166, 161, 1) 100deg,
-      rgba(240, 129, 17, 0) 170deg,
-      rgba(240, 129, 17, 0) 360deg
+      from var(--merci-angle, 0deg),
+      rgba(255, 92, 0, 0) 0deg,
+      #ff5c00 35deg,
+      #00e6cc 100deg,
+      rgba(255, 92, 0, 0) 170deg,
+      rgba(255, 92, 0, 0) 360deg
     );
     animation: merci-glow-tour 5s linear infinite;
   }
 }
 
 @keyframes merci-glow-tour {
-  to { transform: rotate(360deg); }
+  to { --merci-angle: 360deg; }
 }
 
 .merci__titre {
