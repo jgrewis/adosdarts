@@ -103,6 +103,30 @@ supplémentaire nécessaire.
 
 ---
 
+## 7bis. Correctif post-recette (signalé par le client)
+
+Le client a remonté que l'affiche 2026 n'apparaissait pas dans Memories sur mobile — donnant
+l'impression qu'elle avait été retirée alors que D3 demandait explicitement de la garder.
+
+**Cause réelle, confirmée par test** : `memories.js` observe la figure `[data-affiche-nouvelle]`
+avec un `IntersectionObserver`, mais c'est cette même figure qui reçoit `clip-path: inset(0 0 100%
+0)` comme état « fermé » avant révélation. Sur ce moteur de rendu, un `clip-path` posé directement
+sur l'élément observé lui fait rapporter une intersection nulle **en permanence**, même quand
+l'élément occupe tout l'écran — vérifié par un `IntersectionObserver` de test isolé
+(`intersectionRatio: 0` avec la cible pourtant à 100 % dans le viewport). Le mur à une seule
+colonne sur mobile oblige à défiler loin pour atteindre cette carte, ce qui a rendu le problème
+visible côté client alors qu'il existait aussi (plus discrètement) sur desktop.
+
+**Correctif** : l'animation (opacité, transform, clip-path) est déplacée sur un nouveau wrapper
+interne `.memory__reveal`, pendant que `memories.js` continue d'observer la figure — qui, elle,
+reste toujours pleinement visible/non clippée aux yeux de l'`IntersectionObserver`. Vérifié après
+correction : `intersectionRatio` remonte à ~1.0 dans les mêmes conditions.
+
+Fichiers : `index.html` (wrapper `.memory__reveal` ajouté autour de l'image/légende 2026),
+`assets/js/memories.js` (observe la figure, anime le wrapper), `assets/css/pages.css` (classes
+d'animation déplacées sur `.memory__reveal` ; règle de survol `.memory--revelee:hover` supprimée
+car devenue inutile — et fausse — une fois les deux transforms sur des éléments distincts).
+
 ## 7. Suite
 
 Développement sur `preprod`, recette sur https://jgrewis.github.io/adosdarts/, puis fusion dans

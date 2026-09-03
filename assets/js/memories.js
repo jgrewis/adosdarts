@@ -97,10 +97,16 @@ export function initMemories() {
 
   if (mouvementRefuse() || !("IntersectionObserver" in window)) return;
 
+  /* L'animation (opacité, clip-path) vit sur ce wrapper interne, jamais sur
+     `affiche` elle-même : c'est `affiche` qui est observée pour la position
+     à l'écran, et un clip-path posé sur la cible observée fausse la mesure
+     d'intersection (cf. commentaire dans index.html). */
+  const reveal = affiche ? affiche.querySelector(".memory__reveal") : null;
+
   /* Mise en scène : on recule d'un cran. */
   if (tally) monteCompteur(tally);
-  if (affiche) {
-    affiche.classList.add("memory--a-reveler");
+  if (reveal) {
+    reveal.classList.add("memory--a-reveler");
     /* Hors du chargement paresseux dès maintenant : l'image a tout le temps du
        défilement pour arriver, la révélation ne bute pas sur un cadre vide. */
     const img = affiche.querySelector("img");
@@ -118,11 +124,11 @@ export function initMemories() {
     auPremierPassage(tally, 1, () => tally.classList.add("tally--bascule"));
   }
 
-  if (affiche) {
+  if (affiche && reveal) {
     /* L'affiche est haute : un tiers visible suffit à ce que la révélation se
        joue sous les yeux du visiteur plutôt qu'au ras du bord. */
     auPremierPassage(affiche, 0.35, () => {
-      imagePrete(affiche).then(() => affiche.classList.add("memory--revelee"));
+      imagePrete(affiche).then(() => reveal.classList.add("memory--revelee"));
     });
   }
 }

@@ -1139,6 +1139,15 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   position: relative;
 }
 
+/* Porte l'animation (opacité, clip-path) de l'affiche 2026, séparément de la
+   figure observée par memories.js : un clip-path posé sur la cible observée
+   par l'IntersectionObserver lui fait rapporter une intersection nulle en
+   permanence sur certains moteurs, même quand la carte occupe tout l'écran —
+   d'où ce wrapper interne, non observé, qui porte seul l'effet visuel. */
+.memory__reveal {
+  position: relative;
+}
+
 /* État de départ de l'affiche révélée : légèrement en retrait, masquée par le
    bas. Le volet se lève ensuite sur l'image (clip-path), pendant qu'elle se
    pose (translation + échelle). */
@@ -1184,8 +1193,7 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   to   { transform: translateX(130%); }
 }
 
-/* Le survol de la carte reprend la main une fois la révélation terminée : sans
-   cela, la transformation de repos écraserait la rotation au survol. */
-.memory--revelee:hover {
-  transform: rotate(-1.5deg) scale(1.02);
-}
+/* Pas de règle de survol dédiée ici : .memory--revelee vit désormais sur
+   .memory__reveal (le wrapper interne), tandis que le survol de la carte
+   (.memory:hover) s'applique à la figure elle-même. Les deux transforms
+   portent sur des éléments différents, donc plus de conflit à résoudre. */

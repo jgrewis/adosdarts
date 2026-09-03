@@ -155,10 +155,17 @@
             <figcaption class="memory__caption">Édition #7 — 2025</figcaption>
           </figure>
           <!-- L'affiche qui vient rejoindre le mur : c'est elle qui est révélée
-               au défilement, en même temps que le compteur passe de 7 à 8. -->
+               au défilement, en même temps que le compteur passe de 7 à 8.
+               Le clip-path de l'animation vit sur .memory__reveal, PAS sur la
+               figure observée par l'IntersectionObserver : un clip-path posé
+               directement sur la cible observée fait rapporter une
+               intersection nulle en permanence sur certains moteurs, même
+               quand la carte occupe tout l'écran (memories.js). -->
           <figure class="memory" data-affiche-nouvelle>
-            <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" width="633" height="791" loading="lazy" />
-            <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
+            <div class="memory__reveal">
+              <img src="assets/img/affiches/affiche-2026.png" alt="Affiche de l'édition 2026 (8ᵉ édition)" width="633" height="791" loading="lazy" />
+              <figcaption class="memory__caption">Édition #8 — 2026</figcaption>
+            </div>
           </figure>
         </div>
 
