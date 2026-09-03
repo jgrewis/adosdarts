@@ -1041,7 +1041,9 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   max-width: var(--measure);
   margin-inline: auto;
   background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
+  /* Pas de bordure statique ici, à la différence des autres cartes du site :
+     le contour lumineux ci-dessous (::after) est la seule mise en avant du
+     bloc — un contour fixe en plus aurait fait doublon (retour client). */
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-block);
   padding: clamp(var(--space-md), 5vw, var(--space-2xl));
@@ -1052,11 +1054,11 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   --glow-y: 50%;
 }
 
-/* Contour lumineux qui suit le pointeur : un radial-gradient masqué en anneau
-   (mask-composite: exclude) autour de la carte, largeur = --border-width pour
-   se superposer exactement à la bordure existante. Deux couleurs de marque
-   (teal + corail) plutôt qu'une seule. Éteint par défaut (opacity: 0) : rien
-   à l'écran sans JS, sur écran tactile, ou hors survol — décoratif et inerte. */
+/* Contour lumineux : un dégradé masqué en anneau (mask-composite: exclude)
+   autour de la carte, largeur = --border-width pour se superposer exactement
+   à la bordure existante. Orange plein (même --brand-orange que le hero) au
+   cœur, teal en accent — même logique de couleurs que --gradient-hero.
+   Éteint par défaut (opacity: 0) : rien à l'écran sans JS ni hors survol. */
 .merci::after {
   content: "";
   position: absolute;
@@ -1065,8 +1067,8 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   border-radius: inherit;
   background: radial-gradient(
     260px circle at var(--glow-x) var(--glow-y),
-    rgba(23, 166, 161, 0.9) 0%,
-    rgba(236, 104, 59, 0.5) 45%,
+    rgba(240, 129, 17, 1) 0%,
+    rgba(23, 166, 161, 0.85) 45%,
     transparent 72%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -1080,6 +1082,29 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
 
 .merci--glow::after {
   opacity: 1;
+}
+
+/* Pas de souris sur écran tactile, donc pas de survol possible : le contour
+   tourne alors tout seul en continu, mêmes couleurs. Un conic-gradient (plutôt
+   que le radial-gradient du survol) donne un point chaud qui voyage le long
+   de l'anneau au lieu d'un simple point fixe. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .merci::after {
+    opacity: 1;
+    background: conic-gradient(
+      from 0deg,
+      rgba(240, 129, 17, 0) 0deg,
+      rgba(240, 129, 17, 1) 35deg,
+      rgba(23, 166, 161, 1) 100deg,
+      rgba(240, 129, 17, 0) 170deg,
+      rgba(240, 129, 17, 0) 360deg
+    );
+    animation: merci-glow-tour 5s linear infinite;
+  }
+}
+
+@keyframes merci-glow-tour {
+  to { transform: rotate(360deg); }
 }
 
 .merci__titre {
