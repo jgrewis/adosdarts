@@ -176,3 +176,43 @@ Chaque tranche est livrable seule : le site reste cohérent si l'on s'arrête en
 Recette sur `preprod` via GitHub Pages, puis fusion dans `main` et téléversement manuel sur Ionos
 par JP. Rappel : sur Pages, les formulaires de contact et l'administration ne fonctionnent pas
 (pas de PHP) — ces deux points ne se vérifient que sur adosdarts.fr après mise en ligne.
+
+---
+
+## 8. État à la fin de la session du 03/09/2026
+
+### Fait, déployé sur `preprod` et vérifié en ligne
+
+Branche `preprod`, 7 commits en avance sur `main`, recette faite sur
+https://jgrewis.github.io/adosdarts/ — **rien n'est encore en production.**
+
+| Tranche | État |
+|---|---|
+| T1 — l'avertissement | Encart sur les 7 pages publiques hors accueil, pavé MERCI, mention du hero, compte à rebours supprimé. |
+| T2 — accueil au passé | Barre de faits, Garden party, teaser concerts, playlist extraite, CTA bénévoles, pied de page. |
+| T3 — Memories | Section remontée sous le hero, compteur 7 → 8, révélation de l'affiche 2026 (volet + reflet). |
+| T4 — métadonnées | `title`, description, Open Graph, JSON-LD. |
+
+Trois défauts trouvés **et corrigés** pendant la recette :
+1. `pages.css` modifié deux fois sous le même `?v=` → l'animation ne s'appliquait pas ;
+2. la révélation attendait `img.decode()`, promesse qui peut ne jamais aboutir → l'affiche
+   pouvait rester invisible pour de bon ;
+3. un `2px` en dur là où `--border-width` existe.
+
+### Reste à faire
+
+| # | Sujet | Qui |
+|---|---|---|
+| R1 | **Mise en production sur Ionos** : fusionner `preprod` dans `main`, puis téléverser à la main. Fichiers concernés : les 8 `.html`, `assets/css/pages.css`, `assets/css/components.css`, `assets/js/{layout,boot-index,programme,memories}.js`, et **supprimer `assets/js/countdown.js` du serveur**. Ne jamais téléverser `assets/uploads/`. | JP |
+| R2 | Vérifier `prefers-reduced-motion` (Réglages → Accessibilité → Réduire les animations) : le compteur doit afficher 8 d'emblée et l'affiche être visible sans animation. | JP |
+| R3 | Parcours clavier complet sur le site en ligne (Tab depuis le haut : lien d'évitement → marque → menu → encart). | JP |
+| R4 | **Décision à prendre** : politique de cache des assets. Ionos n'envoie ni `Cache-Control` ni `Expires`. Les modules JS n'ont aucun numéro de version : après un téléversement, un visiteur déjà venu peut garder l'ancien script pendant quelques jours — donc **sans encart**. Cas réellement observé en recette. Correction propre : quelques lignes de `Cache-Control` dans `.htaccess`. Non fait : c'est une modification de configuration serveur, hors du périmètre validé. | JP puis dev |
+| R5 | Formulaires de contact et administration photos : **non testables sur GitHub Pages** (pas de PHP). À recetter sur adosdarts.fr après mise en ligne. | JP |
+| R6 | Le texte du client est repris mot pour mot, « 8ème » compris, là où le reste du site écrit « 8ᵉ ». Normalisation possible en une ligne si le client le souhaite. | À arbitrer |
+| R7 | Rappel : les pages Infos et Programmation restent au futur (arbitrage assumé). Second lot si le client le remonte. | À arbitrer |
+
+### Règle à ne pas oublier
+
+**Toute modification de `assets/css/pages.css` impose de changer le suffixe `?v=` dans les
+8 fichiers HTML.** Version actuelle : `v=20260903c`. C'est le piège qui a coûté une passe de
+recette ce jour-là.
