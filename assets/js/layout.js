@@ -66,6 +66,29 @@ function headerHtml(page) {
   </header>`;
 }
 
+/* Encart « le festival est passé », posé en haut de toutes les pages SAUF
+   l'accueil : celui-ci porte déjà la mention du hero et le mot complet de
+   l'équipe, un encart y ferait doublon.
+
+   Source unique (2.BonnesPratiques §2.1) : le bloc n'est écrit qu'ici et non
+   copié dans les six fichiers HTML concernés. Contrepartie assumée, tracée
+   dans PLAN-apres-festival-2026.md : comme le menu et le pied de page, il
+   n'apparaît pas sans JavaScript. Le message complet, lui, vit en HTML
+   statique sur la page d'accueil. */
+function bandeauPasseHtml() {
+  return `
+  <aside class="past-notice" aria-label="Information sur l'édition en cours">
+    <div class="container past-notice__inner">
+      <p class="past-notice__texte">
+        <strong>Le festival est terminé pour cette année.</strong>
+        Merci à tous les participants, aux bénévoles et à nos partenaires —
+        rendez-vous en 2027 pour la 9ᵉ édition.
+      </p>
+      <a class="past-notice__lien" href="./#merci">Lire le mot de l'équipe</a>
+    </div>
+  </aside>`;
+}
+
 function footerHtml() {
   return `
   <footer class="site-footer">
@@ -118,6 +141,10 @@ function footerHtml() {
 export function renderLayout() {
   const header = document.querySelector("[data-site-header]");
   const footer = document.querySelector("[data-site-footer]");
-  if (header) header.outerHTML = headerHtml(currentPage());
+  const page = currentPage();
+  /* L'encart suit immédiatement l'en-tête : il se place donc sous la barre
+     collante, en tête du flux de la page, sans recouvrir le contenu. */
+  const bandeau = page === "index" ? "" : bandeauPasseHtml();
+  if (header) header.outerHTML = headerHtml(page) + bandeau;
   if (footer) footer.outerHTML = footerHtml();
 }

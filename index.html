@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
-  <link rel="stylesheet" href="assets/css/pages.css" />
+  <link rel="stylesheet" href="assets/css/pages.css?v=20260903" />
   <link rel="stylesheet" href="assets/css/loader.css" />
 
   <script type="application/ld+json">
@@ -102,8 +102,14 @@
             <a class="btn btn--on-dark" href="infos">Infos pratiques</a>
           </div>
 
-          <p class="hero__countdown-label">Ouverture des portes dans</p>
-          <div data-countdown aria-live="off"></div>
+          <!-- Remplace le compte à rebours de l'édition #8, retiré après le
+               festival : passée l'échéance, il affichait en boucle « c'est
+               aujourd'hui ». La mention occupe exactement sa place, pour que
+               l'information « c'est terminé » soit lisible sans défiler. -->
+          <p class="hero__status">
+            <strong>Édition #8 terminée — merci à tous&nbsp;!</strong>
+            <span>Le festival revient en 2027 pour sa 9ᵉ édition.</span>
+          </p>
         </div>
 
         <div class="hero__visual">
@@ -226,6 +232,38 @@
         <p class="mt-8" data-lien-galerie hidden>
           <a class="btn btn--primary" href="galerie">Voir toutes les photos</a>
         </p>
+      </div>
+    </section>
+
+    <!-- ===== Mot de l'équipe =====
+         Texte fourni et validé par le client (notes du 03/09/2026), repris
+         mot pour mot. Les cœurs sont décoratifs : aria-hidden, pour qu'un
+         lecteur d'écran n'annonce pas « emoji cœur rouge » au milieu du
+         titre. La casse du titre est faite en CSS et non en dur, afin que la
+         synthèse vocale lise « Merci à tous » et non les lettres épelées. -->
+    <section class="section section--merci" id="merci" aria-labelledby="merci-titre">
+      <div class="container">
+        <div class="merci">
+          <h2 id="merci-titre" class="merci__titre">
+            <span aria-hidden="true">❤️</span>
+            Merci à tous&nbsp;!
+            <span aria-hidden="true">❤️</span>
+          </h2>
+
+          <p>Cette année encore, vous étiez nombreux à assister à la 8ème soirée concerts du Festival À Dos d'Arts ! Une soirée placée sous le signe de la musique, du partage, de la création et de la convivialité.</p>
+
+          <p>Votre présence a fait la magie de cet événement. Merci pour votre énergie et cette ambiance unique : vous êtes le cœur de cette aventure.</p>
+
+          <p>Nous remercions également tous nos partenaires institutionnels, financiers et associatifs, ainsi que les équipes techniques et bénévoles dont l'implication a rendu cette édition possible.</p>
+
+          <p>Nos artistes, de la programmation principale à la scène ouverte, ont fait vibrer l'Escapade et révélé de nouveaux talents. Merci à eux !</p>
+
+          <p>À Dos d'Arts reste une aventure collective portée par des jeunes, des bénévoles, des artistes et des habitants qui croient en la culture comme moment de rencontre.</p>
+
+          <p class="merci__rdv">On se donne rendez-vous l'année prochaine !</p>
+
+          <p class="merci__signature">Le comité d'organisation du Festival À Dos d'Arts <span aria-hidden="true">❤️</span></p>
+        </div>
       </div>
     </section>
 

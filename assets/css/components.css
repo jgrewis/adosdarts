@@ -192,47 +192,6 @@
 
 .form-status[hidden] { display: none; }
 
-/* --- Compte à rebours --- */
-.countdown {
-  display: flex;
-  gap: var(--space-2xs);
-  flex-wrap: nowrap;          /* les 4 unités (j/h/min/sec) restent sur une ligne */
-}
-
-.countdown__unit {
-  flex: 1 1 0;
-  min-width: 0;               /* autorise les boîtes à se serrer plutôt qu'à passer à la ligne */
-  text-align: center;
-  background: var(--white);
-  color: var(--brand-ink);
-  border: var(--border-width) solid var(--brand-ink);
-  border-radius: var(--radius-md);
-  padding: var(--space-xs) var(--space-2xs);
-  box-shadow: var(--shadow-block-night);
-}
-
-/* Repli : sur écrans très étroits, on autorise le retour à la ligne. */
-@media (max-width: 360px) {
-  .countdown { flex-wrap: wrap; }
-  .countdown__unit { flex: 1 1 60px; }
-}
-
-.countdown__value {
-  display: block;
-  font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-black);
-  line-height: 1;
-}
-
-.countdown__label {
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  color: var(--color-text-muted);
-}
-
 /* --- Bannière consentement cookies --- */
 .cookie-banner {
   position: fixed;

@@ -99,7 +99,7 @@
    halo sombre — cohérent avec l'esthétique sérigraphie de l'affiche. */
 .hero__place,
 .hero__tagline,
-.hero__countdown-label,
+.hero__status,
 .hero .btn--on-dark {
   text-shadow: 0 1px 3px rgba(26, 20, 48, 0.55);
 }
@@ -163,12 +163,25 @@
   margin-bottom: var(--space-lg);
 }
 
-.hero__countdown-label {
+/* Mention « édition terminée », à la place exacte de l'ancien compte à rebours.
+   Les deux lignes sont deux éléments distincts plutôt qu'un <br> : le retour
+   suit alors le contenu et non une coupure écrite en dur (1.Regles §11). */
+.hero__status {
+  font-size: var(--text-base);
+  max-width: var(--measure);
+}
+.hero__status strong,
+.hero__status span {
+  display: block;
+}
+.hero__status strong {
+  font-family: var(--font-display);
+  font-weight: var(--weight-black);
+  font-size: var(--text-lg);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
-  font-weight: var(--weight-bold);
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-xs);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-3xs);
 }
 
 /* Visuel toucan */
@@ -982,4 +995,118 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+}
+
+/* ==========================================================================
+   Après le festival — encart transverse et mot de l'équipe
+   Ajoutés le 03/09/2026 (cf. PLAN-apres-festival-2026.md).
+   ========================================================================== */
+
+/* --- Encart « le festival est passé » ---
+   Injecté par layout.js juste après l'en-tête, sur toutes les pages sauf
+   l'accueil. Fond teal-deep + texte blanc : c'est la paire documentée dans
+   tokens.css (--color-accent / --color-on-accent), au-dessus de 4.5:1. */
+.past-notice {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.past-notice__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  /* L'écart entre le texte et le lien (24px) reste supérieur à l'écart interne
+     du texte : les deux blocs se lisent comme deux groupes distincts (§7). */
+  gap: var(--space-2xs) var(--space-md);
+  padding-block: var(--space-xs);
+}
+
+.past-notice__texte {
+  margin: 0;
+  max-width: var(--measure);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.past-notice__texte strong {
+  font-weight: var(--weight-bold);
+}
+
+/* Cible tactile de 44px sur un lien de bandeau qui, sans elle, ne ferait que
+   la hauteur de sa ligne (§10). Le soulignement est conservé : le lien ne se
+   distingue pas uniquement par la couleur (WCAG 1.4.1). */
+.past-notice__lien {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  color: var(--color-on-accent);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.past-notice__lien:hover {
+  text-decoration-thickness: 3px;
+}
+
+/* L'outline par défaut est le bleu toucan : invisible ou presque sur le teal.
+   On bascule sur le jaune de marque, comme sur les autres fonds sombres. */
+.past-notice :focus-visible {
+  outline-color: var(--brand-yellow);
+}
+
+/* --- Mot de l'équipe (accueil) --- */
+.section--merci {
+  background: var(--color-surface-alt);
+}
+
+.merci {
+  max-width: var(--measure);
+  margin-inline: auto;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-block);
+  padding: clamp(var(--space-md), 5vw, var(--space-2xl));
+}
+
+.merci__titre {
+  font-family: var(--font-display);
+  font-weight: var(--weight-black);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--brand-red-deep);
+  /* Titre de tête de bloc : rien au-dessus, l'air est donné par le padding de
+     la carte ; l'espace en dessous le rattache au texte qui suit (§5). */
+  margin: 0 0 var(--space-lg);
+}
+
+.merci p {
+  margin: 0 0 var(--space-md);
+  line-height: var(--leading-normal);
+}
+
+.merci p:last-child {
+  margin-bottom: 0;
+}
+
+.merci__rdv {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  color: var(--brand-teal-deep);
+}
+
+.merci__signature {
+  font-weight: var(--weight-semibold);
+  text-align: center;
+  /* Séparation nette avec le corps du message : la signature n'appartient pas
+     au dernier paragraphe (§7). */
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 2px solid var(--color-border);
 }
