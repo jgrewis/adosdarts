@@ -1108,7 +1108,7 @@ body:has(dialog.visionneuse[open]) { overflow: hidden; }
      au dernier paragraphe (§7). */
   margin-top: var(--space-lg);
   padding-top: var(--space-md);
-  border-top: 2px solid var(--color-border);
+  border-top: var(--border-width) solid var(--color-border);
 }
 
 /* --- Memories : arrivée de la nouvelle affiche et compteur d'éditions ---

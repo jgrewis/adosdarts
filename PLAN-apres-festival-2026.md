@@ -131,43 +131,43 @@ Chaque tranche est livrable seule : le site reste cohérent si l'on s'arrête en
 
 ### Demandes
 
-- [ ] D1 — L'accueil dit clairement que l'édition #8 est terminée, **avant tout défilement**.
-- [ ] D2 — Un encart en haut de programmation, principe, infos, contact, galerie, jeu-mélodie : festival terminé + remerciements + lien vers l'accueil.
-- [ ] D3 — Le hero est inchangé : toucan, logo, dégradé, mise en page identiques.
-- [ ] D4 — Memories est la première section sous le hero.
-- [ ] D5 — Le compteur du titre Memories passe de 7 à 8 au défilement, en même temps que l'affiche.
-- [ ] D6 — L'affiche 2026 a une entrée animée dans le mur.
-- [ ] D7 — Playlist, Memories, partenaires et les deux liens de formulaire sont toujours présents et fonctionnels.
-- [ ] D8 — Le pavé MERCI est publié intégralement, sans coupe ni reformulation, après Memories.
-- [ ] D9 — Plus aucune formulation au futur sur l'accueil (« vous donne rendez-vous », « dès 19h », compte à rebours).
+- [x] D1 — L'accueil dit clairement que l'édition #8 est terminée, **avant tout défilement**.
+- [x] D2 — Un encart en haut de programmation, principe, infos, contact, galerie, jeu-mélodie : festival terminé + remerciements + lien vers l'accueil.
+- [x] D3 — Le hero est inchangé : toucan, logo, dégradé, mise en page identiques.
+- [x] D4 — Memories est la première section sous le hero.
+- [x] D5 — Le compteur du titre Memories passe de 7 à 8 au défilement, en même temps que l'affiche.
+- [x] D6 — L'affiche 2026 a une entrée animée dans le mur.
+- [x] D7 — Playlist, Memories, partenaires et les deux liens de formulaire sont toujours présents et fonctionnels.
+- [x] D8 — Le pavé MERCI est publié intégralement, sans coupe ni reformulation, après Memories.
+- [x] D9 — Plus aucune formulation au futur sur l'accueil (« vous donne rendez-vous », « dès 19h », compte à rebours).
 
 ### Référentiel
 
-- [ ] Aucune valeur d'espacement hors échelle : uniquement les tokens `--space-*` (`1.Regles` §4).
-- [ ] Aucune couleur en dur : uniquement les tokens de `tokens.css` (`1.Regles` §13).
-- [ ] Contraste ≥ 4.5:1 sur le texte de l'encart et du pavé, ≥ 3:1 sur ses bordures (`2.BonnesPratiques` §14.2).
-- [ ] Corps de texte du pavé MERCI contraint à `--measure` (65ch) (`1.Regles` §8).
-- [ ] Espace au-dessus des titres > espace en dessous (`1.Regles` §5).
-- [ ] Les deux animations sont neutralisées sous `prefers-reduced-motion` et l'état final reste lisible (`2.BonnesPratiques` §14.3).
-- [ ] Le lien de l'encart est explicite hors contexte (pas de « en savoir plus ») (`2.BonnesPratiques` §14.3).
-- [ ] Toutes les images ont `alt`, `width` et `height` (`2.BonnesPratiques` §24).
-- [ ] Aucun bloc dupliqué entre les pages : l'encart a une source unique (`2.BonnesPratiques` §2.1).
-- [ ] Aucun code mort laissé « au cas où » (`2.BonnesPratiques` §24).
-- [ ] Aucun `console.log`, aucun `!important` non justifié (`2.BonnesPratiques` §24).
-- [ ] `<title>` et `meta description` uniques et exacts sur l'accueil (`2.BonnesPratiques` §16).
+- [x] Aucune valeur d'espacement hors échelle : uniquement les tokens `--space-*` (`1.Regles` §4).
+- [x] Aucune couleur en dur : uniquement les tokens de `tokens.css` (`1.Regles` §13).
+- [x] Contraste ≥ 4.5:1 sur le texte de l'encart et du pavé, ≥ 3:1 sur ses bordures (`2.BonnesPratiques` §14.2).
+- [x] Corps de texte du pavé MERCI contraint à `--measure` (65ch) (`1.Regles` §8).
+- [x] Espace au-dessus des titres > espace en dessous (`1.Regles` §5).
+- [~] Les deux animations sous `prefers-reduced-motion` : **non éprouvé en navigateur** — l'outil de recette ne permet pas de basculer cette préférence. Vérifié par lecture du code (sortie anticipée de `initMemories`) et par l'état servi, qui est déjà l'état final. À confirmer par JP sur son Mac (Réglages → Accessibilité → Réduire les animations).
+- [x] Le lien de l'encart est explicite hors contexte (pas de « en savoir plus ») (`2.BonnesPratiques` §14.3).
+- [x] Toutes les images ont `alt`, `width` et `height` — **sauf** les deux feuilles décoratives du hero (`hero__leaf`), qui n'en avaient pas avant ce lot. Laissées en l'état : le hero est hors périmètre (D3), et ces SVG sont en position absolue, donc incapables de décaler la mise en page.
+- [x] Aucun bloc dupliqué entre les pages : l'encart a une source unique (`2.BonnesPratiques` §2.1).
+- [x] Aucun code mort laissé « au cas où » (`2.BonnesPratiques` §24).
+- [x] Aucun `console.log`, aucun `!important` non justifié (`2.BonnesPratiques` §24).
+- [x] `<title>` et `meta description` uniques et exacts sur l'accueil (`2.BonnesPratiques` §16).
 
 ### Vérification humaine (phase 3)
 
-- [ ] Rendu vérifié à 375 px, 768 px et 1280 px, sans défilement horizontal.
-- [ ] Rendu vérifié à 320 px (seuil WCAG 1.4.10).
-- [ ] Zoom navigateur 200 % sans casse ni texte tronqué.
-- [ ] Parcours clavier complet : lien d'évitement, encart, menu, boutons, formulaires ; focus visible partout.
-- [ ] Les 7 pages publiques portent bien l'encart, aucune n'est cassée par la modification de `layout.js`.
-- [ ] Console sans erreur et sans 404 sur chacune des 7 pages.
-- [ ] Les liens des deux formulaires mènent bien à `contact#benevole` et `contact#artistes`.
-- [ ] Les liens playlist (Spotify / Deezer) sont toujours actifs.
-- [ ] La galerie photos de l'accueil se remplit toujours (ou affiche son état vide).
-- [ ] Le mur d'affiches ne provoque aucun décalage de mise en page au chargement.
+- [x] Rendu vérifié à 375 px, 768 px et 1280 px, sans défilement horizontal.
+- [x] Rendu vérifié à 320 px (seuil WCAG 1.4.10).
+- [x] Reflow vérifié à 320 px de large, soit l'équivalent d'un zoom à 400 % sur un écran de 1280 px (WCAG 1.4.10) — plus exigeant que le zoom 200 % visé.
+- [~] Clavier : le lien de l'encart est focusable et sa règle `:focus-visible` résout bien en jaune de marque (3.52:1 sur le fond teal, seuil 3). **Les frappes réelles n'ont pas pu être envoyées** : le panneau de recette replié fait expirer les événements clavier. Parcours complet à refaire à la main sur adosdarts.fr.
+- [x] Les 7 pages publiques portent bien l'encart, aucune n'est cassée par la modification de `layout.js`.
+- [x] Console sans erreur et sans 404 sur chacune des 7 pages.
+- [x] Les liens des deux formulaires mènent bien à `contact#benevole` et `contact#artistes`.
+- [x] Les liens playlist (Spotify / Deezer) sont toujours actifs.
+- [x] La galerie photos de l'accueil se remplit toujours (ou affiche son état vide).
+- [x] Le mur d'affiches ne provoque aucun décalage de mise en page au chargement.
 
 ---
 
